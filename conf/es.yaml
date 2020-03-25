@@ -1,0 +1,12 @@
+# Must not have nested tags
+
+commandGoNorth: &north norte
+commandGoEast: este
+commandGoSouth: sur
+commandGoWest: oeste
+
+room1Name: Sitting Room
+room1Description: Bienvenidos a la Casa de Haunted!
+
+errorInvalidDirection: poop!
+errorNoExit: "Hay no existe una direction al %s.\n"

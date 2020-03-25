@@ -1,72 +1,130 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
- 	"bufio"
- 	"os"
- 	"strings"
- 	"github.com/wilcox-liam/text-game/pkg" 
+	"github.com/wilcox-liam/text-game/pkg"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
+	"os"
+	"strings"
 )
 
-const game_name = "My Game"
+const gameName = "My Game"
+const confDir = "../conf/"
 
-func main() {
-	var current_room *text_game.Room
+//Valid Game Languages
+func validLanguages() []string {
+	return []string{"en", "es"}
+}
 
-	current_room = set_initial_state()
-
-  	reader := bufio.NewReader(os.Stdin)	
-	fmt.Println("Hello and welcome to", game_name)
-
-	for {
-		fmt.Println(current_room.Name)
-		fmt.Println("----")
-		fmt.Println(current_room.Enter)
-		fmt.Println(current_room.get_options())
-
-		text, _ := reader.ReadString('\n')
-  		text = strings.TrimSpace(text)
-  		fmt.Println()
-
-  		current_room = update_state(current_room, text)
+//Reads the gameStrings yaml file into memory for a given language
+//Error Messages are always in English.
+func gameStrings(lang string) map[string]string {
+	fileName := confDir + lang + ".yaml"
+	yamlFile, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		fmt.Printf("Error reading YAML file: %s\n", err)
+		os.Exit(1)
 	}
+
+	gameStrings := make(map[string]string)
+	err = yaml.Unmarshal(yamlFile, &gameStrings)
+	if err != nil {
+		fmt.Printf("Error parsing YAML file: %s\n", err)
+		os.Exit(1)
+	}
+	return gameStrings
+}
+
+//Helper function
+func contains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
 }
 
 //Updates the Game State
-func update_state(current_room *text_game.Room, input string) *text_game.Room {
-	var next_room *text_game.Room
+func updateState(current_room *textgame.Room, input string, gameStrings map[string]string) *textgame.Room {
+	var next_room *textgame.Room
 
-	if input == "n" {
-		next_room = current_room.go_north()
-	} else if input == "e" {
-		next_room = current_room.go_east()
-	} else if input == "s" {
-		next_room = current_room.go_south()
-	} else if input == "w" {
-		next_room = current_room.go_west()
+	if strings.ToLower(input) == gameStrings["commandGoNorth"] {
+		next_room = current_room.GoNorth()
+	} else if strings.ToLower(input) == gameStrings["commandGoEast"] {
+		next_room = current_room.GoEast()
+	} else if strings.ToLower(input) == gameStrings["commandGoSouth"] {
+		next_room = current_room.GoSouth()
+	} else if strings.ToLower(input) == gameStrings["commandGoWest"] {
+		next_room = current_room.GoWest()
 	} else {
-		fmt.Println("You are directionally challenged!")
-	}	
+		fmt.Println(gameStrings["errorInvalidDirection"])
+		return current_room
+	}
 
 	if next_room == nil {
-		fmt.Println("There is no direction to the", input)
+		fmt.Printf(gameStrings["errorNoExit"], input)
 	} else {
-		current_room = next_room
+		return next_room
 	}
 	return current_room
 }
 
-//Sets the initial game state
-func set_initial_state() *text_game.Room {
-	room1:= text_game.Room{"Room 1", "Welcome to room x", nil, nil, nil, nil}
-	room2 := text_game.Room{"Room 2", "Welcome to room 2", nil, nil, nil, nil}
-	room3 := text_game.Room{"Room 3", "Welcome to room 3", nil, nil, nil, nil}
-	room4 := text_game.Room{"Room 4", "Welcome to room 4", nil, nil, nil, nil}
+//Sets the initial the Game State
+func setInitialState(gameStrings map[string]string) *textgame.Room {
+	room1 := textgame.Room{gameStrings["room1Name"], gameStrings["room1Description"], nil, nil, nil, nil}
+	room2 := textgame.Room{"Dining Room", "Welcome to the Dining Room", nil, nil, nil, nil}
+	room3 := textgame.Room{"Kitchen", "Welcome to the Kitchen", nil, nil, nil, nil}
+	room4 := textgame.Room{"Lounge Room", "Welcome to the Lounge Room", nil, nil, nil, nil}
+	room5 := textgame.Room{"Master Bedroom", "Welcome to the Master Bedroom", nil, nil, nil, nil}
 
+	//Exits
+	room1.East = &room4
 	room1.North = &room2
+
+	room2.South = &room1
 	room2.East = &room3
+
+	room3.West = &room2
 	room3.South = &room4
+
+	room4.North = &room3
 	room4.West = &room1
+	room4.East = &room5
+
+	room5.West = &room4
 
 	return &room1
+}
+
+func main() {
+	var current_room *textgame.Room
+	validLanguages := validLanguages()
+
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Println("Language?", validLanguages)
+	lang, _ := reader.ReadString('\n')
+	lang = strings.TrimSpace(lang)
+
+	if !contains(validLanguages, lang) {
+		fmt.Println("Unknown Language")
+		os.Exit(1)
+	}
+	gameStrings := gameStrings(lang)
+	current_room = setInitialState(gameStrings)
+
+	for {
+		fmt.Println(current_room.Name)
+		fmt.Println(current_room.Description)
+		fmt.Println(current_room.GetOptions(gameStrings))
+
+		input, _ := reader.ReadString('\n')
+		input = strings.TrimSpace(input)
+		fmt.Println("")
+
+		current_room = updateState(current_room, input, gameStrings)
+	}
+	fmt.Println(gameStrings)
 }

@@ -1,0 +1,13 @@
+# Must not have nested tags
+
+#Example of Anchors and aliases
+commandGoNorth: &north north
+commandGoEast: east
+commandGoSouth: south
+commandGoWest: west
+
+room1Name: Sitting Room
+room1Description: Welcome to Haunted's House!
+
+errorInvalidDirection: You are directionally challenged!
+errorNoExit: "There is no direction to the %s.\n"

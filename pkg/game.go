@@ -1,43 +1,55 @@
-package text_game
+package textgame
 
-type Room struct  {
-	Name string
-	Enter string
+type Room struct {
+	Name  string
+	Description string
 	North *Room
-	East *Room
+	East  *Room
 	South *Room
-	West *Room
+	West  *Room
 }
 
-func (r Room) Go_north() *Room {
+//If a struct implements these functions, it can use this interface
+// type Income interface {
+//	Pay // an interface can inherit an interface
+// 	calculate() int
+// 	source() string
+// }
+
+// type Dining_Room struct {
+// 	Room // Inheritance
+// 	number_of_chairs int
+// }
+
+func (r Room) GoNorth() *Room {
 	return r.North
 }
 
-func (r Room) Go_east() *Room {
+func (r Room) GoEast() *Room {
 	return r.East
 }
 
-func (r Room) Go_south() *Room {
+func (r Room) GoSouth() *Room {
 	return r.South
 }
 
-func (r Room) Go_west() *Room {
+func (r Room) GoWest() *Room {
 	return r.West
 }
 
-func (r Room) Get_options() string {
+func (r Room) GetOptions(gameStrings map[string]string) string {
 	options := ""
 	if r.North != nil {
-		options += " [North] "
+		options += "[" + gameStrings["commandGoNorth"] + "] "
 	}
 	if r.East != nil {
-		options += " [East] "
+		options += "[" + gameStrings["commandGoEast"] + "] "
 	}
 	if r.South != nil {
-		options += " [South] "
+		options += "[" + gameStrings["commandGoSouth"] + "] "
 	}
 	if r.West != nil {
-		options += " [West] "
+		options += "[" + gameStrings["commandGoWest"] + "] "
 	}
 	return options
 }
