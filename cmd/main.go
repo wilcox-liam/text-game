@@ -13,6 +13,38 @@ import (
 const gameName = "My Game"
 const confDir = "../conf/"
 
+func main() {
+	var current_room *textgame.Room
+	validLanguages := validLanguages()
+
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Println("Language?", validLanguages)
+	lang, _ := reader.ReadString('\n')
+	lang = strings.TrimSpace(lang)
+
+	if !contains(validLanguages, lang) {
+		fmt.Println("Unknown Language")
+		os.Exit(1)
+	}
+	gameStrings := gameStrings(lang)
+	current_room = setInitialState(gameStrings)
+	fmt.Println()
+	for {
+		fmt.Println(current_room.Name)
+		fmt.Println()
+		fmt.Println(current_room.Description)
+		fmt.Println(current_room.GetDirections(gameStrings))
+		fmt.Println(current_room.GetItemOptions())
+		input, _ := reader.ReadString('\n')
+		input = strings.TrimSpace(input)
+		fmt.Println()
+		fmt.Println()
+
+		current_room = updateState(current_room, input, gameStrings)
+	}
+	fmt.Println(gameStrings)
+}
+
 //Valid Game Languages
 func validLanguages() []string {
 	return []string{"en", "es"}
@@ -74,57 +106,69 @@ func updateState(current_room *textgame.Room, input string, gameStrings map[stri
 
 //Sets the initial the Game State
 func setInitialState(gameStrings map[string]string) *textgame.Room {
-	room1 := textgame.Room{gameStrings["room1Name"], gameStrings["room1Description"], nil, nil, nil, nil}
-	room2 := textgame.Room{"Dining Room", "Welcome to the Dining Room", nil, nil, nil, nil}
-	room3 := textgame.Room{"Kitchen", "Welcome to the Kitchen", nil, nil, nil, nil}
-	room4 := textgame.Room{"Lounge Room", "Welcome to the Lounge Room", nil, nil, nil, nil}
-	room5 := textgame.Room{"Master Bedroom", "Welcome to the Master Bedroom", nil, nil, nil, nil}
+	room1ItemBed := textgame.Item{"bed", "This is your bed", false, false, nil}
+	room1ItemPen := textgame.Item{"pen", "This is your pen", false, false, nil}	
+	room1ItemBook := textgame.Item{"book", "This is your book", false, false, nil}		
+	room1ItemDeskItems := []textgame.Item{room1ItemPen, room1ItemBook}
+	room1ItemDesk := textgame.Item{"desk", "This is your desk", false, true, room1ItemDeskItems}
+	room1Items := []textgame.Item{room1ItemBed, room1ItemDesk}
+
+	room1 := textgame.Room{gameStrings["room1Name"], gameStrings["room1Description"], nil, nil, nil, nil, room1Items}
+	room2 := textgame.Room{gameStrings["room2Name"], gameStrings["room2Description"], nil, nil, nil, nil, nil}
+	room3 := textgame.Room{gameStrings["room3Name"], gameStrings["room3Description"], nil, nil, nil, nil, nil}
+	room4 := textgame.Room{gameStrings["room4Name"], gameStrings["room4Description"], nil, nil, nil, nil, nil}
+	room5 := textgame.Room{gameStrings["room5Name"], gameStrings["room5Description"], nil, nil, nil, nil, nil}
+	room6 := textgame.Room{gameStrings["room6Name"], gameStrings["room6Description"], nil, nil, nil, nil, nil}
+	room7 := textgame.Room{gameStrings["room7Name"], gameStrings["room7Description"], nil, nil, nil, nil, nil}
+	room8 := textgame.Room{gameStrings["room8Name"], gameStrings["room8Description"], nil, nil, nil, nil, nil}
+	room9 := textgame.Room{gameStrings["room9Name"], gameStrings["room9Description"], nil, nil, nil, nil, nil}
+	room10 := textgame.Room{gameStrings["room10Name"], gameStrings["room10Description"], nil, nil, nil, nil, nil}
+	room11 := textgame.Room{gameStrings["room11Name"], gameStrings["room11Description"], nil, nil, nil, nil, nil}
+	room12 := textgame.Room{gameStrings["room12Name"], gameStrings["room12Description"], nil, nil, nil, nil, nil}
+	room13 := textgame.Room{gameStrings["room13Name"], gameStrings["room13Description"], nil, nil, nil, nil, nil}
+	room14 := textgame.Room{gameStrings["room14Name"], gameStrings["room14Description"], nil, nil, nil, nil, nil}
 
 	//Exits
-	room1.East = &room4
-	room1.North = &room2
+	room1.West = &room2
 
-	room2.South = &room1
-	room2.East = &room3
+	room2.West = &room3
+	room2.North = &room4
+	room2.East = &room1
+	room2.South = &room5
 
-	room3.West = &room2
-	room3.South = &room4
+	room3.East = &room2
 
-	room4.North = &room3
-	room4.West = &room1
-	room4.East = &room5
+	room4.South = &room2
 
-	room5.West = &room4
+	room5.South = &room2
+	room5.East = &room6
+	room5.West = &room8
+	//room5.South == driveway
+
+	room6.West = &room5
+	room6.North = &room7
+
+	room7.South = &room6
+
+	room8.East = &room5
+	room8.North = &room9
+
+	room9.South = &room8
+	room9.North = &room10
+
+	room10.South = &room9
+	room10.East = &room11
+
+	room11.West = &room10
+	room11.North = &room12
+	room11.East = &room13
+	room11.South = &room14
+
+	room12.South = &room11
+
+	room13.West = &room11
+
+	room14.North = &room11
 
 	return &room1
-}
-
-func main() {
-	var current_room *textgame.Room
-	validLanguages := validLanguages()
-
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Println("Language?", validLanguages)
-	lang, _ := reader.ReadString('\n')
-	lang = strings.TrimSpace(lang)
-
-	if !contains(validLanguages, lang) {
-		fmt.Println("Unknown Language")
-		os.Exit(1)
-	}
-	gameStrings := gameStrings(lang)
-	current_room = setInitialState(gameStrings)
-
-	for {
-		fmt.Println(current_room.Name)
-		fmt.Println(current_room.Description)
-		fmt.Println(current_room.GetOptions(gameStrings))
-
-		input, _ := reader.ReadString('\n')
-		input = strings.TrimSpace(input)
-		fmt.Println("")
-
-		current_room = updateState(current_room, input, gameStrings)
-	}
-	fmt.Println(gameStrings)
 }

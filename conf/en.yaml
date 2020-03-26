@@ -5,9 +5,49 @@ commandGoNorth: &north north
 commandGoEast: east
 commandGoSouth: south
 commandGoWest: west
+commandExamine: examine
 
-room1Name: Sitting Room
-room1Description: Welcome to Haunted's House!
+room1Name: Bedroom 2
+room1Description: Welcome to Upstairs Bedroom 1
+
+room2Name: Upstairs Hallway
+room2Description: Welcome to the Upstairs Hallway
+
+room3Name: Bedroom 3
+room3Description: Welcome to the Upstairs Bedroom 2
+
+room4Name: Upstairs Bathroom
+room4Description: Welcome to the Upstairs Bathroom
+
+room5Name: Downstairs Hallway
+room5Description: Welcome
+
+room6Name: Master Bedroom
+room6Description: Welcome
+
+room7Name: Master Bedroom Ensuite
+room7Description: Welcome
+
+room8Name: Living Room
+room8Description: Welcome
+
+room9Name: Dining Room
+room9Description: Welcome
+
+room10Name: Kitchen
+room10Description: Welcome
+
+room11Name: Laundry Room
+room11Description: Welcome
+
+room12Name: Downstairs Bathroom
+room12Description: Welcome
+
+room13Name: Back Bedroom
+room13Description: Welcome
+
+room14Name: Patio
+room14Description: Welcome
 
 errorInvalidDirection: You are directionally challenged!
 errorNoExit: "There is no direction to the %s.\n"

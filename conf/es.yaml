@@ -4,9 +4,22 @@ commandGoNorth: &north norte
 commandGoEast: este
 commandGoSouth: sur
 commandGoWest: oeste
+commandExamine: examinar
 
-room1Name: Sitting Room
+room1Name: Sala de Estar
 room1Description: Bienvenidos a la Casa de Haunted!
 
-errorInvalidDirection: poop!
+room2Name: Comedor
+room2Description: Bienvenidos al Comedor
+
+room3Name: Cocina
+room3Description: Bienvenidos a la Cocina
+
+room4Name: Living
+room4Description: Bienvenidos al Living
+
+room5Name: Dormitorio Principal
+room5Description: Bienvenidos al Dormitorio Principal
+
+errorInvalidDirection: Esta selecion no es valida
 errorNoExit: "Hay no existe una direction al %s.\n"
