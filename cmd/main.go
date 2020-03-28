@@ -12,17 +12,15 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"github.com/wilcox-liam/text-game/pkg"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
 	"strings"
-    "flag"
-
 )
 
-const gameName = "My Game"
 const confDir = "../conf/"
 const langDefault = "default"
 
@@ -30,10 +28,10 @@ const langDefault = "default"
 //Log Mode
 //Language
 //Auto Complete Exits
-func commandLineOptions() (string) {
+func commandLineOptions() string {
 	lang := flag.String("lang", "en", "Game Language")
-	flag.Parse()    
-   	return *lang
+	flag.Parse()
+	return *lang
 }
 
 //Valid Game Languages
@@ -59,7 +57,7 @@ func language() string {
 //Reads the game yaml file into memory for a given language
 //Error Messages are always in English.
 func game(lang string) *textgame.Game {
-	fileName := confDir + lang + "-game.yaml"
+	fileName := confDir + lang + ".yaml"
 	yamlFile, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		fmt.Printf("Error reading YAML file: %s\n", err)
@@ -75,25 +73,6 @@ func game(lang string) *textgame.Game {
 	return &game
 }
 
-//Reads the gameStrings yaml file into memory for a given language
-//Error Messages are always in English.
-func gameStrings(lang string) map[string]string {
-	fileName := confDir + lang + ".yaml"
-	yamlFile, err := ioutil.ReadFile(fileName)
-	if err != nil {
-		fmt.Printf("Error reading YAML file: %s\n", err)
-		os.Exit(1)
-	}
-
-	gameStrings := make(map[string]string)
-	err = yaml.Unmarshal(yamlFile, &gameStrings)
-	if err != nil {
-		fmt.Printf("Error parsing YAML file: %s\n", err)
-		os.Exit(1)
-	}
-	return gameStrings
-}
-
 //Helper function
 func contains(s []string, e string) bool {
 	for _, a := range s {
@@ -107,38 +86,62 @@ func contains(s []string, e string) bool {
 //Checks the game state for any data quality issues.
 func sanityCheck(game *textgame.Game) {
 	//Check Rooms do not contain items of the same name. Should always be done
+	//Check Exits point to valid rooms
 	//Check all the Exits align. May not always be true. e.g Jumping down a cliff is a 1 way exit.
-
 }
 
 //Sets the initial the Game State
 //The first room is treated as the starting room.
-func setInitialState(game *textgame.Game, gameStrings map[string]string){
-	currentRoom := &game.Rooms[0]
+func setInitialState(game *textgame.Game) {
+	currentRoom := game.GetRoomByID(1)
 	game.CurrentRoom = currentRoom
 }
 
+//Loops over all exits in the game and sets the *Room based on the RoomID
+//TODO
+//There is a pointer problem here
+func setExits(game *textgame.Game) {
+	for _, room := range *game.Rooms {
+		for _, exit := range *room.Exits {
+			exit.Room = game.GetRoomByID(exit.RoomID)
+			if exit.Room == nil {
+				fmt.Println("Invalid Room ID", exit.RoomID, "in exit", room.Name)
+				os.Exit(1)
+			}
+			return
+		}
+	}
+}
+
+//Expands any shortcuts into their full command
+func expandCommand(game *textgame.Game, words []string) []string {
+	for i, word := range words {
+		lookup := strings.ToLower(game.GameDictionary[word])
+		if lookup != "" {
+			words[i] = lookup
+		}
+	}
+	return words
+}
+
 //Updates the Game State
-func updateState(game *textgame.Game, input string, gameStrings map[string]string) {
-	var nextRoom *textgame.Room
-
-	if strings.ToLower(input) == gameStrings["commandGoNorth"] {
-		nextRoom = game.CurrentRoom.GoNorth()
-	} else if strings.ToLower(input) == gameStrings["commandGoEast"] {
-		nextRoom = game.CurrentRoom.GoEast()
-	} else if strings.ToLower(input) == gameStrings["commandGoSouth"] {
-		nextRoom = game.CurrentRoom.GoSouth()
-	} else if strings.ToLower(input) == gameStrings["commandGoWest"] {
-		nextRoom = game.CurrentRoom.GoWest()
-	} else {
-		fmt.Println(gameStrings["errorInvalidDirection"])
+func updateState(game *textgame.Game, input string) {
+	words := strings.Split(input, " ")
+	words = expandCommand(game, words)
+	if strings.ToLower(words[0]) == strings.ToLower(game.GameDictionary["commandGo"]) && len(words) == 2 {
+		updateStateGo(game, words[1])
 	}
+}
 
-	if nextRoom == nil {
-		fmt.Printf(gameStrings["errorNoExit"], input)
-	} else {
-		game.CurrentRoom = nextRoom
+//Process the go direction input
+func updateStateGo(game *textgame.Game, where string) {
+	for _, exit := range *game.CurrentRoom.Exits {
+		if strings.ToLower(exit.Direction) == strings.ToLower(where) {
+			game.CurrentRoom = exit.Room
+			return
+		}
 	}
+	fmt.Print(game.GameDictionary["errorNoExit"], input)
 }
 
 func main() {
@@ -148,9 +151,9 @@ func main() {
 	}
 
 	game := game(lang)
-	gameStrings := gameStrings(lang)
+	setExits(game)
 	sanityCheck(game)
-	setInitialState(game, gameStrings)
+	setInitialState(game)
 
 	fmt.Println(game.Name)
 	fmt.Println()
@@ -162,14 +165,13 @@ func main() {
 		fmt.Println(game.CurrentRoom.Name)
 		fmt.Println()
 		fmt.Println(game.CurrentRoom.Description)
-		fmt.Println(game.CurrentRoom.GetDirections(gameStrings))
+		fmt.Println(game.CurrentRoom.GetDirections())
 		fmt.Println(game.CurrentRoom.GetItemOptions())
 
 		input, _ := reader.ReadString('\n')
 		input = strings.TrimSpace(input)
 		fmt.Println()
 		fmt.Println()
-		updateState(game, input, gameStrings)
+		updateState(game, input)
 	}
-	fmt.Println(gameStrings)
 }

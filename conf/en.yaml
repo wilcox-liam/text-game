@@ -1,53 +1,84 @@
-# Must not have nested tags
+#The first room is treated as the starting room
+#Room id's intentionally start at 1
+#Exit directions must be a single word only.
 
-#Example of Anchors and aliases
-commandGoNorth: &north north
-commandGoEast: east
-commandGoSouth: south
-commandGoWest: west
-commandExamine: examine
+name: Haunted's House
+description: Welcome to Haunted's House Muhahahaha
 
-room1Name: Bedroom 2
-room1Description: Welcome to Upstairs Bedroom 1
+gamedictionary:
+  commandGo: &go go
+  commandExamine: &examine examine
 
-room2Name: Upstairs Hallway
-room2Description: Welcome to the Upstairs Hallway
+  g: *go
+  x: *examine
+  n: &north north
+  e: &east east
+  s: &south south
+  w: &west west
 
-room3Name: Bedroom 3
-room3Description: Welcome to the Upstairs Bedroom 2
+  errorNoExit: "There is no direction to the %s.\n"
 
-room4Name: Upstairs Bathroom
-room4Description: Welcome to the Upstairs Bathroom
-
-room5Name: Downstairs Hallway
-room5Description: Welcome
-
-room6Name: Master Bedroom
-room6Description: Welcome
-
-room7Name: Master Bedroom Ensuite
-room7Description: Welcome
-
-room8Name: Living Room
-room8Description: Welcome
-
-room9Name: Dining Room
-room9Description: Welcome
-
-room10Name: Kitchen
-room10Description: Welcome
-
-room11Name: Laundry Room
-room11Description: Welcome
-
-room12Name: Downstairs Bathroom
-room12Description: Welcome
-
-room13Name: Back Bedroom
-room13Description: Welcome
-
-room14Name: Patio
-room14Description: Welcome
-
-errorInvalidDirection: You are directionally challenged!
-errorNoExit: "There is no direction to the %s.\n"
+rooms:
+  -
+    id: 1
+    name: Jazminne's Bedroom
+    description: >
+      This is your bedroom, you glance around in the dark and you are able
+      to recgonise the outlines of the familar objects in your room.
+      Your desk is next to you, your laptop sits closed on top of it.
+      You can see the wardrobe in front of you, it is ajar...
+      Liam always forgets to shut it. Everything appears to be normal
+      except for one thing... Your boyfriend is not here.
+    exits:
+      -
+        roomid: 2
+        direction: *west
+        description: An old wooden door.
+        locked: false
+    items:
+      -
+        name: desk
+        description: This is your desk, its looking a bit old.
+        open: false
+        items:
+          -
+            name: pen
+  -
+    id: 2
+    name: Upstairs Hallway
+  -
+    id: 3
+    name: Martin's Bedroom
+  -
+    id: 4
+    name: Upstairs Bathroom
+  -
+    id: 5
+    name: Downstairs Hallway
+  -
+    id: 6
+    name: Master Bedroom
+  -
+    id: 7
+    name: Master Bedroom Ensuite
+  -
+    id: 8
+    name: Living Room
+  -
+    id: 9
+    name: Dining Room
+  -
+    id: 10
+    name: Kitchen
+  -
+    id: 11
+    name: Laundry Room
+  -
+    id: 12
+    name: Downstairs Bathroom
+  -
+    id: 13
+    name: Cassandra's Bedroom
+  -
+    id: 14
+    name: Patio
