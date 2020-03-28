@@ -18,34 +18,22 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+    "flag"
+
 )
 
 const gameName = "My Game"
 const confDir = "../conf/"
+const langDefault = "default"
 
-func main() {
-	lang := language()
-	gameStrings := gameStrings(lang)
-	game := game(lang)
-	sanityCheck(game)	
-	setInitialState(game, gameStrings)
-	fmt.Println()
-
-	reader := bufio.NewReader(os.Stdin)
-	for {
-		fmt.Println(game.CurrentRoom.Name)
-		fmt.Println()
-		fmt.Println(game.CurrentRoom.Description)
-		fmt.Println(game.CurrentRoom.GetDirections(gameStrings))
-		fmt.Println(game.CurrentRoom.GetItemOptions())
-		input, _ := reader.ReadString('\n')
-		input = strings.TrimSpace(input)
-		fmt.Println()
-		fmt.Println()
-
-		updateState(game, input, gameStrings)
-	}
-	fmt.Println(gameStrings)
+//TODO
+//Log Mode
+//Language
+//Auto Complete Exits
+func commandLineOptions() (string) {
+	lang := flag.String("lang", "en", "Game Language")
+	flag.Parse()    
+   	return *lang
 }
 
 //Valid Game Languages
@@ -53,7 +41,7 @@ func validLanguages() []string {
 	return []string{"en", "es"}
 }
 
-//Returns the Game Language
+//Asks the user to choose a language
 func language() string {
 	validLanguages := validLanguages()
 	reader := bufio.NewReader(os.Stdin)
@@ -66,6 +54,25 @@ func language() string {
 		os.Exit(1)
 	}
 	return lang
+}
+
+//Reads the game yaml file into memory for a given language
+//Error Messages are always in English.
+func game(lang string) *textgame.Game {
+	fileName := confDir + lang + "-game.yaml"
+	yamlFile, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		fmt.Printf("Error reading YAML file: %s\n", err)
+		os.Exit(1)
+	}
+
+	var game textgame.Game
+	err = yaml.Unmarshal(yamlFile, &game)
+	if err != nil {
+		fmt.Printf("Error parsing YAML file: %s\n", err)
+		os.Exit(1)
+	}
+	return &game
 }
 
 //Reads the gameStrings yaml file into memory for a given language
@@ -87,25 +94,6 @@ func gameStrings(lang string) map[string]string {
 	return gameStrings
 }
 
-//Reads the game yam=l file into memory for a given language
-//Error Messages are always in English.
-func game(lang string) *textgame.Game {
-	fileName := confDir + lang + "-game.yaml"
-	yamlFile, err := ioutil.ReadFile(fileName)
-	if err != nil {
-		fmt.Printf("Error reading YAML file: %s\n", err)
-		os.Exit(1)
-	}
-
-	var game textgame.Game
-	err = yaml.Unmarshal(yamlFile, &game)
-	if err != nil {
-		fmt.Printf("Error parsing YAML file: %s\n", err)
-		os.Exit(1)
-	}
-	return &game
-}
-
 //Helper function
 func contains(s []string, e string) bool {
 	for _, a := range s {
@@ -114,6 +102,20 @@ func contains(s []string, e string) bool {
 		}
 	}
 	return false
+}
+
+//Checks the game state for any data quality issues.
+func sanityCheck(game *textgame.Game) {
+	//Check Rooms do not contain items of the same name. Should always be done
+	//Check all the Exits align. May not always be true. e.g Jumping down a cliff is a 1 way exit.
+
+}
+
+//Sets the initial the Game State
+//The first room is treated as the starting room.
+func setInitialState(game *textgame.Game, gameStrings map[string]string){
+	currentRoom := &game.Rooms[0]
+	game.CurrentRoom = currentRoom
 }
 
 //Updates the Game State
@@ -139,15 +141,35 @@ func updateState(game *textgame.Game, input string, gameStrings map[string]strin
 	}
 }
 
-//Sets the initial the Game State
-//The first room is treated as the starting room.
-func setInitialState(game *textgame.Game, gameStrings map[string]string){
-	currentRoom := &game.Rooms[0]
-	game.CurrentRoom = currentRoom
-}
+func main() {
+	lang := commandLineOptions()
+	if lang == langDefault {
+		lang = language()
+	}
 
-//Checks the game state for any data quality issues.
-func sanityCheck(game *textgame.Game) {
-	//Check all the Exits align
-	//Check Rooms do not contain items of the same name
+	game := game(lang)
+	gameStrings := gameStrings(lang)
+	sanityCheck(game)
+	setInitialState(game, gameStrings)
+
+	fmt.Println(game.Name)
+	fmt.Println()
+	fmt.Println(game.Description)
+	fmt.Println()
+
+	reader := bufio.NewReader(os.Stdin)
+	for {
+		fmt.Println(game.CurrentRoom.Name)
+		fmt.Println()
+		fmt.Println(game.CurrentRoom.Description)
+		fmt.Println(game.CurrentRoom.GetDirections(gameStrings))
+		fmt.Println(game.CurrentRoom.GetItemOptions())
+
+		input, _ := reader.ReadString('\n')
+		input = strings.TrimSpace(input)
+		fmt.Println()
+		fmt.Println()
+		updateState(game, input, gameStrings)
+	}
+	fmt.Println(gameStrings)
 }
