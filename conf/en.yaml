@@ -6,17 +6,33 @@ name: Haunted's House
 description: Welcome to Haunted's House Muhahahaha
 
 gamedictionary:
+  #Game Commands
   commandGo: &go go
   commandExamine: &examine examine
+  commandOpen: &open open
+  commandTake: &take take
+  commandUser: &use use
+  commandHelp: &help help
 
+  #Game Command Shortcuts
   g: *go
   x: *examine
+  o: *open
+  t: *take
+  u: *use
+  h: *help
+
   n: &north north
   e: &east east
   s: &south south
   w: &west west
 
-  errorNoExit: "There is no direction to the %s.\n"
+  stringCommand: "Command: "
+
+  #Game strings and errors
+  errorNoExit: "There is no direction: %s\n"
+  errorNoObject: "There is no object named %s in this room or in your inventory.\n"  
+  errorInvalidCommand: "Invalid command: %s\n"
 
 rooms:
   -
@@ -32,6 +48,7 @@ rooms:
     exits:
       -
         roomid: 2
+        name: Wooden Door
         direction: *west
         description: An old wooden door.
         locked: false
@@ -39,10 +56,11 @@ rooms:
       -
         name: desk
         description: This is your desk, its looking a bit old.
-        open: false
+        open: true
         items:
           -
             name: pen
+            description: Liam's favourite Pen.           
   -
     id: 2
     name: Upstairs Hallway

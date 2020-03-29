@@ -15,6 +15,7 @@
 //Update Examine for inventory
 //Learn logging for golang
 
+//Add Open Functionality (Probably Openable bool)
 //Add Take Functionality
 //Add Use Functionality
 //Player help
@@ -95,12 +96,22 @@ func contains(s []string, e string) bool {
 
 // sanityCheck validates the game data for any obvious inconsitencies or errors.
 func sanityCheck(game *textgame.Game) {
-	//Check the entire game does not contain items of the same name. Should always be done
-	//Check Exits point to valid rooms
-	//Check a single room does not have multiple exits with the same 'direction'
-	//check for duplicate roomIds in Exits
-	//Every object must have a non empty description
-	//Check there exists atleast one room with ID=1
+	//Exits
+		//Must have a name
+		//Must have a unique name per Room
+		//Must contain a direction
+		//Must contain a description
+		//Must contain a valid Room ID
+	//Rooms
+		//Must have a unique id
+		//Must have a name
+		//Must have a description
+		//Must not have multiple exits with the same 'direction'
+		//1 Room must have RoomID = 1
+	//Items
+		//Must be unique through the entire game
+		//Must have a name
+		//Must have a description
 }
 
 // setInitialState initalises the game state with information that cannot be provided by the yaml configuration file.
