@@ -4,7 +4,6 @@
 //	-Multi-Language Support
 //	-Multi-Player Support
 //	-Coding Best Practices
-//  -Save/Load Game State
 //
 //Known Weaknesses
 //	-Technical Error messages are always in English
@@ -25,7 +24,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/wilcox-liam/text-game/pkg"
-
+	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -33,18 +32,14 @@ import (
 
 const langDefault = "default"
 const playerNameDefault = "default"
-const gameStateDefault = "no-state"
-const confDir = "../conf/"
-const saveDir = "../saves/"
 
 // TODO(wilcox-liam): Log Mode
 // commandLineOptions parses and returns the options provided.
 func commandLineOptions() (string, string) {
 	lang := flag.String("lang", "en", "Game Language")
 	playerName := flag.String("name", "Jazminne", "Player Name")
-	saveState := flag.String("state", gameStateDefault, "Save State Name")
 	flag.Parse()
-	return *lang, *playerName, *saveState
+	return *lang, *playerName
 }
 
 // TODO(wilcox-liam): check for valid conf files to initialise list?
@@ -86,22 +81,45 @@ func contains(s []string, e string) bool {
 }
 
 func main() {
-	lang, playerName, saveState := commandLineOptions()
-
+	lang, playerName := commandLineOptions()
 	if lang == langDefault {
 		lang = language()
 	}
 
-	var game *textGame.Game
-	if saveState == saveStateDefault {
-		game = textGame.LoadGameState(confDir + lang + ".yaml")
-	} else {
-		game = textGame.LoadGameState(saveDir + saveState + ".yaml")
-	}
+	game := game(lang)
+	setExits(game)
+	sanityCheck(game)
+	setInitialState(game)
 
 	if playerName == playerNameDefault {
 		playerName = player(game)
 		fmt.Println()
 	}
 	game.Player = &textgame.Player{playerName, nil}
+
+	fmt.Println(game.Name)
+	fmt.Println()
+	fmt.Println(game.Description)
+	fmt.Println()
+
+	roomChanged := true
+	reader := bufio.NewReader(os.Stdin)
+	for {
+		//Only display Room information if the room has changed
+		if roomChanged {
+			fmt.Println(game.CurrentRoom.Name)
+			fmt.Println()
+			fmt.Println(game.CurrentRoom.Description)
+		}
+		fmt.Println(game.CurrentRoom.GetDirections())
+		fmt.Println(game.CurrentRoom.GetItemOptions())
+
+		fmt.Println()
+		fmt.Print(game.GameDictionary["stringCommand"])
+		input, _ := reader.ReadString('\n')
+		input = strings.TrimSpace(input)
+		fmt.Println()
+		roomChanged = updateState(game, input)
+		fmt.Println()
+	}
 }

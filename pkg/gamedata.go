@@ -157,15 +157,3 @@ func getItemOptions(ic ItemContainer) string {
 	}
 	return options
 }
-
-func LoadGameState() *game {
-
-}
-
-func InitialiseGameState() *game {
-
-}
-
-func UpdateGameState() {
-	
-}
