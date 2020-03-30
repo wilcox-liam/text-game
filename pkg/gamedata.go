@@ -2,12 +2,22 @@
 // Text Adventure Games.
 package textgame
 
+import (
+	"strings"
+)
+
 type Game struct {
 	Name           string
 	Description    string
+	Player         *Player
 	GameDictionary map[string]string
 	Rooms          *[]Room
 	CurrentRoom    *Room
+}
+
+type Player struct {
+	Name      string
+	Inventory *[]Item
 }
 
 type Room struct {
@@ -31,6 +41,8 @@ type Item struct {
 	Name        string
 	Description string
 	Open        bool
+	Openable    bool
+	OpenString  string
 	Items       *[]Item
 }
 
@@ -48,6 +60,11 @@ func (i Item) GetItems() *[]Item {
 	return i.Items
 }
 
+// GetItems returns a slice of Items in a Player's Inventory.
+func (p Player) GetItems() *[]Item {
+	return p.Inventory
+}
+
 // GetRoomByID returns a Room matching a provided name.
 func (g Game) GetRoomByID(id int) *Room {
 	for _, room := range *g.Rooms {
@@ -58,22 +75,34 @@ func (g Game) GetRoomByID(id int) *Room {
 	return nil
 }
 
-// GetItemByName returns an Exit matching a provided name in a Room.
+// GetExitByName returns an Exit matching a provided name in a Room.
+// Ignores case.
 func (r Room) GetExitByName(name string) *Exit {
 	for _, exit := range *r.Exits {
-		if exit.Name == name {
+		if strings.ToLower(exit.Name) == strings.ToLower(name) {
 			return &exit
 		}
 	}
 	return nil
 }
 
-// GetItemByName returns an Item matching a provided name in a Room.
-func (r Room) GetItemByName(name string) *Item {
-	return getItemByName(name, r)
+// GetExitByDirection returns an Exit matching a provided name in a Room.
+// Ignores case.
+func (r Room) GetExitByDirection(direction string) *Exit {
+	//Possibly not needed if you learn how to use pointers dummy
+	if r.Exits == nil {
+		return nil
+	}
+	for _, exit := range *r.Exits {
+		if strings.ToLower(exit.Direction) == strings.ToLower(direction) {
+			return &exit
+		}
+	}
+	return nil
 }
 
 // getItemByName returns an Item matching a provided name in an ItemContainer.
+// Ignores Case
 func getItemByName(name string, ic ItemContainer) *Item {
 	//Possibly not needed if you learn how to use pointers dummy
 	if ic.GetItems() == nil {
@@ -81,7 +110,7 @@ func getItemByName(name string, ic ItemContainer) *Item {
 	}
 
 	for _, item := range *ic.GetItems() {
-		if item.Name == name {
+		if strings.ToLower(item.Name) == strings.ToLower(name) {
 			return &item
 		}
 		subItem := getItemByName(name, item)
@@ -90,24 +119,6 @@ func getItemByName(name string, ic ItemContainer) *Item {
 		}
 	}
 	return nil
-}
-
-// examine will return the description of an object matching the provided name.
-// Bug(wilcox-liam): Does not yet examine the users inventory.
-func (r Room) Examine(name string) string {
-	if r.Name == name {
-		return r.Description
-	}
-	item := r.GetItemByName(name)
-	if item != nil {
-		return item.Description
-	}
-	exit := r.GetExitByName(name)
-	if exit != nil {
-		return exit.Description
-	}
-
-	return ""
 }
 
 // GetDirections returns a formatted string of all Exits in a Room.
@@ -124,8 +135,17 @@ func (r Room) GetItemOptions() string {
 	return "Objects: " + getItemOptions(r)
 }
 
+// GetItemOptions returns a formatted string of all Items in a Player's Inventory.
+func (p Player) GetItemOptions() string {
+	return "Inventory: " + getItemOptions(p)
+}
+
 // getItemOptions returns a formatted string of all Items in an ItemContainer.
 func getItemOptions(ic ItemContainer) string {
+	//Possibly not needed if you learn how to use pointers dummy
+	if ic.GetItems() == nil {
+		return "[]"
+	}
 	var options string
 	for _, item := range *ic.GetItems() {
 		options += " [" + item.Name
@@ -136,4 +156,16 @@ func getItemOptions(ic ItemContainer) string {
 
 	}
 	return options
+}
+
+func LoadGameState() *game {
+
+}
+
+func InitialiseGameState() *game {
+
+}
+
+func UpdateGameState() {
+	
 }

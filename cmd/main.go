@@ -10,12 +10,9 @@
 
 //TODO
 //Learn how to use pointers and slices you dummy
-//Add a player struct
-//Add Inventory
-//Update Examine for inventory
 //Learn logging for golang
+//Learn how to use errors
 
-//Add Open Functionality (Probably Openable bool)
 //Add Take Functionality
 //Add Use Functionality
 //Player help
@@ -35,16 +32,18 @@ import (
 
 const confDir = "../conf/"
 const langDefault = "default"
+const playerNameDefault = "default"
 
-//TODO: Log Mode
+// TODO(wilcox-liam): Log Mode
 // commandLineOptions parses and returns the options provided.
-func commandLineOptions() string {
+func commandLineOptions() (string, string) {
 	lang := flag.String("lang", "en", "Game Language")
+	playerName := flag.String("name", "Jazminne", "Player Name")
 	flag.Parse()
-	return *lang
+	return *lang, *playerName
 }
 
-// TODO check for valid conf files to initialise list?
+// TODO(wilcox-liam): check for valid conf files to initialise list?
 // validLanguages returns a slice of languages the game supports.
 func validLanguages() []string {
 	return []string{"en", "es"}
@@ -54,14 +53,14 @@ func validLanguages() []string {
 func language() string {
 	validLanguages := validLanguages()
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Println("Language?", validLanguages)
+	fmt.Print("Language? ", validLanguages, ": ")
 	lang, _ := reader.ReadString('\n')
 	lang = strings.TrimSpace(lang)
-
 	if !contains(validLanguages, lang) {
 		fmt.Println("Unknown Language")
 		os.Exit(1)
 	}
+	fmt.Println()
 	return lang
 }
 
@@ -84,6 +83,13 @@ func game(lang string) *textgame.Game {
 	return &game
 }
 
+func player(game *textgame.Game) string {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print(game.GameDictionary["stringAskName"])
+	name, _ := reader.ReadString('\n')
+	return name
+}
+
 // contains is a helper function to return if a string appears in a slice.
 func contains(s []string, e string) bool {
 	for _, a := range s {
@@ -97,21 +103,21 @@ func contains(s []string, e string) bool {
 // sanityCheck validates the game data for any obvious inconsitencies or errors.
 func sanityCheck(game *textgame.Game) {
 	//Exits
-		//Must have a name
-		//Must have a unique name per Room
-		//Must contain a direction
-		//Must contain a description
-		//Must contain a valid Room ID
+	//Must have a name
+	//Must have a unique name per Room
+	//Must contain a direction
+	//Must contain a description
+	//Must contain a valid Room ID
 	//Rooms
-		//Must have a unique id
-		//Must have a name
-		//Must have a description
-		//Must not have multiple exits with the same 'direction'
-		//1 Room must have RoomID = 1
+	//Must have a unique id
+	//Must have a name
+	//Must have a description
+	//Must not have multiple exits with the same 'direction'
+	//1 Room must have RoomID = 1
 	//Items
-		//Must be unique through the entire game
-		//Must have a name
-		//Must have a description
+	//Must be unique through the entire game
+	//Must have a name
+	//Must have a description
 }
 
 // setInitialState initalises the game state with information that cannot be provided by the yaml configuration file.
@@ -152,10 +158,17 @@ func expandCommand(game *textgame.Game, words []string) []string {
 func updateState(game *textgame.Game, input string) bool {
 	words := strings.Split(input, " ")
 	words = expandCommand(game, words)
+	//Go Command
 	if strings.ToLower(words[0]) == strings.ToLower(game.GameDictionary["commandGo"]) && len(words) == 2 {
 		return updateStateGo(game, words[1])
+		//Examine Command
 	} else if strings.ToLower(words[0]) == strings.ToLower(game.GameDictionary["commandExamine"]) && len(words) == 2 {
 		examine(game, words[1])
+		//Inventory Command
+	} else if strings.ToLower(words[0]) == strings.ToLower(game.GameDictionary["commandInventory"]) && len(words) == 1 {
+		fmt.Println(game.Player.GetItemOptions())
+	} else if strings.ToLower(words[0]) == strings.ToLower(game.GameDictionary["commandOpen"]) && len(words) == 2 {
+		open(game, words[1])
 	} else {
 		fmt.Printf(game.GameDictionary["errorInvalidCommand"], input)
 	}
@@ -163,6 +176,7 @@ func updateState(game *textgame.Game, input string) bool {
 }
 
 // updateStateGo handles user input commandGo.
+// TODO: Move to the game package
 func updateStateGo(game *textgame.Game, where string) bool {
 	for _, exit := range *game.CurrentRoom.Exits {
 		if strings.ToLower(exit.Direction) == strings.ToLower(where) {
@@ -176,16 +190,36 @@ func updateStateGo(game *textgame.Game, where string) bool {
 
 // examine handles the user input commandExamine.
 func examine(game *textgame.Game, name string) {
-	desc := game.CurrentRoom.Examine(name)
+	desc := game.Examine(name)
 	if desc == "" {
-		fmt.Printf(game.GameDictionary["errorNoObject"], name)
+		fmt.Printf(game.GameDictionary["errorNoObject"], name, game.CurrentRoom.Name)
 	} else {
 		fmt.Println(desc)
 	}
 }
 
+// open handles the user input commandOpen
+// BUG(wilcox-liam) pointer problem here too
+func open(game *textgame.Game, name string) {
+	item, actionTaken := game.Open(name)
+
+	if item == nil {
+		fmt.Printf(game.GameDictionary["errorNoObject"], name, game.CurrentRoom.Name)
+		return
+	}
+	if item.Openable == false {
+		fmt.Println(game.GameDictionary["errorItemNotOpenable"], item.Name)
+		return
+	}
+	if actionTaken == false {
+		fmt.Println(game.GameDictionary["errorItemOpen"], item.Name)
+	} else {
+		fmt.Println(item.OpenString)
+	}
+}
+
 func main() {
-	lang := commandLineOptions()
+	lang, playerName := commandLineOptions()
 	if lang == langDefault {
 		lang = language()
 	}
@@ -195,12 +229,18 @@ func main() {
 	sanityCheck(game)
 	setInitialState(game)
 
+	if playerName == playerNameDefault {
+		playerName = player(game)
+		fmt.Println()
+	}
+	game.Player = &textgame.Player{playerName, nil}
+
 	fmt.Println(game.Name)
 	fmt.Println()
 	fmt.Println(game.Description)
 	fmt.Println()
 
-	var roomChanged = true
+	roomChanged := true
 	reader := bufio.NewReader(os.Stdin)
 	for {
 		//Only display Room information if the room has changed
@@ -208,9 +248,9 @@ func main() {
 			fmt.Println(game.CurrentRoom.Name)
 			fmt.Println()
 			fmt.Println(game.CurrentRoom.Description)
-			fmt.Println(game.CurrentRoom.GetDirections())
-			fmt.Println(game.CurrentRoom.GetItemOptions())
 		}
+		fmt.Println(game.CurrentRoom.GetDirections())
+		fmt.Println(game.CurrentRoom.GetItemOptions())
 
 		fmt.Println()
 		fmt.Print(game.GameDictionary["stringCommand"])
@@ -218,5 +258,6 @@ func main() {
 		input = strings.TrimSpace(input)
 		fmt.Println()
 		roomChanged = updateState(game, input)
+		fmt.Println()
 	}
 }

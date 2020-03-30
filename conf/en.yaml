@@ -12,6 +12,7 @@ gamedictionary:
   commandOpen: &open open
   commandTake: &take take
   commandUser: &use use
+  commandInventory: &inventory inventory
   commandHelp: &help help
 
   #Game Command Shortcuts
@@ -20,6 +21,7 @@ gamedictionary:
   o: *open
   t: *take
   u: *use
+  i: *inventory
   h: *help
 
   n: &north north
@@ -28,10 +30,13 @@ gamedictionary:
   w: &west west
 
   stringCommand: "Command: "
+  stringAskName: "What is your name? "
 
   #Game strings and errors
+  errorItemOpen: "Item %s is already open.\n"
+  errorItemNotOpenable: "Item %s cannot be opened.\n"
   errorNoExit: "There is no direction: %s\n"
-  errorNoObject: "There is no object named %s in this room or in your inventory.\n"  
+  errorNoObject: "There is no object named %s in %s or in your inventory.\n"  
   errorInvalidCommand: "Invalid command: %s\n"
 
 rooms:
@@ -48,7 +53,7 @@ rooms:
     exits:
       -
         roomid: 2
-        name: Wooden Door
+        name: Door
         direction: *west
         description: An old wooden door.
         locked: false
@@ -56,7 +61,9 @@ rooms:
       -
         name: desk
         description: This is your desk, its looking a bit old.
-        open: true
+        open: false
+        openable: true
+        openstring: You slide open the drawer and look inside.
         items:
           -
             name: pen
