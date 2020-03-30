@@ -1,6 +1,7 @@
 package textgame
 
 import (
+	"errors"
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -75,15 +76,14 @@ func (g Game) setExits() {
 
 // Does marshal copy case or lower case it?
 // updateState updates the game state with user provided input.
-func (g Game) UpdateGameState(input string) bool {
+func (g Game) UpdateGameState(input string) error {
 	words := strings.Split(input, " ")
 	words = g.expandCommand(words)
 
 	var command string
 	var object string
 	if len(words) == 0 {
-		fmt.Printf(g.GameDictionary["errorInvalidCommand"], input)
-		return false
+		return errors.New(fmt.Sprintf(g.GameDictionary["errorInvalidCommand"], input))
 	}
 	command = strings.ToLower(words[0])
 	if len(words) > 1 {
@@ -93,13 +93,13 @@ func (g Game) UpdateGameState(input string) bool {
 	if command == strings.ToLower(g.GameDictionary["commandGo"]) {
 		return g.Go(object)
 	} else if command == strings.ToLower(g.GameDictionary["commandExamine"]) {
-		g.Examine(object)
+		return g.Examine(object)
 	} else if command == strings.ToLower(g.GameDictionary["commandInventory"]) {
 		fmt.Println(g.Player.GetItemOptions())
+		return nil
 	} else if command == strings.ToLower(g.GameDictionary["commandOpen"]) {
-		g.Open(object)
+		return g.Open(object)
 	} else {
-		fmt.Printf(g.GameDictionary["errorInvalidCommand"], input)
+		return errors.New(fmt.Sprintf(g.GameDictionary["errorInvalidCommand"], input))
 	}
-	return false
 }

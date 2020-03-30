@@ -18,6 +18,10 @@
 //Add Use Functionality
 //Player help
 
+//BRANCH TODO
+// updateGameState requires error checking
+// check usage of ToLower around the place
+
 package main
 
 import (
@@ -25,25 +29,24 @@ import (
 	"flag"
 	"fmt"
 	"github.com/wilcox-liam/text-game/pkg"
-
-	"io/ioutil"
 	"os"
 	"strings"
 )
 
 const langDefault = "default"
 const playerNameDefault = "default"
-const gameStateDefault = "no-state"
+const saveStateDefault = "no-state"
 const confDir = "../conf/"
 const saveDir = "../saves/"
 
 // TODO(wilcox-liam): Log Mode
 // commandLineOptions parses and returns the options provided.
-func commandLineOptions() (string, string) {
+func commandLineOptions() (string, string, string) {
 	lang := flag.String("lang", "en", "Game Language")
 	playerName := flag.String("name", "Jazminne", "Player Name")
-	saveState := flag.String("state", gameStateDefault, "Save State Name")
+	saveState := flag.String("state", saveStateDefault, "Save State Name")
 	flag.Parse()
+	validateLanguage(*lang)
 	return *lang, *playerName, *saveState
 }
 
@@ -53,6 +56,14 @@ func validLanguages() []string {
 	return []string{"en", "es"}
 }
 
+// validateLanguage checks if a provided language is valid. If not the game exits.
+func validateLanguage(lang string) {
+	if !contains(validLanguages(), lang) {
+		fmt.Println("Unknown Language")
+		os.Exit(1)
+	}
+}
+
 // languages presents the games valid languages to a user and returns the users choice.
 func language() string {
 	validLanguages := validLanguages()
@@ -60,14 +71,12 @@ func language() string {
 	fmt.Print("Language? ", validLanguages, ": ")
 	lang, _ := reader.ReadString('\n')
 	lang = strings.TrimSpace(lang)
-	if !contains(validLanguages, lang) {
-		fmt.Println("Unknown Language")
-		os.Exit(1)
-	}
+	validateLanguage(lang)
 	fmt.Println()
 	return lang
 }
 
+// player asks the user to enter a player name
 func player(game *textgame.Game) string {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print(game.GameDictionary["stringAskName"])
@@ -92,11 +101,11 @@ func main() {
 		lang = language()
 	}
 
-	var game *textGame.Game
+	var game *textgame.Game
 	if saveState == saveStateDefault {
-		game = textGame.LoadGameState(confDir + lang + ".yaml")
+		game = textgame.LoadGameState(confDir + lang + ".yaml")
 	} else {
-		game = textGame.LoadGameState(saveDir + saveState + ".yaml")
+		game = textgame.LoadGameState(saveDir + saveState + ".yaml")
 	}
 
 	if playerName == playerNameDefault {
@@ -104,4 +113,6 @@ func main() {
 		fmt.Println()
 	}
 	game.Player = &textgame.Player{playerName, nil}
+
+	//PlayGame
 }
