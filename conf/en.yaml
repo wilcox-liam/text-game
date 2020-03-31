@@ -35,7 +35,7 @@ gamedictionary:
   #Game strings and errors
   errorItemOpen: "Item %s is already open.\n"
   errorItemNotOpenable: "Item %s cannot be opened.\n"
-  errorNoExit: "There is no direction: %s\n"
+  errorNoExit: "%s has no direction: %s\n"
   errorNoObject: "There is no object named %s in %s or in your inventory.\n"  
   errorInvalidCommand: "Invalid command: %s\n"
 

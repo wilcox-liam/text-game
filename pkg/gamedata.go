@@ -2,6 +2,8 @@
 // Text Adventure Games.
 package textgame
 
+// It is idiomatic to use a pointer receiver for a method that modifies a slice
+
 import (
 	"strings"
 )
@@ -11,21 +13,21 @@ type Game struct {
 	Description    string
 	Player         *Player
 	GameDictionary map[string]string
-	Rooms          *[]Room
+	Rooms          []Room
 	CurrentRoom    *Room
 }
 
 type Player struct {
 	Name      string
-	Inventory *[]Item
+	Inventory []Item
 }
 
 type Room struct {
 	ID          int
 	Name        string
 	Description string
-	Exits       *[]Exit
-	Items       *[]Item
+	Exits       []Exit
+	Items       []Item
 }
 
 type Exit struct {
@@ -43,33 +45,33 @@ type Item struct {
 	Open        bool
 	Openable    bool
 	OpenString  string
-	Items       *[]Item
+	Items       []Item
 }
 
 type ItemContainer interface {
-	GetItems() *[]Item
+	GetItems() []Item
 }
 
 // GetItems returns a slice of Items in a Room.
-func (r Room) GetItems() *[]Item {
+func (r Room) GetItems() []Item {
 	return r.Items
 }
 
 // GetItems returns a slice of Items in an Item.
-func (i Item) GetItems() *[]Item {
+func (i Item) GetItems() []Item {
 	return i.Items
 }
 
 // GetItems returns a slice of Items in a Player's Inventory.
-func (p Player) GetItems() *[]Item {
+func (p Player) GetItems() []Item {
 	return p.Inventory
 }
 
 // GetRoomByID returns a Room matching a provided name.
 func (g Game) GetRoomByID(id int) *Room {
-	for _, room := range *g.Rooms {
+	for index, room := range g.Rooms {
 		if room.ID == id {
-			return &room
+			return &g.Rooms[index]
 		}
 	}
 	return nil
@@ -78,9 +80,9 @@ func (g Game) GetRoomByID(id int) *Room {
 // GetExitByName returns an Exit matching a provided name in a Room.
 // Ignores case.
 func (r Room) GetExitByName(name string) *Exit {
-	for _, exit := range *r.Exits {
+	for index, exit := range r.Exits {
 		if strings.ToLower(exit.Name) == strings.ToLower(name) {
-			return &exit
+			return &r.Exits[index]
 		}
 	}
 	return nil
@@ -89,34 +91,30 @@ func (r Room) GetExitByName(name string) *Exit {
 // GetExitByDirection returns an Exit matching a provided name in a Room.
 // Ignores case.
 func (r Room) GetExitByDirection(direction string) *Exit {
-	//Possibly not needed if you learn how to use pointers dummy
-	if r.Exits == nil {
-		return nil
-	}
-	for _, exit := range *r.Exits {
+	for index, exit := range r.Exits {
 		if strings.ToLower(exit.Direction) == strings.ToLower(direction) {
-			return &exit
+			return &r.Exits[index]
 		}
 	}
 	return nil
 }
 
 // getItemByName returns an Item matching a provided name in an ItemContainer.
-// Ignores Case
+// Only returns an item if it is visible to the player. i.e not inside an unopened container.
+// Ignores Case.
 func getItemByName(name string, ic ItemContainer) *Item {
-	//Possibly not needed if you learn how to use pointers dummy
-	if ic.GetItems() == nil {
-		return nil
-	}
-
-	for _, item := range *ic.GetItems() {
+	items := ic.GetItems()
+	for index, item := range items {
 		if strings.ToLower(item.Name) == strings.ToLower(name) {
-			return &item
+			return &items[index]
 		}
-		subItem := getItemByName(name, item)
-		if subItem != nil {
-			return subItem
+		if item.Open {
+			subItem := getItemByName(name, item)
+			if subItem != nil {
+				return subItem
+			}
 		}
+
 	}
 	return nil
 }
@@ -124,7 +122,7 @@ func getItemByName(name string, ic ItemContainer) *Item {
 // GetDirections returns a formatted string of all Exits in a Room.
 func (r Room) GetDirections() string {
 	directions := "Directions: "
-	for _, exit := range *r.Exits {
+	for _, exit := range r.Exits {
 		directions += "[" + exit.Direction + "]"
 	}
 	return directions
@@ -142,12 +140,8 @@ func (p Player) GetItemOptions() string {
 
 // getItemOptions returns a formatted string of all Items in an ItemContainer.
 func getItemOptions(ic ItemContainer) string {
-	//Possibly not needed if you learn how to use pointers dummy
-	if ic.GetItems() == nil {
-		return "[]"
-	}
 	var options string
-	for _, item := range *ic.GetItems() {
+	for _, item := range ic.GetItems() {
 		options += " [" + item.Name
 		if item.Open {
 			options += getItemOptions(item)

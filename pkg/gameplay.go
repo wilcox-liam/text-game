@@ -3,18 +3,17 @@ package textgame
 import (
 	"errors"
 	"fmt"
-	"strings"
 )
 
 // Go handles user input commandGo and will set CurrentRoom to the new room.
-func (g Game) Go(where string) error {
-	for _, exit := range *g.CurrentRoom.Exits {
-		if strings.ToLower(exit.Direction) == strings.ToLower(where) {
-			g.CurrentRoom = exit.Room
-			return nil
-		}
+func (g Game) Go(where string) (bool, error) {
+	exit := g.CurrentRoom.GetExitByDirection(where)
+	if exit == nil {
+		return false, errors.New(fmt.Sprintf(g.GameDictionary["errorNoExit"], g.CurrentRoom.Name, where))
+	} else {
+		g.CurrentRoom = exit.Room
 	}
-	return errors.New(fmt.Sprintf(g.GameDictionary["errorNoExit"], where))
+	return true, nil
 }
 
 // Examine will return the description of an object matching the
@@ -80,17 +79,4 @@ func (g Game) Take(name string) {
 
 func (g Game) Use(name string, on string) {
 
-}
-
-// expandCommand takes a user entered shortcut and expands it into the full game command
-// using the Game Dictionary provided in the yaml configuration.
-func (g Game) expandCommand(words []string) []string {
-	for i, word := range words {
-		word = strings.ToLower(word)
-		lookup := strings.ToLower(g.GameDictionary[word])
-		if lookup != "" {
-			words[i] = lookup
-		}
-	}
-	return words
 }

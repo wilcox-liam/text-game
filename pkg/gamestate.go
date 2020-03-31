@@ -1,6 +1,7 @@
 package textgame
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"gopkg.in/yaml.v2"
@@ -24,6 +25,8 @@ func LoadGameState(fileName string) *Game {
 		fmt.Printf("Error parsing YAML file: %s\n", err)
 		os.Exit(1)
 	}
+	game.sanityCheck()
+	game.initialiseGameState()
 	return &game
 }
 
@@ -54,18 +57,20 @@ func (g Game) sanityCheck() {
 
 // setInitialState initalises the game state with information that cannot be provided by the yaml configuration file.
 // The game room with ID 1 is set as the Room the Player begins the game in.
-func (g Game) InitialiseGameState() {
+func (g *Game) initialiseGameState() {
 	g.CurrentRoom = g.GetRoomByID(1)
 	g.setExits()
 }
 
 // setExits converts all RoomID's provided by the yaml configuration into a pointer to that room.
 // Bug(wilcox-liam) The data is not persisting in the game state. I don't understand pointers.
+
+//Modifying the room slice
 func (g Game) setExits() {
-	for _, room := range *g.Rooms {
-		for _, exit := range *room.Exits {
-			exit.Room = g.GetRoomByID(exit.RoomID)
-			if exit.Room == nil {
+	for i, room := range g.Rooms {
+		for j, exit := range room.Exits {
+			g.Rooms[i].Exits[j].Room = g.GetRoomByID(exit.RoomID)
+			if g.Rooms[i].Exits[j].Room == nil {
 				fmt.Println("Invalid Room ID", exit.RoomID, "in exit", room.Name)
 				os.Exit(1)
 			}
@@ -74,16 +79,31 @@ func (g Game) setExits() {
 	}
 }
 
+// expandCommand takes a user entered shortcut and expands it into the full game command
+// using the Game Dictionary provided in the yaml configuration.
+func (g Game) expandShortcut(words []string) []string {
+	for i, word := range words {
+		word = strings.ToLower(word)
+		lookup := strings.ToLower(g.GameDictionary[word])
+		if lookup != "" {
+			words[i] = lookup
+		}
+	}
+	return words
+}
+
 // Does marshal copy case or lower case it?
 // updateState updates the game state with user provided input.
-func (g Game) UpdateGameState(input string) error {
+// returns true if the go command executed sucessfully.
+// Bug(wilcox-liam): Is the bool necessary or should I check the error type instead?
+func (g Game) UpdateGameState(input string) (bool, error) {
 	words := strings.Split(input, " ")
-	words = g.expandCommand(words)
+	words = g.expandShortcut(words)
 
 	var command string
 	var object string
 	if len(words) == 0 {
-		return errors.New(fmt.Sprintf(g.GameDictionary["errorInvalidCommand"], input))
+		return false, errors.New(fmt.Sprintf(g.GameDictionary["errorInvalidCommand"], input))
 	}
 	command = strings.ToLower(words[0])
 	if len(words) > 1 {
@@ -93,13 +113,47 @@ func (g Game) UpdateGameState(input string) error {
 	if command == strings.ToLower(g.GameDictionary["commandGo"]) {
 		return g.Go(object)
 	} else if command == strings.ToLower(g.GameDictionary["commandExamine"]) {
-		return g.Examine(object)
+		return false, g.Examine(object)
 	} else if command == strings.ToLower(g.GameDictionary["commandInventory"]) {
 		fmt.Println(g.Player.GetItemOptions())
-		return nil
+		return false, nil
 	} else if command == strings.ToLower(g.GameDictionary["commandOpen"]) {
-		return g.Open(object)
+		return false, g.Open(object)
 	} else {
-		return errors.New(fmt.Sprintf(g.GameDictionary["errorInvalidCommand"], input))
+		return false, errors.New(fmt.Sprintf(g.GameDictionary["errorInvalidCommand"], input))
+	}
+}
+
+// PlayGame contains the game logic and game loop for playing the textgame.
+func (g Game) PlayGame() {
+	fmt.Println(g.Name)
+	fmt.Println()
+	fmt.Println(g.Description)
+	fmt.Println()
+
+	var roomChanged = false
+	var err error
+	reader := bufio.NewReader(os.Stdin)
+	for {
+		//Only display Room information if the room has changed
+		if roomChanged {
+			fmt.Println(g.CurrentRoom.Name)
+			fmt.Println()
+			fmt.Println(g.CurrentRoom.Description)
+		}
+
+		fmt.Println(g.CurrentRoom.GetDirections())
+		fmt.Println(g.CurrentRoom.GetItemOptions())
+
+		fmt.Println()
+		fmt.Print(g.GameDictionary["stringCommand"])
+		input, _ := reader.ReadString('\n')
+		input = strings.TrimSpace(input)
+		fmt.Println()
+		roomChanged, err = g.UpdateGameState(input)
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println()
 	}
 }

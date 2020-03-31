@@ -12,15 +12,10 @@
 //TODO
 //Learn how to use pointers and slices you dummy
 //Learn logging for golang
-//Learn how to use errors
 
 //Add Take Functionality
 //Add Use Functionality
 //Player help
-
-//BRANCH TODO
-// updateGameState requires error checking
-// check usage of ToLower around the place
 
 package main
 
@@ -114,5 +109,5 @@ func main() {
 	}
 	game.Player = &textgame.Player{playerName, nil}
 
-	//PlayGame
+	game.PlayGame()
 }
