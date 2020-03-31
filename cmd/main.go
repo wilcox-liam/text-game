@@ -10,11 +10,11 @@
 //	-Technical Error messages are always in English
 
 //TODO
-//Learn how to use pointers and slices you dummy
 //Learn logging for golang
 
 //Add Take Functionality
 //Add Use Functionality
+//Add Close Functionality?
 //Player help
 
 package main

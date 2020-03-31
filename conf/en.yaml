@@ -33,11 +33,11 @@ gamedictionary:
   stringAskName: "What is your name? "
 
   #Game strings and errors
-  errorItemOpen: "Item %s is already open.\n"
-  errorItemNotOpenable: "Item %s cannot be opened.\n"
-  errorNoExit: "%s has no direction: %s\n"
-  errorNoObject: "There is no object named %s in %s or in your inventory.\n"  
-  errorInvalidCommand: "Invalid command: %s\n"
+  errorItemOpen: "Item %s is already open."
+  errorItemNotOpenable: "Item %s cannot be opened."
+  errorNoExit: "%s has no direction: %s"
+  errorNoObject: "There is no object named %s in %s or in your inventory."  
+  errorInvalidCommand: "Invalid command: %s"
 
 rooms:
   -

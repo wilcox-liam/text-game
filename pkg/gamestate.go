@@ -11,7 +11,6 @@ import (
 )
 
 // Bug(wilcox-liam): Error messages here are not multi-lingual.
-// Bug(wilcox-liam): Call sanityCheck and Initailise from here?
 func LoadGameState(fileName string) *Game {
 	yamlFile, err := ioutil.ReadFile(fileName)
 	if err != nil {
@@ -36,7 +35,7 @@ func SaveGameState(g Game, stateName string) {
 }
 
 // sanityCheck validates the game data for any obvious inconsitencies or errors.
-func (g Game) sanityCheck() {
+func (g *Game) sanityCheck() {
 	//Exits
 	//Must have a name
 	//Must have a unique name per Room
@@ -63,10 +62,7 @@ func (g *Game) initialiseGameState() {
 }
 
 // setExits converts all RoomID's provided by the yaml configuration into a pointer to that room.
-// Bug(wilcox-liam) The data is not persisting in the game state. I don't understand pointers.
-
-//Modifying the room slice
-func (g Game) setExits() {
+func (g *Game) setExits() {
 	for i, room := range g.Rooms {
 		for j, exit := range room.Exits {
 			g.Rooms[i].Exits[j].Room = g.GetRoomByID(exit.RoomID)
@@ -81,7 +77,7 @@ func (g Game) setExits() {
 
 // expandCommand takes a user entered shortcut and expands it into the full game command
 // using the Game Dictionary provided in the yaml configuration.
-func (g Game) expandShortcut(words []string) []string {
+func (g *Game) expandShortcut(words []string) []string {
 	for i, word := range words {
 		word = strings.ToLower(word)
 		lookup := strings.ToLower(g.GameDictionary[word])
@@ -96,7 +92,7 @@ func (g Game) expandShortcut(words []string) []string {
 // updateState updates the game state with user provided input.
 // returns true if the go command executed sucessfully.
 // Bug(wilcox-liam): Is the bool necessary or should I check the error type instead?
-func (g Game) UpdateGameState(input string) (bool, error) {
+func (g *Game) UpdateGameState(input string) (bool, error) {
 	words := strings.Split(input, " ")
 	words = g.expandShortcut(words)
 
@@ -125,7 +121,7 @@ func (g Game) UpdateGameState(input string) (bool, error) {
 }
 
 // PlayGame contains the game logic and game loop for playing the textgame.
-func (g Game) PlayGame() {
+func (g *Game) PlayGame() {
 	fmt.Println(g.Name)
 	fmt.Println()
 	fmt.Println(g.Description)

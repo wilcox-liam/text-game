@@ -48,6 +48,7 @@ type Item struct {
 	Items       []Item
 }
 
+//Bug(wilcox-liam): Should maybe be pointer receivers
 type ItemContainer interface {
 	GetItems() []Item
 }
@@ -68,7 +69,7 @@ func (p Player) GetItems() []Item {
 }
 
 // GetRoomByID returns a Room matching a provided name.
-func (g Game) GetRoomByID(id int) *Room {
+func (g *Game) GetRoomByID(id int) *Room {
 	for index, room := range g.Rooms {
 		if room.ID == id {
 			return &g.Rooms[index]
@@ -79,7 +80,7 @@ func (g Game) GetRoomByID(id int) *Room {
 
 // GetExitByName returns an Exit matching a provided name in a Room.
 // Ignores case.
-func (r Room) GetExitByName(name string) *Exit {
+func (r *Room) GetExitByName(name string) *Exit {
 	for index, exit := range r.Exits {
 		if strings.ToLower(exit.Name) == strings.ToLower(name) {
 			return &r.Exits[index]
@@ -90,7 +91,7 @@ func (r Room) GetExitByName(name string) *Exit {
 
 // GetExitByDirection returns an Exit matching a provided name in a Room.
 // Ignores case.
-func (r Room) GetExitByDirection(direction string) *Exit {
+func (r *Room) GetExitByDirection(direction string) *Exit {
 	for index, exit := range r.Exits {
 		if strings.ToLower(exit.Direction) == strings.ToLower(direction) {
 			return &r.Exits[index]
@@ -120,7 +121,7 @@ func getItemByName(name string, ic ItemContainer) *Item {
 }
 
 // GetDirections returns a formatted string of all Exits in a Room.
-func (r Room) GetDirections() string {
+func (r *Room) GetDirections() string {
 	directions := "Directions: "
 	for _, exit := range r.Exits {
 		directions += "[" + exit.Direction + "]"
@@ -129,12 +130,12 @@ func (r Room) GetDirections() string {
 }
 
 // GetItemOptions returns a formatted string of all Items in a Room.
-func (r Room) GetItemOptions() string {
+func (r *Room) GetItemOptions() string {
 	return "Objects: " + getItemOptions(r)
 }
 
 // GetItemOptions returns a formatted string of all Items in a Player's Inventory.
-func (p Player) GetItemOptions() string {
+func (p *Player) GetItemOptions() string {
 	return "Inventory: " + getItemOptions(p)
 }
 
