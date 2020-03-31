@@ -11,9 +11,10 @@ gamedictionary:
   commandExamine: &examine examine
   commandOpen: &open open
   commandTake: &take take
-  commandUser: &use use
+  commandUse: &use use
   commandInventory: &inventory inventory
   commandHelp: &help help
+  commandRefresh: &refresh refresh
 
   #Game Command Shortcuts
   g: *go
@@ -23,6 +24,7 @@ gamedictionary:
   u: *use
   i: *inventory
   h: *help
+  r: *refresh
 
   n: &north north
   e: &east east
@@ -31,11 +33,15 @@ gamedictionary:
 
   stringCommand: "Command: "
   stringAskName: "What is your name? "
+  stringRefreshing: "Refreshing..."
+  stringItemAdded: "Item %s added to you inventory."
 
   #Game strings and errors
   errorItemOpen: "Item %s is already open."
   errorItemNotOpenable: "Item %s cannot be opened."
+  errorItemNotTakeable: "I don't think I should take that."
   errorNoExit: "%s has no direction: %s"
+  errorNoItem: "There is no Item named %s in %s."    
   errorNoObject: "There is no object named %s in %s or in your inventory."  
   errorInvalidCommand: "Invalid command: %s"
 
@@ -53,7 +59,7 @@ rooms:
     exits:
       -
         roomid: 2
-        name: Door
+        name: old door
         direction: *west
         description: An old wooden door.
         locked: false
@@ -63,10 +69,12 @@ rooms:
         description: This is your desk, its looking a bit old.
         open: false
         openable: true
-        openstring: You slide open the drawer and look inside.
+        takeable: true
+        openstring: You slide open the drawer and look inside to see a [pen]
         items:
           -
             name: pen
+            takeable: true
             description: Liam's favourite Pen.           
   -
     id: 2

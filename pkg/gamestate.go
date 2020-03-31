@@ -110,11 +110,19 @@ func (g *Game) UpdateGameState(input string) (bool, error) {
 		return g.Go(object)
 	} else if command == strings.ToLower(g.GameDictionary["commandExamine"]) {
 		return false, g.Examine(object)
+	} else if command == strings.ToLower(g.GameDictionary["commandRefresh"]) {
+		fmt.Println(g.GameDictionary["stringRefreshing"])
+		return true, nil
 	} else if command == strings.ToLower(g.GameDictionary["commandInventory"]) {
 		fmt.Println(g.Player.GetItemOptions())
 		return false, nil
+	} else if command == strings.ToLower(g.GameDictionary["commandHelp"]) {
+		fmt.Println(g.Help())
+		return false, nil
 	} else if command == strings.ToLower(g.GameDictionary["commandOpen"]) {
 		return false, g.Open(object)
+	} else if command == strings.ToLower(g.GameDictionary["commandTake"]) {
+		return false, g.Take(object)		
 	} else {
 		return false, errors.New(fmt.Sprintf(g.GameDictionary["errorInvalidCommand"], input))
 	}
@@ -126,8 +134,10 @@ func (g *Game) PlayGame() {
 	fmt.Println()
 	fmt.Println(g.Description)
 	fmt.Println()
+	fmt.Println(g.Help())
+	fmt.Println()
 
-	var roomChanged = false
+	var roomChanged = true
 	var err error
 	reader := bufio.NewReader(os.Stdin)
 	for {
@@ -136,12 +146,11 @@ func (g *Game) PlayGame() {
 			fmt.Println(g.CurrentRoom.Name)
 			fmt.Println()
 			fmt.Println(g.CurrentRoom.Description)
-		}
+			fmt.Println(g.CurrentRoom.GetDirections())
+			fmt.Println(g.CurrentRoom.GetObjectOptions())			
+			fmt.Println()
+		}		
 
-		fmt.Println(g.CurrentRoom.GetDirections())
-		fmt.Println(g.CurrentRoom.GetItemOptions())
-
-		fmt.Println()
 		fmt.Print(g.GameDictionary["stringCommand"])
 		input, _ := reader.ReadString('\n')
 		input = strings.TrimSpace(input)

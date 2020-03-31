@@ -22,6 +22,7 @@ type Player struct {
 	Inventory []Item
 }
 
+//Examinable
 type Room struct {
 	ID          int
 	Name        string
@@ -30,6 +31,8 @@ type Room struct {
 	Items       []Item
 }
 
+//Examinable
+//on Useable
 type Exit struct {
 	RoomID      int
 	Name        string
@@ -39,11 +42,16 @@ type Exit struct {
 	Room        *Room
 }
 
+//Examinable
+//Openable
+//Takeable
+//Useable on
 type Item struct {
 	Name        string
 	Description string
 	Open        bool
 	Openable    bool
+	Takeable    bool
 	OpenString  string
 	Items       []Item
 }
@@ -120,6 +128,11 @@ func getItemByName(name string, ic ItemContainer) *Item {
 	return nil
 }
 
+//GetItemByName returns an Item in a room
+func (r *Room) GetItemByName(name string) *Item {
+	return getItemByName(name, r)
+}
+
 // GetDirections returns a formatted string of all Exits in a Room.
 func (r *Room) GetDirections() string {
 	directions := "Directions: "
@@ -129,14 +142,27 @@ func (r *Room) GetDirections() string {
 	return directions
 }
 
-// GetItemOptions returns a formatted string of all Items in a Room.
-func (r *Room) GetItemOptions() string {
-	return "Objects: " + getItemOptions(r)
+// GetDirections returns a formatted string of all Exits in a Room.
+func (r *Room) GetExitOptions() string {
+	var exitNames string
+	for _, exit := range r.Exits {
+		exitNames += "[" + exit.Name + "]"
+	}
+	return exitNames
+}
+
+// GetObjectOptions returns a formatted string of all Items in a Room.
+func (r *Room) GetObjectOptions() string {
+	return "Objects: " + getItemOptions(r) + " " + r.GetExitOptions()
 }
 
 // GetItemOptions returns a formatted string of all Items in a Player's Inventory.
 func (p *Player) GetItemOptions() string {
-	return "Inventory: " + getItemOptions(p)
+	options := getItemOptions(p)
+	if options == "" {
+		options = " []"
+	}
+	 return "Inventory:" + options
 }
 
 // getItemOptions returns a formatted string of all Items in an ItemContainer.

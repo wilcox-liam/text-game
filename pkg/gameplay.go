@@ -73,10 +73,45 @@ func (g *Game) Open(name string) error {
 	return nil
 }
 
-func (g *Game) Take(name string) {
-
+// Take will remove an item from the room and add it to a players inventory.
+// The item must be flagged as takeable.
+func (g *Game) Take(name string) error {
+	item := g.CurrentRoom.GetItemByName(name)
+	if item == nil {
+		return errors.New(fmt.Sprintf(g.GameDictionary["errorNoItem"], name, g.CurrentRoom.Name))
+	}
+	if item.Takeable {
+		g.Player.Inventory = append(g.Player.Inventory, *item)
+		fmt.Println(fmt.Sprintf(g.GameDictionary["stringItemAdded"], item.Name))	
+		return nil
+	} else {
+		return errors.New(fmt.Sprintf(g.GameDictionary["errorItemNotTakeable"]))
+	}
 }
 
 func (g *Game) Use(name string, on string) {
 
+}
+
+// Help returns a list of ingame commands and shortcuts
+// Bug(wilcox-liam): Is not reading shortcuts from a config file. Loop over a map?
+func (g *Game) Help() string {
+	// Loop over the map, store the values where the key contains 'command'
+	// Loop over the map again, and build the string with keys and values,
+	// where value is in command slice.
+
+	//Change gameDictionary to a map of maps?
+
+	//Just need to identify the shortcut text
+	var help string
+	help += "List of commands:\n"
+	help += "  " + g.GameDictionary["commandGo"] + "(g) <Direction>\n"
+	help += "  " + g.GameDictionary["commandExamine"] + "(x) <Object> | <Direction>\n"
+	help += "  " + g.GameDictionary["commandOpen"] + "(o) <Object>\n"
+	help += "  " + g.GameDictionary["commandTake"] + "(t) <Object>\n"
+	help += "  " + g.GameDictionary["commandUse"] + "(u) <Object> on <Object>\n"
+	help += "  " + g.GameDictionary["commandInventory"] + "(i)\n"
+	help += "  " + g.GameDictionary["commandHelp"] + "(h)\n"
+	help += "  " + g.GameDictionary["commandRefresh"] + "(r)"	
+	return help
 }
