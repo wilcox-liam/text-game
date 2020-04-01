@@ -3,13 +3,14 @@ package textgame
 import (
 	"errors"
 	"fmt"
+	"sort"
 )
 
 // Go handles user input commandGo and will set CurrentRoom to the new room.
 func (g *Game) Go(where string) (bool, error) {
 	exit := g.CurrentRoom.GetExitByDirection(where)
 	if exit == nil {
-		return false, errors.New(fmt.Sprintf(g.GameDictionary["errorNoExit"], g.CurrentRoom.Name, where))
+		return false, errors.New(fmt.Sprintf(g.GameDictionary["errors"]["noExit"], g.CurrentRoom.Name, where))
 	} else {
 		g.CurrentRoom = exit.Room
 	}
@@ -42,7 +43,7 @@ func (g *Game) Examine(name string) error {
 		fmt.Println("(" + exit.Name + "): " + exit.Description)
 		return nil
 	}
-	return errors.New(fmt.Sprintf(g.GameDictionary["errorNoObject"], name, g.CurrentRoom.Name))
+	return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["noObject"], name, g.CurrentRoom.Name))
 }
 
 // Open will set the Open attribute of an item to true in the Current Room
@@ -53,14 +54,14 @@ func (g *Game) Open(name string) error {
 		item = getItemByName(name, g.Player)
 	}
 	if item == nil {
-		return errors.New(fmt.Sprintf(g.GameDictionary["errorNoObject"], name, g.CurrentRoom.Name))
+		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["noObject"], name, g.CurrentRoom.Name))
 	}
 	//return if item is already open or cannot be opened.
 	if item.Open {
-		return errors.New(fmt.Sprintf(g.GameDictionary["errorItemOpen"], item.Name))
+		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["itemOpen"], item.Name))
 	}
 	if item.Openable == false {
-		return errors.New(fmt.Sprintf(g.GameDictionary["errorItemNotOpenable"], item.Name))
+		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["itemNotOpenable"], item.Name))
 	}
 
 	item.Open = true
@@ -73,14 +74,14 @@ func (g *Game) Open(name string) error {
 func (g *Game) Take(name string) error {
 	item := g.CurrentRoom.GetItemByName(name)
 	if item == nil {
-		return errors.New(fmt.Sprintf(g.GameDictionary["errorNoItem"], name, g.CurrentRoom.Name))
+		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["noItem"], name, g.CurrentRoom.Name))
 	}
 	if item.Takeable {
 		g.Player.Inventory = append(g.Player.Inventory, *item)
-		fmt.Println(fmt.Sprintf(g.GameDictionary["stringItemAdded"], item.Name))
+		fmt.Println(fmt.Sprintf(g.GameDictionary["strings"]["itemAdded"], item.Name))
 		return nil
 	} else {
-		return errors.New(fmt.Sprintf(g.GameDictionary["errorItemNotTakeable"]))
+		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["itemNotTakeable"]))
 	}
 }
 
@@ -89,35 +90,38 @@ func (g *Game) Take(name string) error {
 func (g *Game) Use(name string, on string) error {
 	item := g.CurrentRoom.GetItemByName(name)
 	if item == nil {
-		return errors.New(fmt.Sprintf(g.GameDictionary["errorNoItem"], name, g.CurrentRoom.Name))
+		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["noItem"], name, g.CurrentRoom.Name))
 	}
 	if item.Useable {
 		fmt.Println(item.UseString)
 		return nil
 	} else {
-		return errors.New(fmt.Sprintf(g.GameDictionary["errorItemNotUseable"]))
+		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["itemNotUseable"]))
 	}
 }
 
-// Help returns a list of ingame commands and shortcuts
-// Bug(wilcox-liam): Is not reading shortcuts from a config file. Loop over a map?
+// Help returns a list of ingame commands and shortcuts based on the Game Dictionary
 func (g *Game) Help() string {
-	// Loop over the map, store the values where the key contains 'command'
-	// Loop over the map again, and build the string with keys and values,
-	// where value is in command slice.
+	//So the help options come out in the same order every time.
+	sortedKeys := sortedKeys(g.GameDictionary["shortcuts"])
 
-	//Change gameDictionary to a map of maps?
+	helptext := "List of commands:"
+	for _, key := range sortedKeys {
+		value := g.GameDictionary["shortcuts"][key]
+		helpstring := g.GameDictionary["helptext"][value]
+		helptext += "\n (" + key + ") " + value + ": " + helpstring
+	}
+	return helptext
+}
 
-	//Just need to identify the shortcut text
-	var help string
-	help += "List of commands:\n"
-	help += "  " + g.GameDictionary["commandGo"] + "(g) <Direction>\n"
-	help += "  " + g.GameDictionary["commandExamine"] + "(x) <Object> | <Direction>\n"
-	help += "  " + g.GameDictionary["commandOpen"] + "(o) <Object>\n"
-	help += "  " + g.GameDictionary["commandTake"] + "(t) <Object>\n"
-	help += "  " + g.GameDictionary["commandUse"] + "(u) <Object> [on <Object>]\n"
-	help += "  " + g.GameDictionary["commandInventory"] + "(i)\n"
-	help += "  " + g.GameDictionary["commandHelp"] + "(h)\n"
-	help += "  " + g.GameDictionary["commandRefresh"] + "(r)"
-	return help
+// sortedKeys is a helper function to sorts the keys in a map
+func sortedKeys(m map[string]string) ([]string) {
+    keys := make([]string, len(m))
+    i := 0
+    for k := range m {
+        keys[i] = k
+        i++
+    }
+    sort.Strings(keys)
+    return keys
 }

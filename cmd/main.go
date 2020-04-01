@@ -17,6 +17,9 @@
 //Add Close Functionality?
 //Player help
 
+//Remove player name parm and have a player object in the yaml.
+//Start with something in your inventory?
+
 package main
 
 import (
@@ -72,6 +75,7 @@ func language() string {
 }
 
 // player asks the user to enter a player name
+// Bug(wilcox-liam): Should you always play as Jazminne? (and Cassandra)
 func player(game *textgame.Game) string {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print(game.GameDictionary["stringAskName"])

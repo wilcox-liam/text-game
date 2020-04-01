@@ -80,7 +80,7 @@ func (g *Game) setExits() {
 func (g *Game) expandShortcut(words []string) []string {
 	for i, word := range words {
 		word = strings.ToLower(word)
-		lookup := strings.ToLower(g.GameDictionary[word])
+		lookup := strings.ToLower(g.GameDictionary["shortcuts"][word])
 		if lookup != "" {
 			words[i] = lookup
 		}
@@ -92,6 +92,7 @@ func (g *Game) expandShortcut(words []string) []string {
 // updateState updates the game state with user provided input.
 // returns true if the go command executed sucessfully.
 // Bug(wilcox-liam): Is the bool necessary or should I check the error type instead?
+// Bug(wilcox-liam): Only expand the first word. Expand the second word if first word = go
 func (g *Game) UpdateGameState(input string) (bool, error) {
 	words := strings.Split(input, " ")
 	words = g.expandShortcut(words)
@@ -99,34 +100,34 @@ func (g *Game) UpdateGameState(input string) (bool, error) {
 	var command string
 	var object string
 	if len(words) == 0 {
-		return false, errors.New(fmt.Sprintf(g.GameDictionary["errorInvalidCommand"], input))
+		return false, errors.New(fmt.Sprintf(g.GameDictionary["errors"]["invalidCommand"], input))
 	}
 	command = strings.ToLower(words[0])
 	if len(words) > 1 {
 		object = strings.ToLower(strings.Join(words[1:], " "))
 	}
 
-	if command == strings.ToLower(g.GameDictionary["commandGo"]) {
+	if command == strings.ToLower(g.GameDictionary["commands"]["go"]) {
 		return g.Go(object)
-	} else if command == strings.ToLower(g.GameDictionary["commandExamine"]) {
+	} else if command == strings.ToLower(g.GameDictionary["commands"]["examine"]) {
 		return false, g.Examine(object)
-	} else if command == strings.ToLower(g.GameDictionary["commandRefresh"]) {
-		fmt.Println(g.GameDictionary["stringRefreshing"])
+	} else if command == strings.ToLower(g.GameDictionary["commands"]["refresh"]) {
+		fmt.Println(g.GameDictionary["strings"]["refreshing"])
 		return true, nil
-	} else if command == strings.ToLower(g.GameDictionary["commandInventory"]) {
+	} else if command == strings.ToLower(g.GameDictionary["commands"]["inventory"]) {
 		fmt.Println(g.Player.GetItemOptions())
 		return false, nil
-	} else if command == strings.ToLower(g.GameDictionary["commandHelp"]) {
+	} else if command == strings.ToLower(g.GameDictionary["commands"]["help"]) {
 		fmt.Println(g.Help())
 		return false, nil
-	} else if command == strings.ToLower(g.GameDictionary["commandOpen"]) {
+	} else if command == strings.ToLower(g.GameDictionary["commands"]["open"]) {
 		return false, g.Open(object)
-	} else if command == strings.ToLower(g.GameDictionary["commandTake"]) {
+	} else if command == strings.ToLower(g.GameDictionary["commands"]["take"]) {
 		return false, g.Take(object)
-	} else if command == strings.ToLower(g.GameDictionary["commandUse"]) {
+	} else if command == strings.ToLower(g.GameDictionary["commands"]["use"]) {
 		return false, g.Use(object, "")
 	} else {
-		return false, errors.New(fmt.Sprintf(g.GameDictionary["errorInvalidCommand"], input))
+		return false, errors.New(fmt.Sprintf(g.GameDictionary["errors"]["invalidCommand"], input))
 	}
 }
 
@@ -135,9 +136,6 @@ func (g *Game) PlayGame() {
 	fmt.Println(g.Name)
 	fmt.Println()
 	fmt.Println(g.Description)
-	fmt.Println()
-	fmt.Println(g.Help())
-	fmt.Println()
 
 	var roomChanged = true
 	var err error
@@ -153,7 +151,7 @@ func (g *Game) PlayGame() {
 			fmt.Println()
 		}
 
-		fmt.Print(g.GameDictionary["stringCommand"])
+		fmt.Print(g.GameDictionary["strings"]["command"])
 		input, _ := reader.ReadString('\n')
 		input = strings.TrimSpace(input)
 		fmt.Println()

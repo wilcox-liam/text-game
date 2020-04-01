@@ -12,7 +12,7 @@ type Game struct {
 	Name           string
 	Description    string
 	Player         *Player
-	GameDictionary map[string]string
+	GameDictionary map[string]map[string]string
 	Rooms          []Room
 	CurrentRoom    *Room
 }

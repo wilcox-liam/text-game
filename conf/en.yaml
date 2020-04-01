@@ -1,59 +1,83 @@
-#The first room is treated as the starting room
-#Room id's intentionally start at 1
-#Exit directions must be a single word only.
+#The room with ID 1 is the starting room
+#Keys cannot be edited, with the exception of game dictionary shortcuts.
 
 name: Haunted's House
-description: Welcome to Haunted's House Muhahahaha
+description: >
+  You awake with a start, it is the middle of the night, you can hear rain pattering on the roof,
+  and the air feels unusually cold. 
 
+  Suddenly you realise that you have an urgent need to use the bathroom, so you grab your phone, 
+  but before you get out of bed you pause for a moment... something feels ... wrong.
+
+#I can use anchors as keys
 gamedictionary:
-  #Game Commands
-  commandGo: &go go
-  commandExamine: &examine examine
-  commandOpen: &open open
-  commandTake: &take take
-  commandUse: &use use
-  commandInventory: &inventory inventory
-  commandHelp: &help help
-  commandRefresh: &refresh refresh
 
-  #Game Command Shortcuts
-  g: *go
-  x: *examine
-  o: *open
-  t: *take
-  u: *use
-  i: *inventory
-  h: *help
-  r: *refresh
+  commands:
+    #Game Commands
+    go: &go go
+    examine: &examine examine
+    open: &open open
+    take: &take take
+    use: &use use
+    inventory: &inventory inventory
+    help: &help help
+    refresh: &refresh refresh
 
-  n: &north north
-  e: &east east
-  s: &south south
-  w: &west west
+  shortcuts:
+    #Game Command Shortcuts
+    g: *go
+    x: *examine
+    o: *open
+    t: *take
+    u: *use
+    i: *inventory
+    h: *help
+    r: *refresh
 
-  stringCommand: "Command: "
-  stringAskName: "What is your name? "
-  stringRefreshing: "Refreshing..."
-  stringItemAdded: "Item %s added to you inventory."
+  helptext:
+    # Help Text
+    *go: Go to another room. Usage "go <Direction>"
+    *examine: Examine an object or direction in the room or your invetory. Usage "examine <Object> | <Direction>"
+    *open: Opens an object in the room or your inventory. Usage "open <Object>"
+    *take: Take an object from the room and add it to your inventory. Usage "take <Object>"
+    *use: Use an object in the room or your inventory. Usage "use <Object> [on <Object>]"
+    *inventory: Opens the Player's inventory 
+    *help: Displays Help Text
+    *refresh: Refreshes the screen and displays the room information again.
 
-  #Game strings and errors
-  errorItemOpen: "Item %s is already open."
-  errorItemNotOpenable: "Item %s cannot be opened."
-  errorItemNotTakeable: "I don't think I should take that."
-  errorItemNotUseable: "It isn't the time for that."  
-  errorNoExit: "%s has no direction: %s"
-  errorNoItem: "There is no Item named %s in %s."    
-  errorNoObject: "There is no object named %s in %s or in your inventory."  
-  errorInvalidCommand: "Invalid command: %s"
+  directions:
+    #Common game direction shortcuts
+    n: &north north
+    e: &east east
+    s: &south south
+    w: &west west    
+
+  strings:
+    # Game strings
+    command: "Command: "
+    askName: "What is your name? "
+    refreshing: "Refreshing..."
+    itemAdded: "Item %s added to you inventory."
+
+  errors:
+    # Game errors
+    itemOpen: "Item %s is already open."
+    itemNotOpenable: "Item %s cannot be opened."
+    itemNotTakeable: "I don't think I should take that."
+    itemNotUseable: "It isn't the time for that."  
+    noExit: "%s has no direction: %s"
+    noItem: "There is no Item named %s in %s."    
+    noObject: "There is no object named %s in %s or in your inventory."  
+    invalidCommand: "Invalid command: %s"
 
 rooms:
   -
     id: 1
     name: Jazminne's Bedroom
     description: >
-      This is your bedroom, you glance around in the dark and you are able
+      You glance around in the dark and you are able
       to recgonise the outlines of the familar objects in your room.
-      Your desk is next to you, your laptop sits closed on top of it.
+      Your desk is in the corner, your laptop sits closed on top of it.
       You can see the wardrobe in front of you, it is ajar...
       Liam always forgets to shut it. Everything appears to be normal
       except for one thing... Your boyfriend is not here.
@@ -70,14 +94,12 @@ rooms:
         description: This is your desk, its looking a bit old.
         open: false
         openable: true
-        takeable: true
         useable: true
         openstring: You slide open the drawer and look inside to see a [pen]
         usestring: You take a seat at the desk... Now what?
         items:
           -
             name: pen
-            takeable: true
             description: Liam's favourite Pen.
       -
         name: guitar
