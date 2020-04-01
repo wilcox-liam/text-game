@@ -115,13 +115,13 @@ func (g *Game) Help() string {
 }
 
 // sortedKeys is a helper function to sorts the keys in a map
-func sortedKeys(m map[string]string) ([]string) {
-    keys := make([]string, len(m))
-    i := 0
-    for k := range m {
-        keys[i] = k
-        i++
-    }
-    sort.Strings(keys)
-    return keys
+func sortedKeys(m map[string]string) []string {
+	keys := make([]string, len(m))
+	i := 0
+	for k := range m {
+		keys[i] = k
+		i++
+	}
+	sort.Strings(keys)
+	return keys
 }

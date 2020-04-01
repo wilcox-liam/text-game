@@ -15,10 +15,6 @@
 //Add Take Functionality
 //Add Use Functionality
 //Add Close Functionality?
-//Player help
-
-//Remove player name parm and have a player object in the yaml.
-//Start with something in your inventory?
 
 package main
 
@@ -32,23 +28,18 @@ import (
 )
 
 const langDefault = "default"
-const playerNameDefault = "default"
 const saveStateDefault = "no-state"
-const confDir = "../conf/"
-const saveDir = "../saves/"
 
 // TODO(wilcox-liam): Log Mode
 // commandLineOptions parses and returns the options provided.
-func commandLineOptions() (string, string, string) {
+func commandLineOptions() (string, string) {
 	lang := flag.String("lang", "en", "Game Language")
-	playerName := flag.String("name", "Jazminne", "Player Name")
 	saveState := flag.String("state", saveStateDefault, "Save State Name")
 	flag.Parse()
 	validateLanguage(*lang)
-	return *lang, *playerName, *saveState
+	return *lang, *saveState
 }
 
-// TODO(wilcox-liam): check for valid conf files to initialise list?
 // validLanguages returns a slice of languages the game supports.
 func validLanguages() []string {
 	return []string{"en", "es"}
@@ -74,15 +65,6 @@ func language() string {
 	return lang
 }
 
-// player asks the user to enter a player name
-// Bug(wilcox-liam): Should you always play as Jazminne? (and Cassandra)
-func player(game *textgame.Game) string {
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Print(game.GameDictionary["stringAskName"])
-	name, _ := reader.ReadString('\n')
-	return name
-}
-
 // contains is a helper function to return if a string appears in a slice.
 func contains(s []string, e string) bool {
 	for _, a := range s {
@@ -94,24 +76,18 @@ func contains(s []string, e string) bool {
 }
 
 func main() {
-	lang, playerName, saveState := commandLineOptions()
-
+	lang, saveState := commandLineOptions()
 	if lang == langDefault {
 		lang = language()
 	}
 
 	var game *textgame.Game
+	var newGame bool
 	if saveState == saveStateDefault {
-		game = textgame.LoadGameState(confDir + lang + ".yaml")
+		game = textgame.LoadGameState(lang + ".yaml")
+		newGame = true
 	} else {
-		game = textgame.LoadGameState(saveDir + saveState + ".yaml")
+		game = textgame.LoadGameState(saveState + ".yaml")
 	}
-
-	if playerName == playerNameDefault {
-		playerName = player(game)
-		fmt.Println()
-	}
-	game.Player = &textgame.Player{playerName, nil}
-
-	game.PlayGame()
+	game.PlayGame(newGame)
 }

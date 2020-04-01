@@ -10,9 +10,12 @@ import (
 	"strings"
 )
 
+const confDir = "../conf/"
+const saveDir = "../saves/"
+
 // Bug(wilcox-liam): Error messages here are not multi-lingual.
 func LoadGameState(fileName string) *Game {
-	yamlFile, err := ioutil.ReadFile(fileName)
+	yamlFile, err := ioutil.ReadFile(confDir + fileName)
 	if err != nil {
 		fmt.Printf("Error reading YAML file: %s\n", err)
 		os.Exit(1)
@@ -30,8 +33,18 @@ func LoadGameState(fileName string) *Game {
 }
 
 // SaveGameState saves a game state to a file to be continued later.
-func SaveGameState(g Game, stateName string) {
-	//TODO
+// Bug(wilcox-liam) Need a better way to save the current room.
+func SaveGameState(g *Game, stateName string) {
+	d, err := yaml.Marshal(g)
+	if err != nil {
+		fmt.Printf("Error parsing YAML file: %s\n", err)
+	}
+	err = ioutil.WriteFile(saveDir+stateName+".yaml", d, 0644)
+	if err != nil {
+		fmt.Printf("Error writing file file: %s\n", err)
+	}
+	fmt.Println(g.GameDictionary["strings"]["saveSucessful"])
+	return
 }
 
 // sanityCheck validates the game data for any obvious inconsitencies or errors.
@@ -93,6 +106,7 @@ func (g *Game) expandShortcut(words []string) []string {
 // returns true if the go command executed sucessfully.
 // Bug(wilcox-liam): Is the bool necessary or should I check the error type instead?
 // Bug(wilcox-liam): Only expand the first word. Expand the second word if first word = go
+// Bug(wilcox-liam): Look through this function again.
 func (g *Game) UpdateGameState(input string) (bool, error) {
 	words := strings.Split(input, " ")
 	words = g.expandShortcut(words)
@@ -120,6 +134,9 @@ func (g *Game) UpdateGameState(input string) (bool, error) {
 	} else if command == strings.ToLower(g.GameDictionary["commands"]["help"]) {
 		fmt.Println(g.Help())
 		return false, nil
+	} else if command == strings.ToLower(g.GameDictionary["commands"]["save"]) {
+		SaveGameState(g, object)
+		return false, nil
 	} else if command == strings.ToLower(g.GameDictionary["commands"]["open"]) {
 		return false, g.Open(object)
 	} else if command == strings.ToLower(g.GameDictionary["commands"]["take"]) {
@@ -132,10 +149,17 @@ func (g *Game) UpdateGameState(input string) (bool, error) {
 }
 
 // PlayGame contains the game logic and game loop for playing the textgame.
-func (g *Game) PlayGame() {
-	fmt.Println(g.Name)
-	fmt.Println()
-	fmt.Println(g.Description)
+func (g *Game) PlayGame(newGame bool) {
+	//Only display the welcome text if starting a new game
+	if newGame {
+		fmt.Println(fmt.Sprintf(g.GameDictionary["strings"]["welcome"], g.Player.Name, g.Name))
+		fmt.Println()
+		fmt.Println(g.GameDictionary["strings"]["helpAdvice"])
+		fmt.Println()
+		fmt.Println(g.Name)
+		fmt.Println()
+		fmt.Println(g.Description)
+	}
 
 	var roomChanged = true
 	var err error

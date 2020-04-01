@@ -11,10 +11,6 @@ description: >
 
 player:
   name: Jazminne
-  inventory:
-    -
-      name: phone
-      description: what a great phone!
 
 #I can use anchors as keys
 gamedictionary:
@@ -29,7 +25,6 @@ gamedictionary:
     inventory: &inventory inventory
     help: &help help
     refresh: &refresh refresh
-    save: &save save
 
   shortcuts:
     #Game Command Shortcuts
@@ -41,7 +36,6 @@ gamedictionary:
     i: *inventory
     h: *help
     r: *refresh
-    s: *save
 
   helptext:
     # Help Text
@@ -53,7 +47,6 @@ gamedictionary:
     *inventory: Opens the Player's inventory 
     *help: Displays Help Text
     *refresh: Refreshes the screen and displays the room information again.
-    *save: Saves your game state to be continued another time.
 
   directions:
     #Common game direction shortcuts
@@ -64,13 +57,10 @@ gamedictionary:
 
   strings:
     # Game strings
-    welcome: "Hello %s and welcome to %s."
     command: "Command: "
     askName: "What is your name? "
     refreshing: "Refreshing..."
     itemAdded: "Item %s added to you inventory."
-    helpAdvice: "type 'help' at any time to list the available commands."
-    saveSucessful: "Game state saved sucesfully"
 
   errors:
     # Game errors
@@ -86,7 +76,7 @@ gamedictionary:
 rooms:
   -
     id: 1
-    name: Jazminne's Bedroom
+    name: Jazminnes's Bedroom
     description: >
       You glance around in the dark and you are able
       to recgonise the outlines of the familar objects in your room.
