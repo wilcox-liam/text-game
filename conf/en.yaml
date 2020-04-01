@@ -40,6 +40,7 @@ gamedictionary:
   errorItemOpen: "Item %s is already open."
   errorItemNotOpenable: "Item %s cannot be opened."
   errorItemNotTakeable: "I don't think I should take that."
+  errorItemNotUseable: "It isn't the time for that."  
   errorNoExit: "%s has no direction: %s"
   errorNoItem: "There is no Item named %s in %s."    
   errorNoObject: "There is no object named %s in %s or in your inventory."  
@@ -70,12 +71,27 @@ rooms:
         open: false
         openable: true
         takeable: true
+        useable: true
         openstring: You slide open the drawer and look inside to see a [pen]
+        usestring: You take a seat at the desk... Now what?
         items:
           -
             name: pen
             takeable: true
-            description: Liam's favourite Pen.           
+            description: Liam's favourite Pen.
+      -
+        name: guitar
+        description: Your dad bought you this guitar.
+        useable: true
+        usestring: You bust out a quick Wonderwall!... But it isn't the time for that.
+      -
+        name: wardrobe
+        description: There is so much stuff in here, but no Yoga Matt!
+        open: true
+        items:
+          -
+            name: junk
+            description: This all belongs to Cassandra. I probably should not touch it.
   -
     id: 2
     name: Upstairs Hallway

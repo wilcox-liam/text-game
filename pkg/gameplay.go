@@ -19,11 +19,6 @@ func (g *Game) Go(where string) (bool, error) {
 // Examine will return the description of an object matching the
 // provided name or direction.
 func (g *Game) Examine(name string) error {
-	// Room
-	if g.CurrentRoom.Name == name {
-		fmt.Println(g.CurrentRoom.Description)
-		return nil
-	}
 	// Items in the Room
 	item := getItemByName(name, g.CurrentRoom)
 	if item != nil {
@@ -82,15 +77,26 @@ func (g *Game) Take(name string) error {
 	}
 	if item.Takeable {
 		g.Player.Inventory = append(g.Player.Inventory, *item)
-		fmt.Println(fmt.Sprintf(g.GameDictionary["stringItemAdded"], item.Name))	
+		fmt.Println(fmt.Sprintf(g.GameDictionary["stringItemAdded"], item.Name))
 		return nil
 	} else {
 		return errors.New(fmt.Sprintf(g.GameDictionary["errorItemNotTakeable"]))
 	}
 }
 
-func (g *Game) Use(name string, on string) {
-
+// Use actions the use function of an item in a players inventory or the room.
+// Bug(wilcox-liam): NYI Using an item on another item.
+func (g *Game) Use(name string, on string) error {
+	item := g.CurrentRoom.GetItemByName(name)
+	if item == nil {
+		return errors.New(fmt.Sprintf(g.GameDictionary["errorNoItem"], name, g.CurrentRoom.Name))
+	}
+	if item.Useable {
+		fmt.Println(item.UseString)
+		return nil
+	} else {
+		return errors.New(fmt.Sprintf(g.GameDictionary["errorItemNotUseable"]))
+	}
 }
 
 // Help returns a list of ingame commands and shortcuts
@@ -109,9 +115,9 @@ func (g *Game) Help() string {
 	help += "  " + g.GameDictionary["commandExamine"] + "(x) <Object> | <Direction>\n"
 	help += "  " + g.GameDictionary["commandOpen"] + "(o) <Object>\n"
 	help += "  " + g.GameDictionary["commandTake"] + "(t) <Object>\n"
-	help += "  " + g.GameDictionary["commandUse"] + "(u) <Object> on <Object>\n"
+	help += "  " + g.GameDictionary["commandUse"] + "(u) <Object> [on <Object>]\n"
 	help += "  " + g.GameDictionary["commandInventory"] + "(i)\n"
 	help += "  " + g.GameDictionary["commandHelp"] + "(h)\n"
-	help += "  " + g.GameDictionary["commandRefresh"] + "(r)"	
+	help += "  " + g.GameDictionary["commandRefresh"] + "(r)"
 	return help
 }

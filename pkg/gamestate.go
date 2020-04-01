@@ -122,7 +122,9 @@ func (g *Game) UpdateGameState(input string) (bool, error) {
 	} else if command == strings.ToLower(g.GameDictionary["commandOpen"]) {
 		return false, g.Open(object)
 	} else if command == strings.ToLower(g.GameDictionary["commandTake"]) {
-		return false, g.Take(object)		
+		return false, g.Take(object)
+	} else if command == strings.ToLower(g.GameDictionary["commandUse"]) {
+		return false, g.Use(object, "")
 	} else {
 		return false, errors.New(fmt.Sprintf(g.GameDictionary["errorInvalidCommand"], input))
 	}
@@ -147,9 +149,9 @@ func (g *Game) PlayGame() {
 			fmt.Println()
 			fmt.Println(g.CurrentRoom.Description)
 			fmt.Println(g.CurrentRoom.GetDirections())
-			fmt.Println(g.CurrentRoom.GetObjectOptions())			
+			fmt.Println(g.CurrentRoom.GetObjectOptions())
 			fmt.Println()
-		}		
+		}
 
 		fmt.Print(g.GameDictionary["stringCommand"])
 		input, _ := reader.ReadString('\n')

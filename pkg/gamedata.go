@@ -22,7 +22,6 @@ type Player struct {
 	Inventory []Item
 }
 
-//Examinable
 type Room struct {
 	ID          int
 	Name        string
@@ -51,8 +50,10 @@ type Item struct {
 	Description string
 	Open        bool
 	Openable    bool
-	Takeable    bool
 	OpenString  string
+	Takeable    bool
+	Useable     bool
+	UseString   string
 	Items       []Item
 }
 
@@ -153,7 +154,7 @@ func (r *Room) GetExitOptions() string {
 
 // GetObjectOptions returns a formatted string of all Items in a Room.
 func (r *Room) GetObjectOptions() string {
-	return "Objects: " + getItemOptions(r) + " " + r.GetExitOptions()
+	return "Objects: " + r.GetExitOptions() + getItemOptions(r)
 }
 
 // GetItemOptions returns a formatted string of all Items in a Player's Inventory.
@@ -162,7 +163,7 @@ func (p *Player) GetItemOptions() string {
 	if options == "" {
 		options = " []"
 	}
-	 return "Inventory:" + options
+	return "Inventory:" + options
 }
 
 // getItemOptions returns a formatted string of all Items in an ItemContainer.
