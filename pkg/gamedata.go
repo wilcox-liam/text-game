@@ -9,14 +9,15 @@ import (
 )
 
 type Game struct {
-	Name           string
-	Description    string
-	Player         *Player
-	GameDictionary map[string]map[string]string
-	Rooms          []Room
-	CurrentRoomID  int
-	CurrentRoom    *Room
-	SavedGame      bool
+	Name            string
+	Description     string
+	Player          *Player
+	GameDictionary  map[string]map[string]string
+	Rooms           []Room
+	CurrentRoomID   int
+	CurrentRoom     *Room
+	SavedGame       bool
+	DisplayRoomInfo bool
 }
 
 type Player struct {

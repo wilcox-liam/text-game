@@ -61,11 +61,12 @@ func (g *Game) sanityCheck() {
 	//Must have a name
 	//Must have a description
 	//Must not have multiple exits with the same 'direction'
-	//1 Room must have RoomID = 1
 	//Items
 	//Must be unique through the entire game
 	//Must have a name
 	//Must have a description
+	//Cannot have the same name as a direction
+	//General
 }
 
 // setInitialState initialises the game state with information that cannot be provided by the yaml configuration file.
@@ -91,73 +92,100 @@ func (g *Game) setExits() {
 
 // expandCommand takes a user entered shortcut and expands it into the full game command
 // using the Game Dictionary provided in the yaml configuration.
-func (g *Game) expandShortcut(words []string) []string {
-	for i, word := range words {
-		word = strings.ToLower(word)
-		lookup := strings.ToLower(g.GameDictionary["shortcuts"][word])
-		if lookup != "" {
-			words[i] = lookup
-		}
+func (g *Game) ExpandShortcut(word string) string {
+	lookup := strings.ToLower(g.GameDictionary["shortcuts"][strings.ToLower(word)])
+	if lookup != "" {
+		return lookup
 	}
-	return words
+	return word
 }
 
-// Does marshal copy case or lower case it?
-// updateState updates the game state with user provided input.
-// returns true if the go command executed successfully.
-// Bug(wilcox-liam): Is the bool necessary or should I check the error type instead?
-// Bug(wilcox-liam): Only expand the first word. Expand the second word if first word = go
-// Bug(wilcox-liam): Look through this function again.
-func (g *Game) UpdateGameState(input string) (*Game, error) {
-	words := strings.Split(input, " ")
-	words = g.expandShortcut(words)
-
-	var command string
-	var object string
-	if len(words) == 0 {
-		return g, errors.New(fmt.Sprintf(g.GameDictionary["errors"]["invalidCommand"], input))
+// ExpandDirection takes a user entered shortcut and expands it into the full game direction
+// using the Game Dictionary provided in the yaml configuration.
+func (g *Game) ExpandDirection(word string) string {
+	lookup := strings.ToLower(g.GameDictionary["directions"][strings.ToLower(word)])
+	if lookup != "" {
+		return lookup
 	}
-	command = strings.ToLower(words[0])
+	return word
+}
+
+// ParseInput takes a user input and returns the command, object and objectTarget test
+//<Command> <Object> [on <Object>]. Object names may incluse spaces.
+func (g *Game) ParseInput(input string) (string, string, string, error) {
+	words := strings.Split(input, " ")
+	if len(words) == 0 {
+		return "", "", "", errors.New(fmt.Sprintf(g.GameDictionary["errors"]["invalidCommand"], input))
+	}
+	command := g.ExpandShortcut(words[0])
+
+	var object string
+	var objectTarget string
 	if len(words) > 1 {
 		object = strings.ToLower(strings.Join(words[1:], " "))
+		if len(words) >= 4 && command == strings.ToLower(g.GameDictionary["commands"]["use"]) {
+			objects := strings.Split(object, " on ")
+			if len(objects) != 2 {
+				return "", "", "", errors.New(fmt.Sprintf(g.GameDictionary["errors"]["invalidCommand"], input))
+			}
+			object = objects[0]
+			objectTarget = objects[1]
+		}
+		if command == strings.ToLower(g.GameDictionary["commands"]["go"]) ||
+			command == strings.ToLower(g.GameDictionary["commands"]["examine"]) {
+			object = g.ExpandDirection(object)
+		}
+	}
+	return command, object, objectTarget, nil
+}
+
+// UpdateGameState updates the game state with user provided input.
+func (g *Game) UpdateGameState(input string) (*Game, error) {
+	command, object, objectTarget, err := g.ParseInput(input)
+	if err != nil {
+		return g, err
 	}
 
-	if command == strings.ToLower(g.GameDictionary["commands"]["go"]) {
+	g.DisplayRoomInfo = false
+	switch command {
+	case strings.ToLower(g.GameDictionary["commands"]["go"]):
+		g.DisplayRoomInfo = true
 		return g, g.Go(object)
-	} else if command == strings.ToLower(g.GameDictionary["commands"]["examine"]) {
+	case strings.ToLower(g.GameDictionary["commands"]["examine"]):
 		return g, g.Examine(object)
-	} else if command == strings.ToLower(g.GameDictionary["commands"]["refresh"]) {
+	case strings.ToLower(g.GameDictionary["commands"]["refresh"]):
 		fmt.Println(g.GameDictionary["strings"]["refreshing"])
+		g.DisplayRoomInfo = true
 		return g, nil
-	} else if command == strings.ToLower(g.GameDictionary["commands"]["inventory"]) {
+	case strings.ToLower(g.GameDictionary["commands"]["inventory"]):
 		fmt.Println(g.Player.GetItemOptions())
 		return g, nil
-	} else if command == strings.ToLower(g.GameDictionary["commands"]["help"]) {
+	case strings.ToLower(g.GameDictionary["commands"]["help"]):
 		fmt.Println(g.Help())
 		return g, nil
-	} else if command == strings.ToLower(g.GameDictionary["commands"]["save"]) {
+	case strings.ToLower(g.GameDictionary["commands"]["save"]):
 		return g, SaveGameState(g, object)
-	} else if command == strings.ToLower(g.GameDictionary["commands"]["load"]) {
+	case strings.ToLower(g.GameDictionary["commands"]["load"]):
 		g, err := LoadGameState(SaveDir + object)
 		if err == nil {
 			fmt.Println(g.GameDictionary["strings"]["loadSuccessful"])
 		}
+		g.DisplayRoomInfo = true
 		return g, err
-	} else if command == strings.ToLower(g.GameDictionary["commands"]["open"]) {
+	case strings.ToLower(g.GameDictionary["commands"]["open"]):
 		return g, g.Open(object)
-	} else if command == strings.ToLower(g.GameDictionary["commands"]["take"]) {
+	case strings.ToLower(g.GameDictionary["commands"]["take"]):
 		return g, g.Take(object)
-	} else if command == strings.ToLower(g.GameDictionary["commands"]["use"]) {
-		return g, g.Use(object, "")
-	} else {
+	case strings.ToLower(g.GameDictionary["commands"]["use"]):
+		return g, g.Use(object, objectTarget)
+	default:
 		return g, errors.New(fmt.Sprintf(g.GameDictionary["errors"]["invalidCommand"], input))
 	}
 }
 
 // PlayGame contains the game logic and game loop for playing the textgame.
 // Bug(wilcox-liam): Is replacing the game from within the game loop super weird?
-// TODO: consider removing this parm - check using some game data.
-func (g *Game) PlayGame() {
+func (g *Game) Play() {
 	//Do not display the welcome text if loading a saved game
 	if g.SavedGame == false {
 		fmt.Println(fmt.Sprintf(g.GameDictionary["strings"]["welcome"], g.Player.Name, g.Name))
@@ -169,12 +197,10 @@ func (g *Game) PlayGame() {
 		fmt.Println(g.Description)
 	}
 
-	var roomChanged = true
 	var err error
 	reader := bufio.NewReader(os.Stdin)
 	for {
-		//Only display Room information if the room has changed
-		if roomChanged {
+		if g.DisplayRoomInfo {
 			fmt.Println(g.CurrentRoom.Name)
 			fmt.Println()
 			fmt.Println(g.CurrentRoom.Description)

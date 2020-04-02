@@ -97,5 +97,5 @@ func main() {
 		os.Exit(1)
 	}
 
-	game.PlayGame()
+	game.Play()
 }

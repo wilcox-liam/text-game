@@ -1,5 +1,5 @@
-#The room with ID 1 is the starting room
 #Keys cannot be edited, with the exception of game dictionary shortcuts.
+#The value of any directions should not match the name of anything else. i.e do not name an item west
 
 name: Haunted's House
 description: >
@@ -10,6 +10,7 @@ description: >
   but before you get out of bed you pause for a moment... something feels ... wrong.
 currentroomid: 1
 savedgame: false
+displayroominfo: true
 
 player:
   name: Jazminne
@@ -75,8 +76,8 @@ gamedictionary:
     refreshing: "Refreshing..."
     itemAdded: "Item %s added to you inventory."
     helpAdvice: "type 'help' at any time to list the available commands."
-    saveSucessful: "Game state saved succesfully"
-    loadSucessful: "Game state loaded succesfully"
+    saveSuccessful: "Game state saved succesfully"
+    loadSuccessful: "Game state loaded succesfully"
 
   errors:
     # Game errors
@@ -120,6 +121,7 @@ rooms:
           -
             name: pen
             description: Liam's favourite Pen.
+            takeable: true
       -
         name: guitar
         description: Your dad bought you this guitar.
