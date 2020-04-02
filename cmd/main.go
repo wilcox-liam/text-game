@@ -16,6 +16,10 @@
 //Add Use Functionality
 //Add Close Functionality?
 
+//UpdateState is a mess
+//Take doesnt remove the item from the room
+//Use doesnt support target items
+
 package main
 
 import (
@@ -82,12 +86,16 @@ func main() {
 	}
 
 	var game *textgame.Game
-	var newGame bool
+	var err error
 	if saveState == saveStateDefault {
-		game = textgame.LoadGameState(lang + ".yaml")
-		newGame = true
+		game, err = textgame.LoadGameState(textgame.ConfDir + lang)
 	} else {
-		game = textgame.LoadGameState(saveState + ".yaml")
+		game, err = textgame.LoadGameState(textgame.SaveDir + saveState)
 	}
-	game.PlayGame(newGame)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	game.PlayGame()
 }

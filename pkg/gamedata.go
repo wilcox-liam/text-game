@@ -14,7 +14,9 @@ type Game struct {
 	Player         *Player
 	GameDictionary map[string]map[string]string
 	Rooms          []Room
+	CurrentRoomID  int
 	CurrentRoom    *Room
+	SavedGame	   bool
 }
 
 type Player struct {

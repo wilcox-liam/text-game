@@ -6,8 +6,10 @@ description: >
   You awake with a start, it is the middle of the night, you can hear rain pattering on the roof,
   and the air feels unusually cold. 
 
-  Suddenly you realise that you have an urgent need to use the bathroom, so you grab your phone, 
+  Suddenly you realise that you have an urgent need to use the bathroom, so you grab your phone,
   but before you get out of bed you pause for a moment... something feels ... wrong.
+currentroomid: 1
+savedgame: false
 
 player:
   name: Jazminne
@@ -30,6 +32,7 @@ gamedictionary:
     help: &help help
     refresh: &refresh refresh
     save: &save save
+    load: &load load
 
   shortcuts:
     #Game Command Shortcuts
@@ -42,6 +45,7 @@ gamedictionary:
     h: *help
     r: *refresh
     s: *save
+    l: *load
 
   helptext:
     # Help Text
@@ -54,6 +58,7 @@ gamedictionary:
     *help: Displays Help Text
     *refresh: Refreshes the screen and displays the room information again.
     *save: Saves your game state to be continued another time.
+    *load: Loads your game from a previous save state.
 
   directions:
     #Common game direction shortcuts
@@ -71,6 +76,7 @@ gamedictionary:
     itemAdded: "Item %s added to you inventory."
     helpAdvice: "type 'help' at any time to list the available commands."
     saveSucessful: "Game state saved sucesfully"
+    loadSucessful: "Game state loaded sucesfully"
 
   errors:
     # Game errors

@@ -7,14 +7,15 @@ import (
 )
 
 // Go handles user input commandGo and will set CurrentRoom to the new room.
-func (g *Game) Go(where string) (bool, error) {
+func (g *Game) Go(where string) error {
 	exit := g.CurrentRoom.GetExitByDirection(where)
 	if exit == nil {
-		return false, errors.New(fmt.Sprintf(g.GameDictionary["errors"]["noExit"], g.CurrentRoom.Name, where))
+		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["noExit"], g.CurrentRoom.Name, where))
 	} else {
 		g.CurrentRoom = exit.Room
+		g.CurrentRoomID = exit.Room.ID
 	}
-	return true, nil
+	return nil
 }
 
 // Examine will return the description of an object matching the
