@@ -16,7 +16,7 @@ type Game struct {
 	Rooms          []Room
 	CurrentRoomID  int
 	CurrentRoom    *Room
-	SavedGame	   bool
+	SavedGame      bool
 }
 
 type Player struct {

@@ -39,12 +39,12 @@ func SaveGameState(g *Game, stateName string) error {
 	if err != nil {
 		fmt.Printf("Error parsing YAML file: %s\n", err)
 	}
-	path := SaveDir+stateName+".yaml"
+	path := SaveDir + stateName + ".yaml"
 	err = ioutil.WriteFile(path, d, 0644)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Unable to write file %s", path))
 	}
-	fmt.Println(g.GameDictionary["strings"]["saveSucessful"])
+	fmt.Println(g.GameDictionary["strings"]["saveSuccessful"])
 	return nil
 }
 
@@ -68,7 +68,7 @@ func (g *Game) sanityCheck() {
 	//Must have a description
 }
 
-// setInitialState initalises the game state with information that cannot be provided by the yaml configuration file.
+// setInitialState initialises the game state with information that cannot be provided by the yaml configuration file.
 // The game room with ID 1 is set as the Room the Player begins the game in.
 func (g *Game) initialiseGameState() {
 	g.CurrentRoom = g.GetRoomByID(g.CurrentRoomID)
@@ -104,7 +104,7 @@ func (g *Game) expandShortcut(words []string) []string {
 
 // Does marshal copy case or lower case it?
 // updateState updates the game state with user provided input.
-// returns true if the go command executed sucessfully.
+// returns true if the go command executed successfully.
 // Bug(wilcox-liam): Is the bool necessary or should I check the error type instead?
 // Bug(wilcox-liam): Only expand the first word. Expand the second word if first word = go
 // Bug(wilcox-liam): Look through this function again.
@@ -140,7 +140,7 @@ func (g *Game) UpdateGameState(input string) (*Game, error) {
 	} else if command == strings.ToLower(g.GameDictionary["commands"]["load"]) {
 		g, err := LoadGameState(SaveDir + object)
 		if err == nil {
-			fmt.Println(g.GameDictionary["strings"]["loadSucessful"])
+			fmt.Println(g.GameDictionary["strings"]["loadSuccessful"])
 		}
 		return g, err
 	} else if command == strings.ToLower(g.GameDictionary["commands"]["open"]) {
