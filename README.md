@@ -1,3 +1,5 @@
+[![Go Report Card](https://goreportcard.com/report/github.com/wilcox-liam/text-game)](https://goreportcard.com/report/github.com/wilcox-liam/text-game)
+
 # text-game
 
 A simple text adventure game as a learning exercise
