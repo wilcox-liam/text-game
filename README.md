@@ -1,4 +1,4 @@
-[![Go Report Card](https://goreportcard.com/report/github.com/wilcox-liam/text-game)](https://goreportcard.com/report/github.com/wilcox-liam/text-game)
+[![Go Report Card](https://goreportcard.com/badge/github.com/wilcox-liam/text-game)](https://goreportcard.com/report/github.com/wilcox-liam/text-game)
 
 # text-game
 
