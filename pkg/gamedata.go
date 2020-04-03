@@ -63,21 +63,37 @@ type Item struct {
 //Bug(wilcox-liam): Should maybe be pointer receivers
 type ItemContainer interface {
 	GetItems() []Item
+	SetItems(items []Item)
 }
 
 // GetItems returns a slice of Items in a Room.
-func (r Room) GetItems() []Item {
+func (r *Room) GetItems() []Item {
 	return r.Items
 }
 
 // GetItems returns a slice of Items in an Item.
-func (i Item) GetItems() []Item {
+func (i *Item) GetItems() []Item {
 	return i.Items
 }
 
 // GetItems returns a slice of Items in a Player's Inventory.
-func (p Player) GetItems() []Item {
+func (p *Player) GetItems() []Item {
 	return p.Inventory
+}
+
+// GetItems returns a slice of Items in a Room.
+func (r *Room) SetItems(items []Item) {
+	r.Items = items
+}
+
+// GetItems returns a slice of Items in an Item.
+func (i *Item) SetItems(items []Item) {
+	i.Items = items
+}
+
+// GetItems returns a slice of Items in a Player's Inventory.
+func (p *Player) SetItems(items []Item) {
+	p.Inventory = items
 }
 
 // GetRoomByID returns a Room matching a provided name.
@@ -122,7 +138,7 @@ func getItemByName(name string, ic ItemContainer) *Item {
 			return &items[index]
 		}
 		if item.Open {
-			subItem := getItemByName(name, item)
+			subItem := getItemByName(name, &item)
 			if subItem != nil {
 				return subItem
 			}
@@ -135,6 +151,38 @@ func getItemByName(name string, ic ItemContainer) *Item {
 //GetItemByName returns an Item in a room
 func (r *Room) GetItemByName(name string) *Item {
 	return getItemByName(name, r)
+}
+
+// Pop returns and removes an item from a room
+func (r *Room) Pop(name string) *Item {
+	return pop(name, r)
+}
+
+// Remove an item from a slice - maintaining order
+func remove(slice []Item, s int) []Item {
+    return append(slice[:s], slice[s+1:]...)
+}
+
+// Pop returns and removes an item from an ItemContainer
+// Bug(wilcox-liam): Better abstraction, became specific to the take command
+func pop(name string, ic ItemContainer) *Item {
+	items := ic.GetItems()
+	for index, item := range items {
+		if strings.ToLower(item.Name) == strings.ToLower(name) {
+			if item.Takeable {
+				items = remove(items, index)
+				ic.SetItems(items)			
+			}
+			return &item
+		}
+		if item.Open {
+			subItem := pop(name, &items[index])
+			if subItem != nil {
+				return subItem
+			}
+		}
+	}
+	return nil
 }
 
 // GetDirections returns a formatted string of all Exits in a Room.
@@ -175,10 +223,9 @@ func getItemOptions(ic ItemContainer) string {
 	for _, item := range ic.GetItems() {
 		options += " [" + item.Name
 		if item.Open {
-			options += getItemOptions(item)
+			options += getItemOptions(&item)
 		}
 		options += "]"
-
 	}
 	return options
 }

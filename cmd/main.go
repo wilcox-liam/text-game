@@ -16,7 +16,6 @@
 //Add Use Functionality
 //Add Close Functionality?
 
-//UpdateState is a mess
 //Take doesnt remove the item from the room
 //Use doesnt support target items
 
@@ -40,18 +39,15 @@ func commandLineOptions() (string, string) {
 	lang := flag.String("lang", "en", "Game Language")
 	saveState := flag.String("state", saveStateDefault, "Save State Name")
 	flag.Parse()
-	validateLanguage(*lang)
+	if *lang != langDefault {
+		validateLanguage(*lang)
+	}
 	return *lang, *saveState
-}
-
-// validLanguages returns a slice of languages the game supports.
-func validLanguages() []string {
-	return []string{"en", "es"}
 }
 
 // validateLanguage checks if a provided language is valid. If not the game exits.
 func validateLanguage(lang string) {
-	if !contains(validLanguages(), lang) {
+	if !contains(textgame.ReadLanguages(), lang) {
 		fmt.Println("Unknown Language")
 		os.Exit(1)
 	}
@@ -59,7 +55,7 @@ func validateLanguage(lang string) {
 
 // languages presents the games valid languages to a user and returns the users choice.
 func language() string {
-	validLanguages := validLanguages()
+	validLanguages := textgame.ReadLanguages()
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("Language? ", validLanguages, ": ")
 	lang, _ := reader.ReadString('\n')

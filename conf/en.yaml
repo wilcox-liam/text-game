@@ -34,6 +34,7 @@ gamedictionary:
     refresh: &refresh refresh
     save: &save save
     load: &load load
+    quit: &quit quit
 
   shortcuts:
     #Game Command Shortcuts
@@ -47,6 +48,7 @@ gamedictionary:
     r: *refresh
     s: *save
     l: *load
+    q: *quit
 
   helptext:
     # Help Text
@@ -60,6 +62,7 @@ gamedictionary:
     *refresh: Refreshes the screen and displays the room information again.
     *save: Saves your game state to be continued another time.
     *load: Loads your game from a previous save state.
+    *quit: Exit the game.
 
   directions:
     #Common game direction shortcuts
@@ -100,7 +103,9 @@ rooms:
       Your desk is in the corner, your laptop sits closed on top of it.
       You can see the wardrobe in front of you, it is ajar...
       Liam always forgets to shut it. Everything appears to be normal
-      except for one thing... Your boyfriend is not here.
+      except for one thing... Your boyfriend is not here!
+       
+      He must be in the bathroom, you decide to get out of bed to go and check.
     exits:
       -
         roomid: 2
@@ -126,6 +131,7 @@ rooms:
         name: guitar
         description: Your dad bought you this guitar.
         useable: true
+        takeable: true
         usestring: You bust out a quick Wonderwall!... But it isn't the time for that.
       -
         name: wardrobe

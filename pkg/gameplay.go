@@ -22,7 +22,7 @@ func (g *Game) Go(where string) error {
 // provided name or direction.
 func (g *Game) Examine(name string) error {
 	// Items in the Room
-	item := getItemByName(name, g.CurrentRoom)
+	item := g.CurrentRoom.GetItemByName(name)
 	if item != nil {
 		fmt.Println(item.Description)
 		return nil
@@ -50,7 +50,7 @@ func (g *Game) Examine(name string) error {
 // Open will set the Open attribute of an item to true in the Current Room
 // or the players inventory.
 func (g *Game) Open(name string) error {
-	item := getItemByName(name, g.CurrentRoom)
+	item := g.CurrentRoom.GetItemByName(name)
 	if item == nil {
 		item = getItemByName(name, g.Player)
 	}
@@ -73,7 +73,7 @@ func (g *Game) Open(name string) error {
 // Take will remove an item from the room and add it to a players inventory.
 // The item must be flagged as takeable.
 func (g *Game) Take(name string) error {
-	item := g.CurrentRoom.GetItemByName(name)
+	item := g.CurrentRoom.Pop(name)
 	if item == nil {
 		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["noItem"], name, g.CurrentRoom.Name))
 	}
@@ -115,7 +115,7 @@ func (g *Game) Help() string {
 	return helptext
 }
 
-// sortedKeys is a helper function to sorts the keys in a map
+// sortedKeys is a helper function to sort the keys in a map
 func sortedKeys(m map[string]string) []string {
 	keys := make([]string, len(m))
 	i := 0

@@ -13,6 +13,20 @@ import (
 const ConfDir = "../conf/"
 const SaveDir = "../saves/"
 
+// ReadLanguages lists all languages provided by the game configuration.
+func ReadLanguages() []string {
+	files, err := ioutil.ReadDir(ConfDir)
+	if err != nil {
+		fmt.Printf("No language files found.", err)
+		os.Exit(1)
+	}
+	var langs []string
+	for _, f := range files {
+		langs = append(langs, strings.Replace(f.Name(), ".yaml", "", -1))
+	}
+	return langs
+}
+
 // LoadGameState restores a game state from a file into memory.
 func LoadGameState(fileName string) (*Game, error) {
 	path := fileName + ".yaml"
@@ -111,7 +125,7 @@ func (g *Game) ExpandDirection(word string) string {
 }
 
 // ParseInput takes a user input and returns the command, object and objectTarget test
-//<Command> <Object> [on <Object>]. Object names may incluse spaces.
+//<Command> <Object> [on <Object>]. Object names may includes spaces.
 func (g *Game) ParseInput(input string) (string, string, string, error) {
 	words := strings.Split(input, " ")
 	if len(words) == 0 {
@@ -172,6 +186,8 @@ func (g *Game) UpdateGameState(input string) (*Game, error) {
 		}
 		g.DisplayRoomInfo = true
 		return g, err
+	case strings.ToLower(g.GameDictionary["commands"]["quit"]):
+		os.Exit(1)
 	case strings.ToLower(g.GameDictionary["commands"]["open"]):
 		return g, g.Open(object)
 	case strings.ToLower(g.GameDictionary["commands"]["take"]):
@@ -181,6 +197,7 @@ func (g *Game) UpdateGameState(input string) (*Game, error) {
 	default:
 		return g, errors.New(fmt.Sprintf(g.GameDictionary["errors"]["invalidCommand"], input))
 	}
+	return g, nil
 }
 
 // PlayGame contains the game logic and game loop for playing the textgame.
