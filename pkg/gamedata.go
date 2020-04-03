@@ -60,7 +60,6 @@ type Item struct {
 	Items       []Item
 }
 
-//Bug(wilcox-liam): Should maybe be pointer receivers
 type ItemContainer interface {
 	GetItems() []Item
 	SetItems(items []Item)
@@ -160,7 +159,7 @@ func (r *Room) Pop(name string) *Item {
 
 // Remove an item from a slice - maintaining order
 func remove(slice []Item, s int) []Item {
-    return append(slice[:s], slice[s+1:]...)
+	return append(slice[:s], slice[s+1:]...)
 }
 
 // Pop returns and removes an item from an ItemContainer
@@ -171,7 +170,7 @@ func pop(name string, ic ItemContainer) *Item {
 		if strings.ToLower(item.Name) == strings.ToLower(name) {
 			if item.Takeable {
 				items = remove(items, index)
-				ic.SetItems(items)			
+				ic.SetItems(items)
 			}
 			return &item
 		}
@@ -189,7 +188,7 @@ func pop(name string, ic ItemContainer) *Item {
 func (r *Room) GetDirections() string {
 	directions := "Directions: "
 	for _, exit := range r.Exits {
-		directions += "[" + exit.Direction + "]"
+		directions += "[" + exit.Direction + "] "
 	}
 	return directions
 }
@@ -198,7 +197,7 @@ func (r *Room) GetDirections() string {
 func (r *Room) GetExitOptions() string {
 	var exitNames string
 	for _, exit := range r.Exits {
-		exitNames += "[" + exit.Name + "]"
+		exitNames += " [" + exit.Name + "]"
 	}
 	return exitNames
 }

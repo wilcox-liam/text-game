@@ -13,7 +13,7 @@ func (g *Game) Go(where string) error {
 		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["noExit"], g.CurrentRoom.Name, where))
 	} else {
 		g.CurrentRoom = exit.Room
-		g.CurrentRoomID = exit.Room.ID
+		g.CurrentRoomID = exit.RoomID
 	}
 	return nil
 }
@@ -96,9 +96,8 @@ func (g *Game) Use(name string, on string) error {
 	if item.Useable {
 		fmt.Println(item.UseString)
 		return nil
-	} else {
-		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["itemNotUseable"]))
 	}
+	return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["itemNotUseable"]))
 }
 
 // Help returns a list of ingame commands and shortcuts based on the Game Dictionary

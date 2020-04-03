@@ -1,5 +1,5 @@
-#Keys cannot be edited, with the exception of game dictionary shortcuts.
-#The value of any directions should not match the name of anything else. i.e do not name an item west
+# All Values are editable
+# Keys cannot be edited, with the exception of game dictionary shortcuts and directions.
 
 name: Haunted's House
 description: >
@@ -69,7 +69,9 @@ gamedictionary:
     n: &north north
     e: &east east
     s: &south south
-    w: &west west    
+    w: &west west
+    u: &up up
+    d: &down down
 
   strings:
     # Game strings
@@ -144,12 +146,41 @@ rooms:
   -
     id: 2
     name: Upstairs Hallway
+    description: >
+      You walk onto the landing at the top of the stairs, the floor makes a creaking sound as you move into the room.
+    exits:
+      -
+        roomid: 4
+        name: white door
+        direction: *north
+        description: A thick white door
+        locked: false     
+      -
+        roomid: 1
+        name: old door
+        direction: *east
+        description: An old wooden door.
+        locked: false   
   -
     id: 3
     name: Martin's Bedroom
   -
     id: 4
     name: Upstairs Bathroom
+    description: poop
+    exits:
+      -
+        roomid: 15
+        name: Tile in the room
+        direction: *up
+        description: There is a removable tile in the roof, it is pretty high.
+        locked: false  
+      -
+        roomid: 2
+        name: white door
+        direction: *south
+        description: A thick white door
+        locked: false              
   -
     id: 5
     name: Downstairs Hallway
@@ -180,3 +211,14 @@ rooms:
   -
     id: 14
     name: Patio
+  -
+    id: 15
+    name: Attic
+    description: This place is very creepy!
+    exits:
+      -
+        roomid: 4
+        name: Removed tile in the floor
+        direction: *down
+        description: The tile you removed leading back to the bathroom
+        locked: false     

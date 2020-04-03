@@ -11,13 +11,14 @@
 
 //TODO
 //Learn logging for golang
+//Exposed functions/fields
 
-//Add Take Functionality
-//Add Use Functionality
-//Add Close Functionality?
-
-//Take doesnt remove the item from the room
 //Use doesnt support target items
+
+//go lint
+//Merge Pop Function with Take function
+
+//Add Close Functionality?
 
 package main
 

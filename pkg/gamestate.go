@@ -99,7 +99,6 @@ func (g *Game) setExits() {
 				fmt.Println("Invalid Room ID", exit.RoomID, "in exit", room.Name)
 				os.Exit(1)
 			}
-			return
 		}
 	}
 }
