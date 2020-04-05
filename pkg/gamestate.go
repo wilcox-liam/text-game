@@ -1,8 +1,9 @@
+// Package textgame provides data structures and functions to support
+// development of Text Adventure Games.
 package textgame
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -10,7 +11,10 @@ import (
 	"strings"
 )
 
+// ConfDir is the directory where new game configurations are stored.
 const ConfDir = "../conf/"
+
+// SaveDir is the directory where save games are stored.
 const SaveDir = "../saves/"
 
 // ReadLanguages lists all languages provided by the Game configuration.
@@ -32,7 +36,7 @@ func LoadGameState(fileName string) (*Game, error) {
 	path := fileName + ".yaml"
 	yamlFile, err := ioutil.ReadFile(path)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Unable to find save state %s", path))
+		return nil, fmt.Errorf("Unable to find save state %s", path)
 	}
 	var game Game
 	err = yaml.Unmarshal(yamlFile, &game)
@@ -55,7 +59,7 @@ func saveGameState(g *Game, stateName string) error {
 	path := SaveDir + stateName + ".yaml"
 	err = ioutil.WriteFile(path, d, 0644)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Unable to write file %s", path))
+		return fmt.Errorf("Unable to write file %s", path)
 	}
 	fmt.Println(g.Dictionary["strings"]["saveSuccessful"])
 	return nil
@@ -113,7 +117,7 @@ func (g *Game) expandDirection(word string) string {
 func (g *Game) parseInput(input string) (string, string, string, error) {
 	words := strings.Split(input, " ")
 	if len(words) == 0 {
-		return "", "", "", errors.New(fmt.Sprintf(g.Dictionary["errors"]["invalidCommand"], input))
+		return "", "", "", fmt.Errorf(g.Dictionary["errors"]["invalidCommand"], input)
 	}
 	command := g.expandShortcut(words[0])
 
@@ -124,7 +128,7 @@ func (g *Game) parseInput(input string) (string, string, string, error) {
 		if len(words) >= 4 && command == strings.ToLower(g.Dictionary["commands"]["use"]) {
 			objects := strings.Split(object, " on ")
 			if len(objects) != 2 {
-				return "", "", "", errors.New(fmt.Sprintf(g.Dictionary["errors"]["invalidCommand"], input))
+				return "", "", "", fmt.Errorf(g.Dictionary["errors"]["invalidCommand"], input)
 			}
 			object = objects[0]
 			objectTarget = objects[1]
@@ -177,17 +181,17 @@ func (g *Game) updateGameState(input string) (*Game, error) {
 	case strings.ToLower(g.Dictionary["commands"]["use"]):
 		return g, g.use(object, objectTarget)
 	default:
-		return g, errors.New(fmt.Sprintf(g.Dictionary["errors"]["invalidCommand"], input))
+		return g, fmt.Errorf(g.Dictionary["errors"]["invalidCommand"], input)
 	}
 	return g, nil
 }
 
-// PlayGame contains the game logic and game loop for playing the textgame.
+// Play contains the game logic and game loop for playing the textgame.
 // Bug(wilcox-liam): Is replacing the game from within the game loop super weird?
 func (g *Game) Play() {
 	//Do not display the welcome text if loading a saved game
 	if g.SavedGame == false {
-		fmt.Println(fmt.Sprintf(g.Dictionary["strings"]["welcome"], g.Player.Name, g.Name))
+		fmt.Println(fmt.Errorf(g.Dictionary["strings"]["welcome"], g.Player.Name, g.Name))
 		fmt.Println()
 		fmt.Println(g.Dictionary["strings"]["helpAdvice"])
 		fmt.Println()

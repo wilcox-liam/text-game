@@ -1,5 +1,5 @@
-// textgame provides data structures and functions to support development of
-// Text Adventure Games.
+// Package textgame provides data structures and functions to support
+// development of Text Adventure Games.
 package textgame
 
 // It is idiomatic to use a pointer receiver for a method that modifies a slice
@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// Game provides the data structures to play a text-game
 type Game struct {
 	Name            string
 	Description     string
@@ -44,6 +45,7 @@ type exit struct {
 
 	RoomID    int
 	Direction string
+	GoString  string
 }
 
 type item struct {
@@ -309,7 +311,7 @@ func remove(slice []item, s int) []item {
 }
 
 // Pop returns and removes an item from an ItemContainer
-// Bug(wilcox-liam): Better abstraction, became specific to the take command
+// Bug(wilcox-liam): Better abstraction, this became specific to the take command
 func pop(name string, ic itemContainer) *item {
 	items := ic.getItems()
 	for index, item := range items {

@@ -1,3 +1,5 @@
+// Package textgame provides data structures and functions to support
+// development of Text Adventure Games.
 package textgame
 
 import (
@@ -11,14 +13,14 @@ import (
 func (g *Game) goDirection(where string) error {
 	exit := g.CurrentRoom.getExitByDirection(where)
 	if exit == nil {
-		return errors.New(fmt.Sprintf(g.Dictionary["errors"]["noExit"], g.CurrentRoom.Name, where))
-	} else {
-		if exit.Locked {
-			return errors.New(exit.LockedString)
-		}
-		nextRoom := g.getRoomByID(exit.RoomID)
-		g.setCurrentRoom(nextRoom)
+		return fmt.Errorf(g.Dictionary["errors"]["noExit"], g.CurrentRoom.Name, where)
 	}
+	if exit.Locked {
+		return errors.New(exit.LockedString)
+	}
+	nextRoom := g.getRoomByID(exit.RoomID)
+	g.setCurrentRoom(nextRoom)
+	fmt.Println(exit.GoString)
 	return nil
 }
 
@@ -41,21 +43,21 @@ func (g *Game) examine(name string) error {
 		fmt.Println("(" + exit.Name + "): " + exit.Description)
 		return nil
 	}
-	return errors.New(fmt.Sprintf(g.Dictionary["errors"]["noObject"], name, g.CurrentRoom.Name))
+	return fmt.Errorf(g.Dictionary["errors"]["noObject"], name, g.CurrentRoom.Name)
 }
 
 // open will set the Open attribute of a visible item to true.
 func (g *Game) open(name string) error {
 	item := g.getItemByName(name)
 	if item == nil {
-		return errors.New(fmt.Sprintf(g.Dictionary["errors"]["noObject"], name, g.CurrentRoom.Name))
+		return fmt.Errorf(g.Dictionary["errors"]["noObject"], name, g.CurrentRoom.Name)
 	}
 	//return if item is already open or cannot be opened.
 	if item.Open {
-		return errors.New(fmt.Sprintf(g.Dictionary["errors"]["itemOpen"], item.Name))
+		return fmt.Errorf(g.Dictionary["errors"]["itemOpen"], item.Name)
 	}
 	if item.Openable == false {
-		return errors.New(fmt.Sprintf(g.Dictionary["errors"]["itemNotOpenable"], item.Name))
+		return fmt.Errorf(g.Dictionary["errors"]["itemNotOpenable"], item.Name)
 	}
 	if item.Locked == true {
 		return errors.New(item.LockedString)
@@ -70,15 +72,15 @@ func (g *Game) open(name string) error {
 func (g *Game) take(name string) error {
 	item := g.CurrentRoom.pop(name)
 	if item == nil {
-		return errors.New(fmt.Sprintf(g.Dictionary["errors"]["noItem"], name, g.CurrentRoom.Name))
+		return fmt.Errorf(g.Dictionary["errors"]["noItem"], name, g.CurrentRoom.Name)
 	}
 	if item.Takeable {
 		g.Player.Inventory = append(g.Player.Inventory, *item)
-		fmt.Println(fmt.Sprintf(g.Dictionary["strings"]["itemAdded"], item.Name))
+		fmt.Printf(g.Dictionary["strings"]["itemAdded"], item.Name)
+		fmt.Println()
 		return nil
-	} else {
-		return errors.New(fmt.Sprintf(g.Dictionary["errors"]["itemNotTakeable"]))
 	}
+	return fmt.Errorf(g.Dictionary["errors"]["itemNotTakeable"])
 }
 
 // use actions the use function of an item in a players inventory or the room.
@@ -86,21 +88,21 @@ func (g *Game) take(name string) error {
 func (g *Game) use(name string, on string) error {
 	item := g.getItemByName(name)
 	if item == nil {
-		return errors.New(fmt.Sprintf(g.Dictionary["errors"]["noItem"], name, g.CurrentRoom.Name))
+		return fmt.Errorf(g.Dictionary["errors"]["noItem"], name, g.CurrentRoom.Name)
 	}
 	if on == "" {
 		if item.Useable {
 			fmt.Println(item.UseString)
 			return nil
 		}
-		return errors.New(fmt.Sprintf(g.Dictionary["errors"]["itemNotUseable"]))
+		return fmt.Errorf(g.Dictionary["errors"]["itemNotUseable"])
 	}
 	var unlockable unlockable
 	unlockable = g.getItemByName(on)
 	if isNil(unlockable) {
 		unlockable = g.CurrentRoom.getExitByName(on)
 		if isNil(unlockable) {
-			return errors.New(fmt.Sprintf(g.Dictionary["errors"]["noItem"], on, g.CurrentRoom.Name))
+			return fmt.Errorf(g.Dictionary["errors"]["noItem"], on, g.CurrentRoom.Name)
 		}
 	}
 	return g.useOn(item, unlockable)
@@ -114,7 +116,7 @@ func (g *Game) useOn(item *item, unlockable unlockable) error {
 		fmt.Println(unlockable.unlockString())
 		return nil
 	}
-	return errors.New(fmt.Sprintf(g.Dictionary["errors"]["cannotUseItem"], item.Name, unlockable.name()))
+	return fmt.Errorf(g.Dictionary["errors"]["cannotUseItem"], item.Name, unlockable.name())
 }
 
 // isNil is a helper function to determine if an interface is nil

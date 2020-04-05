@@ -115,8 +115,9 @@ rooms:
         name: door
         direction: *west
         description: An old wooden door.
-        locked: true
+        locked: false
         lockedstring: This door is locked!
+        gostring: You open the door and walk through.
 
     items:
       -

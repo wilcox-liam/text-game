@@ -17,9 +17,6 @@
 //Merge Pop Function with Take function
 //Add Close Functionality?
 
-// g.GetVisibleObjects
-// g.GetVisibleObjectsInRoom
-
 package main
 
 import (
