@@ -25,6 +25,7 @@ type Player struct {
 	Inventory []Item
 }
 
+//Examinable
 type Room struct {
 	ID          int
 	Name        string
@@ -36,12 +37,14 @@ type Room struct {
 //Examinable
 //on Useable
 type Exit struct {
-	RoomID      int
-	Name        string
-	Direction   string
-	Description string
-	Locked      bool
-	Room        *Room
+	RoomID       int
+	Name         string
+	Direction    string
+	Description  string
+	Locked       bool
+	UnlockedWith string
+	UnlockString string
+	Room         *Room
 }
 
 //Examinable
@@ -49,20 +52,77 @@ type Exit struct {
 //Takeable
 //Useable on
 type Item struct {
-	Name        string
-	Description string
-	Open        bool
-	Openable    bool
-	OpenString  string
-	Takeable    bool
-	Useable     bool
-	UseString   string
-	Items       []Item
+	Name         string
+	Description  string
+	Open         bool
+	Openable     bool
+	OpenString   string
+	Takeable     bool
+	Useable      bool
+	UseString    string
+	Items        []Item
+	Locked       bool
+	UnlockedWith string
+	UnlockString string
 }
 
 type ItemContainer interface {
 	GetItems() []Item
 	SetItems(items []Item)
+}
+
+type Unlockable interface {
+	name() string
+	isLocked() bool
+	setLocked(locked bool)
+	unlockedWith() string
+	unlockString() string
+}
+
+type Examinable interface {
+	name() string
+	description() string
+	direction() string
+}
+
+func (e *Exit) name() string {
+	return e.Name
+}
+
+func (e *Exit) isLocked() bool {
+	return e.Locked
+}
+
+func (e *Exit) setLocked(locked bool) {
+	e.Locked = locked
+}
+
+func (e *Exit) unlockedWith() string {
+	return e.UnlockedWith
+}
+
+func (e *Exit) unlockString() string {
+	return e.UnlockString
+}
+
+func (i *Item) name() string {
+	return i.Name
+}
+
+func (i *Item) isLocked() bool {
+	return i.Locked
+}
+
+func (i *Item) setLocked(locked bool) {
+	i.Locked = locked
+}
+
+func (i *Item) unlockedWith() string {
+	return i.UnlockedWith
+}
+
+func (i *Item) unlockString() string {
+	return i.UnlockString
 }
 
 // GetItems returns a slice of Items in a Room.

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"sort"
+	"reflect"
 )
 
 // Go handles user input commandGo and will set CurrentRoom to the new room.
@@ -86,18 +87,42 @@ func (g *Game) Take(name string) error {
 	}
 }
 
+func isNil(i interface{}) bool {                        
+   return i == nil || reflect.ValueOf(i).IsNil()                       }
+
 // Use actions the use function of an item in a players inventory or the room.
-// Bug(wilcox-liam): NYI Using an item on another item.
+// Bug(wilcox-liam): Check the players inventory for the item too
 func (g *Game) Use(name string, on string) error {
 	item := g.CurrentRoom.GetItemByName(name)
 	if item == nil {
 		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["noItem"], name, g.CurrentRoom.Name))
 	}
-	if item.Useable {
-		fmt.Println(item.UseString)
+	if on == "" {
+		if item.Useable {
+			fmt.Println(item.UseString)
+			return nil
+		}
+		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["itemNotUseable"]))
+	}
+	var unlockable Unlockable = g.CurrentRoom.GetItemByName(on)
+	if isNil(unlockable) {
+		unlockable = g.CurrentRoom.GetExitByName(on)
+	}
+	if isNil(unlockable) {
+		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["noItem"], on, g.CurrentRoom.Name))
+	}
+	return g.UseOn(item, unlockable)
+}
+
+// UseOn actions the use function of an item in a players inventory or room or another item
+// in the players inventory or room.
+func (g *Game) UseOn(item *Item, unlockable Unlockable) error {
+	if unlockable.isLocked() && unlockable.unlockedWith() == item.Name {
+		unlockable.setLocked(false)
+		fmt.Println(unlockable.unlockString())
 		return nil
 	}
-	return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["itemNotUseable"]))
+	return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["cannotUseItem"], item.Name, unlockable.name()))
 }
 
 // Help returns a list of ingame commands and shortcuts based on the Game Dictionary

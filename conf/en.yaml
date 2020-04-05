@@ -94,6 +94,7 @@ gamedictionary:
     noItem: "There is no Item named %s in %s."    
     noObject: "There is no object named %s in %s or in your inventory."  
     invalidCommand: "Invalid command: %s"
+    cannotUseItem: "Cannot use item %s on item %s."
 
 rooms:
   -
@@ -111,10 +112,12 @@ rooms:
     exits:
       -
         roomid: 2
-        name: old door
+        name: door
         direction: *west
         description: An old wooden door.
-        locked: false
+        locked: true
+        unlockedwith: key
+        unlockstring: Woot Woot
     items:
       -
         name: desk
@@ -130,7 +133,7 @@ rooms:
             description: Liam's favourite Pen.
             takeable: true
       -
-        name: guitar
+        name: key
         description: Your dad bought you this guitar.
         useable: true
         takeable: true
