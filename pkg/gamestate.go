@@ -13,7 +13,7 @@ import (
 const ConfDir = "../conf/"
 const SaveDir = "../saves/"
 
-// ReadLanguages lists all languages provided by the game configuration.
+// ReadLanguages lists all languages provided by the Game configuration.
 func ReadLanguages() []string {
 	files, err := ioutil.ReadDir(ConfDir)
 	if err != nil {
@@ -27,14 +27,13 @@ func ReadLanguages() []string {
 	return langs
 }
 
-// LoadGameState restores a game state from a file into memory.
+// LoadGameState restores a Game state from a file into memory.
 func LoadGameState(fileName string) (*Game, error) {
 	path := fileName + ".yaml"
 	yamlFile, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("Unable to find save state %s", path))
 	}
-
 	var game Game
 	err = yaml.Unmarshal(yamlFile, &game)
 	if err != nil {
@@ -46,8 +45,8 @@ func LoadGameState(fileName string) (*Game, error) {
 	return &game, nil
 }
 
-// SaveGameState saves a game state to a file to be continued later.
-func SaveGameState(g *Game, stateName string) error {
+// saveGameState saves a Game state to a file to be continued later.
+func saveGameState(g *Game, stateName string) error {
 	g.SavedGame = true
 	d, err := yaml.Marshal(g)
 	if err != nil {
@@ -58,7 +57,7 @@ func SaveGameState(g *Game, stateName string) error {
 	if err != nil {
 		return errors.New(fmt.Sprintf("Unable to write file %s", path))
 	}
-	fmt.Println(g.GameDictionary["strings"]["saveSuccessful"])
+	fmt.Println(g.Dictionary["strings"]["saveSuccessful"])
 	return nil
 }
 
@@ -83,118 +82,102 @@ func (g *Game) sanityCheck() {
 	//General
 }
 
-// setInitialState initialises the game state with information that cannot be provided by the yaml configuration file.
-// The game room with ID 1 is set as the Room the Player begins the game in.
+// setInitialState initialises the Game state with information that cannot
+// be provided by the yaml configuration file.
 func (g *Game) initialiseGameState() {
-	g.CurrentRoom = g.GetRoomByID(g.CurrentRoomID)
-	g.setExits()
-}
-
-// setExits converts all RoomID's provided by the yaml configuration into a pointer to that room.
-func (g *Game) setExits() {
-	for i, room := range g.Rooms {
-		for j, exit := range room.Exits {
-			g.Rooms[i].Exits[j].Room = g.GetRoomByID(exit.RoomID)
-			if g.Rooms[i].Exits[j].Room == nil {
-				fmt.Println("Invalid Room ID", exit.RoomID, "in exit", room.Name)
-				os.Exit(1)
-			}
-		}
-	}
+	g.setCurrentRoom(g.getRoomByID(g.CurrentRoomID))
 }
 
 // expandCommand takes a user entered shortcut and expands it into the full game command
 // using the Game Dictionary provided in the yaml configuration.
-func (g *Game) ExpandShortcut(word string) string {
-	lookup := strings.ToLower(g.GameDictionary["shortcuts"][strings.ToLower(word)])
+func (g *Game) expandShortcut(word string) string {
+	lookup := strings.ToLower(g.Dictionary["shortcuts"][strings.ToLower(word)])
 	if lookup != "" {
 		return lookup
 	}
 	return word
 }
 
-// ExpandDirection takes a user entered shortcut and expands it into the full game direction
+// expandDirection takes a user entered shortcut and expands it into the full game direction
 // using the Game Dictionary provided in the yaml configuration.
-func (g *Game) ExpandDirection(word string) string {
-	lookup := strings.ToLower(g.GameDictionary["directions"][strings.ToLower(word)])
+func (g *Game) expandDirection(word string) string {
+	lookup := strings.ToLower(g.Dictionary["directions"][strings.ToLower(word)])
 	if lookup != "" {
 		return lookup
 	}
 	return word
 }
 
-// ParseInput takes a user input and returns the command, object and objectTarget test
+// parseInput takes a user input and returns the command, Item and object
 //<Command> <Object> [on <Object>]. Object names may includes spaces.
-func (g *Game) ParseInput(input string) (string, string, string, error) {
+func (g *Game) parseInput(input string) (string, string, string, error) {
 	words := strings.Split(input, " ")
 	if len(words) == 0 {
-		return "", "", "", errors.New(fmt.Sprintf(g.GameDictionary["errors"]["invalidCommand"], input))
+		return "", "", "", errors.New(fmt.Sprintf(g.Dictionary["errors"]["invalidCommand"], input))
 	}
-	command := g.ExpandShortcut(words[0])
+	command := g.expandShortcut(words[0])
 
 	var object string
 	var objectTarget string
 	if len(words) > 1 {
 		object = strings.ToLower(strings.Join(words[1:], " "))
-		if len(words) >= 4 && command == strings.ToLower(g.GameDictionary["commands"]["use"]) {
+		if len(words) >= 4 && command == strings.ToLower(g.Dictionary["commands"]["use"]) {
 			objects := strings.Split(object, " on ")
 			if len(objects) != 2 {
-				return "", "", "", errors.New(fmt.Sprintf(g.GameDictionary["errors"]["invalidCommand"], input))
+				return "", "", "", errors.New(fmt.Sprintf(g.Dictionary["errors"]["invalidCommand"], input))
 			}
 			object = objects[0]
 			objectTarget = objects[1]
 		}
-		if command == strings.ToLower(g.GameDictionary["commands"]["go"]) ||
-			command == strings.ToLower(g.GameDictionary["commands"]["examine"]) {
-			object = g.ExpandDirection(object)
+		if command == strings.ToLower(g.Dictionary["commands"]["go"]) ||
+			command == strings.ToLower(g.Dictionary["commands"]["examine"]) {
+			object = g.expandDirection(object)
 		}
 	}
 	return command, object, objectTarget, nil
 }
 
-// UpdateGameState updates the game state with user provided input.
-func (g *Game) UpdateGameState(input string) (*Game, error) {
-	command, object, objectTarget, err := g.ParseInput(input)
+// updateGameState updates the game state with user provided input.
+func (g *Game) updateGameState(input string) (*Game, error) {
+	command, object, objectTarget, err := g.parseInput(input)
 	if err != nil {
 		return g, err
 	}
 
 	g.DisplayRoomInfo = false
 	switch command {
-	case strings.ToLower(g.GameDictionary["commands"]["go"]):
+	case strings.ToLower(g.Dictionary["commands"]["go"]):
+		return g, g.goDirection(object)
+	case strings.ToLower(g.Dictionary["commands"]["examine"]):
+		return g, g.examine(object)
+	case strings.ToLower(g.Dictionary["commands"]["refresh"]):
+		fmt.Println(g.Dictionary["strings"]["refreshing"])
 		g.DisplayRoomInfo = true
-		return g, g.Go(object)
-	case strings.ToLower(g.GameDictionary["commands"]["examine"]):
-		return g, g.Examine(object)
-	case strings.ToLower(g.GameDictionary["commands"]["refresh"]):
-		fmt.Println(g.GameDictionary["strings"]["refreshing"])
-		g.DisplayRoomInfo = true
 		return g, nil
-	case strings.ToLower(g.GameDictionary["commands"]["inventory"]):
-		fmt.Println(g.Player.GetItemOptions())
+	case strings.ToLower(g.Dictionary["commands"]["inventory"]):
+		fmt.Println(g.Player.getItemOptions())
 		return g, nil
-	case strings.ToLower(g.GameDictionary["commands"]["help"]):
-		fmt.Println(g.Help())
+	case strings.ToLower(g.Dictionary["commands"]["help"]):
+		fmt.Println(g.help())
 		return g, nil
-	case strings.ToLower(g.GameDictionary["commands"]["save"]):
-		return g, SaveGameState(g, object)
-	case strings.ToLower(g.GameDictionary["commands"]["load"]):
+	case strings.ToLower(g.Dictionary["commands"]["save"]):
+		return g, saveGameState(g, object)
+	case strings.ToLower(g.Dictionary["commands"]["load"]):
 		g, err := LoadGameState(SaveDir + object)
 		if err == nil {
-			fmt.Println(g.GameDictionary["strings"]["loadSuccessful"])
+			fmt.Println(g.Dictionary["strings"]["loadSuccessful"])
 		}
-		g.DisplayRoomInfo = true
 		return g, err
-	case strings.ToLower(g.GameDictionary["commands"]["quit"]):
+	case strings.ToLower(g.Dictionary["commands"]["quit"]):
 		os.Exit(1)
-	case strings.ToLower(g.GameDictionary["commands"]["open"]):
-		return g, g.Open(object)
-	case strings.ToLower(g.GameDictionary["commands"]["take"]):
-		return g, g.Take(object)
-	case strings.ToLower(g.GameDictionary["commands"]["use"]):
-		return g, g.Use(object, objectTarget)
+	case strings.ToLower(g.Dictionary["commands"]["open"]):
+		return g, g.open(object)
+	case strings.ToLower(g.Dictionary["commands"]["take"]):
+		return g, g.take(object)
+	case strings.ToLower(g.Dictionary["commands"]["use"]):
+		return g, g.use(object, objectTarget)
 	default:
-		return g, errors.New(fmt.Sprintf(g.GameDictionary["errors"]["invalidCommand"], input))
+		return g, errors.New(fmt.Sprintf(g.Dictionary["errors"]["invalidCommand"], input))
 	}
 	return g, nil
 }
@@ -204,9 +187,9 @@ func (g *Game) UpdateGameState(input string) (*Game, error) {
 func (g *Game) Play() {
 	//Do not display the welcome text if loading a saved game
 	if g.SavedGame == false {
-		fmt.Println(fmt.Sprintf(g.GameDictionary["strings"]["welcome"], g.Player.Name, g.Name))
+		fmt.Println(fmt.Sprintf(g.Dictionary["strings"]["welcome"], g.Player.Name, g.Name))
 		fmt.Println()
-		fmt.Println(g.GameDictionary["strings"]["helpAdvice"])
+		fmt.Println(g.Dictionary["strings"]["helpAdvice"])
 		fmt.Println()
 		fmt.Println(g.Name)
 		fmt.Println()
@@ -220,16 +203,16 @@ func (g *Game) Play() {
 			fmt.Println(g.CurrentRoom.Name)
 			fmt.Println()
 			fmt.Println(g.CurrentRoom.Description)
-			fmt.Println(g.CurrentRoom.GetDirections())
-			fmt.Println(g.CurrentRoom.GetObjectOptions())
+			fmt.Println(g.CurrentRoom.getDirections())
+			fmt.Println(g.CurrentRoom.getObjectOptions())
 			fmt.Println()
 		}
 
-		fmt.Print(g.GameDictionary["strings"]["command"])
+		fmt.Print(g.Dictionary["strings"]["command"])
 		input, _ := reader.ReadString('\n')
 		input = strings.TrimSpace(input)
 		fmt.Println()
-		g, err = g.UpdateGameState(input)
+		g, err = g.updateGameState(input)
 		if err != nil {
 			fmt.Println(err)
 		}

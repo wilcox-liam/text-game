@@ -16,11 +16,11 @@ player:
   name: Jazminne
   inventory:
     -
-      name: phone
+      name: key
       description: what a great phone!
 
 #I can use anchors as keys
-gamedictionary:
+dictionary:
 
   commands:
     #Game Commands
@@ -116,8 +116,8 @@ rooms:
         direction: *west
         description: An old wooden door.
         locked: true
-        unlockedwith: key
-        unlockstring: Woot Woot
+        lockedstring: This door is locked!
+
     items:
       -
         name: desk
@@ -125,15 +125,19 @@ rooms:
         open: false
         openable: true
         useable: true
+        locked: true
+        lockedstring: The desk is locked derp.
         openstring: You slide open the drawer and look inside to see a [pen]
         usestring: You take a seat at the desk... Now what?
+        unlockedwith: key
+        unlockstring: Woot Woot        
         items:
           -
             name: pen
             description: Liam's favourite Pen.
             takeable: true
       -
-        name: key
+        name: guitar
         description: Your dad bought you this guitar.
         useable: true
         takeable: true

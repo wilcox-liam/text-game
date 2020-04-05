@@ -11,152 +11,154 @@ import (
 type Game struct {
 	Name            string
 	Description     string
-	Player          *Player
-	GameDictionary  map[string]map[string]string
-	Rooms           []Room
+	Dictionary      map[string]map[string]string
+	Player          *player
+	Rooms           []room
 	CurrentRoomID   int
-	CurrentRoom     *Room
+	CurrentRoom     *room
 	SavedGame       bool
 	DisplayRoomInfo bool
 }
 
-type Player struct {
+type player struct {
 	Name      string
-	Inventory []Item
+	Inventory []item
 }
 
-//Examinable
-type Room struct {
+type room struct {
 	ID          int
 	Name        string
 	Description string
-	Exits       []Exit
-	Items       []Item
+	Exits       []exit
+	Items       []item
 }
 
-//Examinable
-//on Useable
-type Exit struct {
-	RoomID       int
-	Name         string
-	Direction    string
-	Description  string
-	Locked       bool
-	UnlockedWith string
-	UnlockString string
-	Room         *Room
-}
-
-//Examinable
-//Openable
-//Takeable
-//Useable on
-type Item struct {
+//Should I use inheritance or interfaces?
+type exit struct {
 	Name         string
 	Description  string
-	Open         bool
-	Openable     bool
-	OpenString   string
-	Takeable     bool
-	Useable      bool
-	UseString    string
-	Items        []Item
 	Locked       bool
+	LockedString string
 	UnlockedWith string
 	UnlockString string
+
+	RoomID    int
+	Direction string
 }
 
-type ItemContainer interface {
-	GetItems() []Item
-	SetItems(items []Item)
+type item struct {
+	Name         string
+	Description  string
+	Locked       bool
+	LockedString string
+	UnlockedWith string
+	UnlockString string
+
+	Open       bool
+	Openable   bool
+	OpenString string
+	Takeable   bool
+	Useable    bool
+	UseString  string
+	Items      []item
 }
 
-type Unlockable interface {
+// itemContainer is an interface for Room, Player and Item
+type itemContainer interface {
+	getItems() []item
+	setItems(items []item)
+}
+
+// getItems returns a slice of items in a room.
+func (r *room) getItems() []item {
+	return r.Items
+}
+
+// getItems returns a slice of items in an item.
+func (i *item) getItems() []item {
+	return i.Items
+}
+
+// getItems returns a slice of items in a player's inventory.
+func (p *player) getItems() []item {
+	return p.Inventory
+}
+
+// setItems returns a slice of items in a room.
+func (r *room) setItems(items []item) {
+	r.Items = items
+}
+
+// setItems returns a slice of items in an item.
+func (i *item) setItems(items []item) {
+	i.Items = items
+}
+
+// setItems returns a slice of items in a player's inventory.
+func (p *player) setItems(items []item) {
+	p.Inventory = items
+}
+
+type unlockable interface {
 	name() string
-	isLocked() bool
+	locked() bool
 	setLocked(locked bool)
 	unlockedWith() string
 	unlockString() string
 }
 
-type Examinable interface {
-	name() string
-	description() string
-	direction() string
-}
-
-func (e *Exit) name() string {
-	return e.Name
-}
-
-func (e *Exit) isLocked() bool {
-	return e.Locked
-}
-
-func (e *Exit) setLocked(locked bool) {
-	e.Locked = locked
-}
-
-func (e *Exit) unlockedWith() string {
-	return e.UnlockedWith
-}
-
-func (e *Exit) unlockString() string {
-	return e.UnlockString
-}
-
-func (i *Item) name() string {
+// name returns the name of an item.
+func (i *item) name() string {
 	return i.Name
 }
 
-func (i *Item) isLocked() bool {
+// returns whether an item is locked.
+func (i *item) locked() bool {
 	return i.Locked
 }
 
-func (i *Item) setLocked(locked bool) {
+// setLocked sets the locked property of an item.
+func (i *item) setLocked(locked bool) {
 	i.Locked = locked
 }
 
-func (i *Item) unlockedWith() string {
+// unlockedWith returns the name of the item that can unlock this item.
+func (i *item) unlockedWith() string {
 	return i.UnlockedWith
 }
 
-func (i *Item) unlockString() string {
+// unlockString returns the string to print when an item is unlocked.
+func (i *item) unlockString() string {
 	return i.UnlockString
 }
 
-// GetItems returns a slice of Items in a Room.
-func (r *Room) GetItems() []Item {
-	return r.Items
+// name returns the name of an exit.
+func (e *exit) name() string {
+	return e.Name
 }
 
-// GetItems returns a slice of Items in an Item.
-func (i *Item) GetItems() []Item {
-	return i.Items
+// returns whether an exit is locked.
+func (e *exit) locked() bool {
+	return e.Locked
 }
 
-// GetItems returns a slice of Items in a Player's Inventory.
-func (p *Player) GetItems() []Item {
-	return p.Inventory
+// setLocked sets the locked property of an exit.
+func (e *exit) setLocked(locked bool) {
+	e.Locked = locked
 }
 
-// GetItems returns a slice of Items in a Room.
-func (r *Room) SetItems(items []Item) {
-	r.Items = items
+// unlockedWith returns the name of the item that can unlock this exit.
+func (e *exit) unlockedWith() string {
+	return e.UnlockedWith
 }
 
-// GetItems returns a slice of Items in an Item.
-func (i *Item) SetItems(items []Item) {
-	i.Items = items
+// unlockString returns the string to print when an exit is unlocked.
+func (e *exit) unlockString() string {
+	return e.UnlockString
 }
 
-// GetItems returns a slice of Items in a Player's Inventory.
-func (p *Player) SetItems(items []Item) {
-	p.Inventory = items
-}
-
-// GetRoomByID returns a Room matching a provided name.
-func (g *Game) GetRoomByID(id int) *Room {
+// getRoomByID returns a room matching a provided id.
+func (g *Game) getRoomByID(id int) *room {
 	for index, room := range g.Rooms {
 		if room.ID == id {
 			return &g.Rooms[index]
@@ -165,9 +167,16 @@ func (g *Game) GetRoomByID(id int) *Room {
 	return nil
 }
 
-// GetExitByName returns an Exit matching a provided name in a Room.
+// setCurrentRoom sets the room the player is currently in.
+func (g *Game) setCurrentRoom(room *room) {
+	g.DisplayRoomInfo = true
+	g.CurrentRoom = room
+	g.CurrentRoomID = room.ID
+}
+
+// getExitByName returns an exit matching a provided name in a room.
 // Ignores case.
-func (r *Room) GetExitByName(name string) *Exit {
+func (r *room) getExitByName(name string) *exit {
 	for index, exit := range r.Exits {
 		if strings.ToLower(exit.Name) == strings.ToLower(name) {
 			return &r.Exits[index]
@@ -176,9 +185,9 @@ func (r *Room) GetExitByName(name string) *Exit {
 	return nil
 }
 
-// GetExitByDirection returns an Exit matching a provided name in a Room.
+// getExitByDirection returns an exit matching a provided direction in a Room.
 // Ignores case.
-func (r *Room) GetExitByDirection(direction string) *Exit {
+func (r *room) getExitByDirection(direction string) *exit {
 	for index, exit := range r.Exits {
 		if strings.ToLower(exit.Direction) == strings.ToLower(direction) {
 			return &r.Exits[index]
@@ -187,17 +196,42 @@ func (r *Room) GetExitByDirection(direction string) *Exit {
 	return nil
 }
 
+// getItemByName will return an item given a name if it is visible
+// to the player.
+func (g *Game) getItemByName(name string) *item {
+	item := g.CurrentRoom.getItemByName(name)
+	if item == nil {
+		item = g.Player.getItemByName(name)
+	}
+	return item
+}
+
+// getItemByName returns an item in a room if it is visible to the player.
+func (r *room) getItemByName(name string) *item {
+	return getItemByName(name, r)
+}
+
+// getItemByName returns an item in a a player's inventory if it is visible to the player.
+func (p *player) getItemByName(name string) *item {
+	return getItemByName(name, p)
+}
+
+// getItemByName returns an item in a item if it is visible to the player.
+func (i *item) getItemByName(name string) *item {
+	return getItemByName(name, i)
+}
+
 // getItemByName returns an Item matching a provided name in an ItemContainer.
 // Only returns an item if it is visible to the player. i.e not inside an unopened container.
 // Ignores Case.
-func getItemByName(name string, ic ItemContainer) *Item {
-	items := ic.GetItems()
+func getItemByName(name string, ic itemContainer) *item {
+	items := ic.getItems()
 	for index, item := range items {
 		if strings.ToLower(item.Name) == strings.ToLower(name) {
 			return &items[index]
 		}
 		if item.Open {
-			subItem := getItemByName(name, &item)
+			subItem := item.getItemByName(name)
 			if subItem != nil {
 				return subItem
 			}
@@ -207,30 +241,82 @@ func getItemByName(name string, ic ItemContainer) *Item {
 	return nil
 }
 
-//GetItemByName returns an Item in a room
-func (r *Room) GetItemByName(name string) *Item {
-	return getItemByName(name, r)
+// getItemOptions returns a formatted string of all items within a room.
+func (r *room) getItemOptions() string {
+	return getItemOptions(r)
 }
 
+// GetItemOptions returns a formatted string of all items in a player's inventory.
+func (p *player) getItemOptions() string {
+	options := getItemOptions(p)
+	if options == "" {
+		options = " []"
+	}
+	return "Inventory:" + options
+}
+
+// getItemOptions returns a formatted string of all items within an item.
+func (i *item) getItemOptions() string {
+	return getItemOptions(i)
+}
+
+// getItemOptions returns a formatted string of all items in an itemContainer.
+func getItemOptions(ic itemContainer) string {
+	var options string
+	for _, item := range ic.getItems() {
+		options += " [" + item.Name
+		if item.Open {
+			options += item.getItemOptions()
+		}
+		options += "]"
+	}
+	return options
+}
+
+// getExitOptions returns a formatted string of all Exits in a Room name.
+func (r *room) getExitOptions() string {
+	var exitNames string
+	for _, exit := range r.Exits {
+		exitNames += " [" + exit.Name + "]"
+	}
+	return exitNames
+}
+
+// getDirections returns a formatted string of all exits in a room by direction.
+func (r *room) getDirections() string {
+	directions := "Directions: "
+	for _, exit := range r.Exits {
+		directions += "[" + exit.Direction + "] "
+	}
+	return directions
+}
+
+// getObjectOptions returns a formatted string of all objects in a room.
+func (r *room) getObjectOptions() string {
+	return "Objects: " + r.getExitOptions() + r.getItemOptions()
+}
+
+/////////////////////
+
 // Pop returns and removes an item from a room
-func (r *Room) Pop(name string) *Item {
+func (r *room) pop(name string) *item {
 	return pop(name, r)
 }
 
 // Remove an item from a slice - maintaining order
-func remove(slice []Item, s int) []Item {
+func remove(slice []item, s int) []item {
 	return append(slice[:s], slice[s+1:]...)
 }
 
 // Pop returns and removes an item from an ItemContainer
 // Bug(wilcox-liam): Better abstraction, became specific to the take command
-func pop(name string, ic ItemContainer) *Item {
-	items := ic.GetItems()
+func pop(name string, ic itemContainer) *item {
+	items := ic.getItems()
 	for index, item := range items {
 		if strings.ToLower(item.Name) == strings.ToLower(name) {
 			if item.Takeable {
 				items = remove(items, index)
-				ic.SetItems(items)
+				ic.setItems(items)
 			}
 			return &item
 		}
@@ -242,49 +328,4 @@ func pop(name string, ic ItemContainer) *Item {
 		}
 	}
 	return nil
-}
-
-// GetDirections returns a formatted string of all Exits in a Room.
-func (r *Room) GetDirections() string {
-	directions := "Directions: "
-	for _, exit := range r.Exits {
-		directions += "[" + exit.Direction + "] "
-	}
-	return directions
-}
-
-// GetDirections returns a formatted string of all Exits in a Room.
-func (r *Room) GetExitOptions() string {
-	var exitNames string
-	for _, exit := range r.Exits {
-		exitNames += " [" + exit.Name + "]"
-	}
-	return exitNames
-}
-
-// GetObjectOptions returns a formatted string of all Items in a Room.
-func (r *Room) GetObjectOptions() string {
-	return "Objects: " + r.GetExitOptions() + getItemOptions(r)
-}
-
-// GetItemOptions returns a formatted string of all Items in a Player's Inventory.
-func (p *Player) GetItemOptions() string {
-	options := getItemOptions(p)
-	if options == "" {
-		options = " []"
-	}
-	return "Inventory:" + options
-}
-
-// getItemOptions returns a formatted string of all Items in an ItemContainer.
-func getItemOptions(ic ItemContainer) string {
-	var options string
-	for _, item := range ic.GetItems() {
-		options += " [" + item.Name
-		if item.Open {
-			options += getItemOptions(&item)
-		}
-		options += "]"
-	}
-	return options
 }

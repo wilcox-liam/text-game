@@ -13,12 +13,12 @@
 //Learn logging for golang
 //Exposed functions/fields
 
-//Use doesnt support target items
-
 //go lint
 //Merge Pop Function with Take function
-
 //Add Close Functionality?
+
+// g.GetVisibleObjects
+// g.GetVisibleObjectsInRoom
 
 package main
 
@@ -96,3 +96,18 @@ func main() {
 
 	game.Play()
 }
+
+// setExits converts all RoomID's provided by the yaml configuration into a pointer to that room.
+// Bug(wilcox-liam) Should I bother with this, or just lookup the room with the id in the go function?
+// Bug(wilcox-liam) Error is not using the game dictionary
+// func (g *Game) setExits() {
+// 	for i, room := range g.Rooms {
+// 		for j, exit := range room.Exits {
+// 			g.Rooms[i].Exits[j].room = g.getRoomByID(exit.roomID)
+// 			if g.Rooms[i].Exits[j].room == nil {
+// 				fmt.Println("Invalid Room ID", exit.roomID, "in exit", room.name)
+// 				os.Exit(1)
+// 			}
+// 		}
+// 	}
+// }

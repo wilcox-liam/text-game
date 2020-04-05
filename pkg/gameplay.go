@@ -3,137 +3,134 @@ package textgame
 import (
 	"errors"
 	"fmt"
-	"sort"
 	"reflect"
+	"sort"
 )
 
-// Go handles user input commandGo and will set CurrentRoom to the new room.
-func (g *Game) Go(where string) error {
-	exit := g.CurrentRoom.GetExitByDirection(where)
+// goDirection handles user input command.go and will set CurrentRoom to the new room.
+func (g *Game) goDirection(where string) error {
+	exit := g.CurrentRoom.getExitByDirection(where)
 	if exit == nil {
-		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["noExit"], g.CurrentRoom.Name, where))
+		return errors.New(fmt.Sprintf(g.Dictionary["errors"]["noExit"], g.CurrentRoom.Name, where))
 	} else {
-		g.CurrentRoom = exit.Room
-		g.CurrentRoomID = exit.RoomID
+		if exit.Locked {
+			return errors.New(exit.LockedString)
+		}
+		nextRoom := g.getRoomByID(exit.RoomID)
+		g.setCurrentRoom(nextRoom)
 	}
 	return nil
 }
 
-// Examine will return the description of an object matching the
+// examine will return the description of an object matching the
 // provided name or direction.
-func (g *Game) Examine(name string) error {
-	// Items in the Room
-	item := g.CurrentRoom.GetItemByName(name)
-	if item != nil {
-		fmt.Println(item.Description)
-		return nil
-	}
-	// Items in the player inventory
-	item = getItemByName(name, g.Player)
+func (g *Game) examine(name string) error {
+	item := g.getItemByName(name)
 	if item != nil {
 		fmt.Println(item.Description)
 		return nil
 	}
 	// Exits in the Room
-	exit := g.CurrentRoom.GetExitByName(name)
+	exit := g.CurrentRoom.getExitByName(name)
 	if exit != nil {
 		fmt.Println("(" + exit.Direction + "): " + exit.Description)
 		return nil
 	}
-	exit = g.CurrentRoom.GetExitByDirection(name)
+	exit = g.CurrentRoom.getExitByDirection(name)
 	if exit != nil {
 		fmt.Println("(" + exit.Name + "): " + exit.Description)
 		return nil
 	}
-	return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["noObject"], name, g.CurrentRoom.Name))
+	return errors.New(fmt.Sprintf(g.Dictionary["errors"]["noObject"], name, g.CurrentRoom.Name))
 }
 
-// Open will set the Open attribute of an item to true in the Current Room
-// or the players inventory.
-func (g *Game) Open(name string) error {
-	item := g.CurrentRoom.GetItemByName(name)
+// open will set the Open attribute of a visible item to true.
+func (g *Game) open(name string) error {
+	item := g.getItemByName(name)
 	if item == nil {
-		item = getItemByName(name, g.Player)
-	}
-	if item == nil {
-		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["noObject"], name, g.CurrentRoom.Name))
+		return errors.New(fmt.Sprintf(g.Dictionary["errors"]["noObject"], name, g.CurrentRoom.Name))
 	}
 	//return if item is already open or cannot be opened.
 	if item.Open {
-		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["itemOpen"], item.Name))
+		return errors.New(fmt.Sprintf(g.Dictionary["errors"]["itemOpen"], item.Name))
 	}
 	if item.Openable == false {
-		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["itemNotOpenable"], item.Name))
+		return errors.New(fmt.Sprintf(g.Dictionary["errors"]["itemNotOpenable"], item.Name))
 	}
-
+	if item.Locked == true {
+		return errors.New(item.LockedString)
+	}
 	item.Open = true
 	fmt.Println(item.OpenString)
 	return nil
 }
 
-// Take will remove an item from the room and add it to a players inventory.
+// take will remove an item from the room and add it to a players inventory.
 // The item must be flagged as takeable.
-func (g *Game) Take(name string) error {
-	item := g.CurrentRoom.Pop(name)
+func (g *Game) take(name string) error {
+	item := g.CurrentRoom.pop(name)
 	if item == nil {
-		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["noItem"], name, g.CurrentRoom.Name))
+		return errors.New(fmt.Sprintf(g.Dictionary["errors"]["noItem"], name, g.CurrentRoom.Name))
 	}
 	if item.Takeable {
 		g.Player.Inventory = append(g.Player.Inventory, *item)
-		fmt.Println(fmt.Sprintf(g.GameDictionary["strings"]["itemAdded"], item.Name))
+		fmt.Println(fmt.Sprintf(g.Dictionary["strings"]["itemAdded"], item.Name))
 		return nil
 	} else {
-		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["itemNotTakeable"]))
+		return errors.New(fmt.Sprintf(g.Dictionary["errors"]["itemNotTakeable"]))
 	}
 }
 
-func isNil(i interface{}) bool {                        
-   return i == nil || reflect.ValueOf(i).IsNil()                       }
-
-// Use actions the use function of an item in a players inventory or the room.
-// Bug(wilcox-liam): Check the players inventory for the item too
-func (g *Game) Use(name string, on string) error {
-	item := g.CurrentRoom.GetItemByName(name)
+// use actions the use function of an item in a players inventory or the room.
+// An item can be used on an item or an exit.
+func (g *Game) use(name string, on string) error {
+	item := g.getItemByName(name)
 	if item == nil {
-		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["noItem"], name, g.CurrentRoom.Name))
+		return errors.New(fmt.Sprintf(g.Dictionary["errors"]["noItem"], name, g.CurrentRoom.Name))
 	}
 	if on == "" {
 		if item.Useable {
 			fmt.Println(item.UseString)
 			return nil
 		}
-		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["itemNotUseable"]))
+		return errors.New(fmt.Sprintf(g.Dictionary["errors"]["itemNotUseable"]))
 	}
-	var unlockable Unlockable = g.CurrentRoom.GetItemByName(on)
+	var unlockable unlockable
+	unlockable = g.getItemByName(on)
 	if isNil(unlockable) {
-		unlockable = g.CurrentRoom.GetExitByName(on)
+		unlockable = g.CurrentRoom.getExitByName(on)
+		if isNil(unlockable) {
+			return errors.New(fmt.Sprintf(g.Dictionary["errors"]["noItem"], on, g.CurrentRoom.Name))
+		}
 	}
-	if isNil(unlockable) {
-		return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["noItem"], on, g.CurrentRoom.Name))
-	}
-	return g.UseOn(item, unlockable)
+	return g.useOn(item, unlockable)
 }
 
-// UseOn actions the use function of an item in a players inventory or room or another item
-// in the players inventory or room.
-func (g *Game) UseOn(item *Item, unlockable Unlockable) error {
-	if unlockable.isLocked() && unlockable.unlockedWith() == item.Name {
+// useOn actions the use function of an item in a players inventory or room or another item
+// or exit in the players inventory or room.
+func (g *Game) useOn(item *item, unlockable unlockable) error {
+	if unlockable.locked() && unlockable.unlockedWith() == item.Name {
 		unlockable.setLocked(false)
 		fmt.Println(unlockable.unlockString())
 		return nil
 	}
-	return errors.New(fmt.Sprintf(g.GameDictionary["errors"]["cannotUseItem"], item.Name, unlockable.name()))
+	return errors.New(fmt.Sprintf(g.Dictionary["errors"]["cannotUseItem"], item.Name, unlockable.name()))
 }
 
-// Help returns a list of ingame commands and shortcuts based on the Game Dictionary
-func (g *Game) Help() string {
+// isNil is a helper function to determine if an interface is nil
+func isNil(i interface{}) bool {
+	return i == nil || reflect.ValueOf(i).IsNil()
+}
+
+// help returns a list of ingame commands and shortcuts based on the Game Dictionary
+func (g *Game) help() string {
 	//So the help options come out in the same order every time.
-	sortedKeys := sortedKeys(g.GameDictionary["shortcuts"])
+	sortedKeys := sortedKeys(g.Dictionary["shortcuts"])
 
 	helptext := "List of commands:"
 	for _, key := range sortedKeys {
-		value := g.GameDictionary["shortcuts"][key]
-		helpstring := g.GameDictionary["helptext"][value]
+		value := g.Dictionary["shortcuts"][key]
+		helpstring := g.Dictionary["helptext"][value]
 		helptext += "\n (" + key + ") " + value + ": " + helpstring
 	}
 	return helptext
