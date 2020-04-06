@@ -34,7 +34,7 @@ type room struct {
 	Items       []item
 }
 
-//Should I use inheritance or interfaces?
+//Should I use inheritance or interfaces for items and exits?
 type exit struct {
 	Name         string
 	Description  string
@@ -49,12 +49,15 @@ type exit struct {
 }
 
 type item struct {
-	Name         string
-	Description  string
-	Locked       bool
-	LockedString string
-	UnlockedWith string
-	UnlockString string
+	Name              string
+	Description       string
+	Locked            bool
+	LockedString      string
+	UnlockedWith      string
+	UnlockString      string
+	TakeableWith      string
+	TakeableString    string
+	NotTakeableString string
 
 	Open       bool
 	Openable   bool
@@ -250,11 +253,7 @@ func (r *room) getItemOptions() string {
 
 // GetItemOptions returns a formatted string of all items in a player's inventory.
 func (p *player) getItemOptions() string {
-	options := getItemOptions(p)
-	if options == "" {
-		options = " []"
-	}
-	return "Inventory:" + options
+	return getItemOptions(p)
 }
 
 // getItemOptions returns a formatted string of all items within an item.
@@ -286,16 +285,11 @@ func (r *room) getExitOptions() string {
 
 // getDirections returns a formatted string of all exits in a room by direction.
 func (r *room) getDirections() string {
-	directions := "Directions: "
+	var directions string
 	for _, exit := range r.Exits {
 		directions += "[" + exit.Direction + "] "
 	}
 	return directions
-}
-
-// getObjectOptions returns a formatted string of all objects in a room.
-func (r *room) getObjectOptions() string {
-	return "Objects: " + r.getExitOptions() + r.getItemOptions()
 }
 
 /////////////////////

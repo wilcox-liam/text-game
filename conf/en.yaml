@@ -16,10 +16,9 @@ player:
   name: Jazminne
   inventory:
     -
-      name: key
-      description: what a great phone!
+      name: phone
+      description: What a great phone! It has so many features, even a torch!
 
-#I can use anchors as keys
 dictionary:
 
   commands:
@@ -52,11 +51,11 @@ dictionary:
 
   helptext:
     # Help Text
-    *go: Go to another room. Usage "go <Direction>"
-    *examine: Examine a direction or an object in the room or your invetory. Usage "examine <Object>
-    *open: Opens an object in the room or your inventory. Usage "open <Object>"
-    *take: Take an object from the room and add it to your inventory. Usage "take <Object>"
-    *use: Use an object in the room or your inventory. Usage "use <Object> [on <Object>]"
+    *go: Go to another room. Usage "go <Direction | Exit>"
+    *examine: Examine a direction, item or exit in the room or your invetory. Usage "examine <Object>
+    *open: Opens an item in the room or your inventory. Usage "open <Item>"
+    *take: Take an item from the room and add it to your inventory. Usage "take <Item>"
+    *use: Use an item in the room or your inventory. Usage "use <Item> [on <Item | Exit>]"
     *inventory: Opens the Player's inventory 
     *help: Displays Help Text
     *refresh: Refreshes the screen and displays the room information again.
@@ -72,12 +71,19 @@ dictionary:
     w: &west west
     u: &up up
     d: &down down
+    ne: &ne north east
+    se: &se south east
+    sw: &sw south west
+    nw: &nw north west  
 
   strings:
     # Game strings
+    directions: "Directions: "
+    exits: "Exits:"
+    items: "Items:"
+    inventory: "Inventory:"
     welcome: "Hello %s and welcome to %s."
     command: "Command: "
-    askName: "What is your name? "
     refreshing: "Refreshing..."
     itemAdded: "Item %s added to you inventory."
     helpAdvice: "type 'help' at any time to list the available commands."
@@ -92,9 +98,9 @@ dictionary:
     itemNotUseable: "It isn't the time for that."  
     noExit: "%s has no direction: %s"
     noItem: "There is no Item named %s in %s."    
-    noObject: "There is no object named %s in %s or in your inventory."  
+    noObject: "There is no item or exit named %s in %s or in your inventory."  
     invalidCommand: "Invalid command: %s"
-    cannotUseItem: "Cannot use item %s on item %s."
+    cannotUseItem: "Cannot use item %s on %s."
 
 rooms:
   -
@@ -112,113 +118,359 @@ rooms:
     exits:
       -
         roomid: 2
-        name: door
+        name: white door
         direction: *west
-        description: An old wooden door.
-        locked: false
-        lockedstring: This door is locked!
-        gostring: You open the door and walk through.
+        description: An old white door.
+        gostring: >
+          You open the bedroom door and walk out onto the landing at the top of stairs. 
+          It makes a creaking sound as you move.
 
     items:
-      -
-        name: desk
-        description: This is your desk, its looking a bit old.
-        open: false
-        openable: true
-        useable: true
-        locked: true
-        lockedstring: The desk is locked derp.
-        openstring: You slide open the drawer and look inside to see a [pen]
-        usestring: You take a seat at the desk... Now what?
-        unlockedwith: key
-        unlockstring: Woot Woot        
-        items:
-          -
-            name: pen
-            description: Liam's favourite Pen.
-            takeable: true
       -
         name: guitar
         description: Your dad bought you this guitar.
         useable: true
-        takeable: true
         usestring: You bust out a quick Wonderwall!... But it isn't the time for that.
-      -
-        name: wardrobe
-        description: There is so much stuff in here, but no Yoga Matt!
-        open: true
-        items:
-          -
-            name: junk
-            description: This all belongs to Cassandra. I probably should not touch it.
   -
     id: 2
     name: Upstairs Hallway
     description: >
-      You walk onto the landing at the top of the stairs, the floor makes a creaking sound as you move into the room.
+      You glance briefly around the room, it is full of all sorts of things. The bookshelf is overflowing
+      with thick old books, strange bits and pieces collected over many years and arts and crafts supplies.
+
+      Further along the room, a sits a giant wardrobe and your old lounge, it is not used much anymore.
     exits:
       -
         roomid: 4
-        name: white door
+        name: heavy door
         direction: *north
-        description: A thick white door
-        locked: false     
+        description: A large heavy door with a brass handle.
+        locked: true
+        unlockedwith: brass key
+        lockedstring: >-
+          The door is locked! You knock on the door and ask "Liam".. There is no response..
+          With growing anxiety you knock again, but louder.. still no response. You pull the handle,
+          but the door is very strong and heavy, it does not move at all.
+
+          You are in a panic now, imagining what might have happened to your love. 
+          You decide to go downstairs to your parents room and see if they have the key to this door.
+        unlockstring: Atlast! the door swings open and....... nothing, nobody is here.     
       -
         roomid: 1
-        name: old door
+        name: white door
         direction: *east
-        description: An old wooden door.
-        locked: false   
+        description: An old white door.
+        gostring: >
+          You walk back into your bedroom. Everything is exactly as you left it.
+      -
+        roomid: 3
+        name: brown door
+        direction: *west
+        description: An old brown door.
+        locked: true
+        unlockedwith: bronze key
+        lockedstring: >-
+          Martin's door is locked, not unusual for a teenager..
+        unlockstring: The key slips into the lock and the door swiongs open.          
+        gostring: >
+          You walk into Martin's Bedroom, the smell of teenage boy enters your nostrils.. lets not stay here long.          
+      -
+        roomid: 5
+        name: stairway
+        direction: *down
+        description: A steep and dark stairway.
+        locked: true
+        unlockedwith: phone
+        lockedstring: >-
+          You try the lightswitch by the stairs.. it isn't working. You glance down.. it is unusually dark tonight,
+          not a spot of moonlight coming through the window. It would not be safe to walk the stairs without a light.
+        unlockstring: The torch on your phone illuminates the stairwell.       
+        gostring: >-
+          You walk down the stairs by the light of your phone, and reach the lower floor of the house safely.         
+    items:
+      -
+        name: towel
+        description: This is your towel, it is still damp from your shower yesterday.
+        takeable: true   
   -
     id: 3
     name: Martin's Bedroom
+    exits:
+      -
+        roomid: 3
+        name: brown door
+        direction: *west
+        description: An old brown door.
+        gostring: >
+          You walk into Martin's Bedroom, the smell of teenage boy enters your nostrils.. lets not stay here long. 
   -
     id: 4
     name: Upstairs Bathroom
-    description: poop
+    description: You share this bathroom with your brother Martin, it is a bit of a mess...
     exits:
       -
-        roomid: 15
-        name: Tile in the room
-        direction: *up
-        description: There is a removable tile in the roof, it is pretty high.
-        locked: false  
-      -
         roomid: 2
-        name: white door
+        name: heavy door
         direction: *south
-        description: A thick white door
-        locked: false              
+        description: A large heavy door with a brass handle.  
+        locked: true
+        unlockedwith: handle
+        lockedstring: >-
+          This door is locked.. from the inside, using the handle should unlock it.
+        unlockstring: You grab the handle of the door and twist it. The door clicks unlocked. 
+        gostring: You walk through the heavy door back into the upstairs hallway.    
+      -
+        roomid: 15
+        name: Tile in the roof
+        direction: *up
+        description: There is a removable tile in the roof, it is pretty high, you cannot reach that.
+        locked: true
+        unlockedwith: step-ladder
+        lockedstring: >-
+          The roof is very high. I cannot reach that alone.
+        unlockstring: You place the step-ladder in the centre of the room. 
+        gostring: You climb the step ladder, move the tile and proceed into the attic.  
+    items:
+      -
+        name: handle
+        description: A brass handle for opening the door  
+      -
+        name: scissors
+        description: A pair of bathroom scissors, they are small but they look sharp.
+        takeable: true      
   -
     id: 5
     name: Downstairs Hallway
+    exits:
+      -
+        roomid: 2
+        name: stairway
+        direction: *up
+        description: A steep and dark stairway.   
+        gostring: >
+          You walk back up the stairs by the light of your phone to the upper floor.
+      -
+        roomid: 6
+        name: brown door
+        direction: *east
+        description: An old brown door.
+        locked: true
+        gostring: >
+          You walk quietly into your parents bedroom.. They are not here either!   
+      -  
+        roomid: 9
+        name: front door
+        direction: *south
+        description: A heavy front door leading to the driveway.
+        gostring: >
+          You open the door and walk outside and onto the driveway.          
+      -  
+        roomid: 8
+        name: passage
+        direction: *west
+        description: An open passage leading to the living room.
+        gostring: >
+          You walk into the open living space.
   -
     id: 6
     name: Master Bedroom
+    exits:
+      -
+        roomid: 7
+        name: sliding door
+        direction: *north
+        description: A sliding door leading to the ensuite.
+        gostring: >
+          You walk into a small but modern ensuite.        
+      -
+        roomid: 5
+        name: brown door
+        direction: *west
+        description: An old brown door.
+        gostring: >
+          You walk back into the hallway at the bottom of the stairs.      
+         
   -
     id: 7
     name: Master Bedroom Ensuite
+    exits:
+      -
+        roomid: 6
+        name: sliding door
+        direction: *south
+        description: A sliding door leading to the ensuite.
+        gostring: >
+          You walk back into the Master Bedroom.       
   -
     id: 8
     name: Living Room
+    exits:
+      -
+        roomid: 10
+        name: saloon door
+        direction: *north
+        description: A saloon style door leading to the kitchen.
+        gostring: >
+          You push the saloon door with both hands and enter the kitchen.       
+      -
+        roomid: 5
+        name: passage
+        direction: *east
+        description: An open passage leading to the downstairs hallway.
+        gostring: >
+          You walk back into the downstairs hallway.      
   -
     id: 9
-    name: Dining Room
+    name: Driveway
+    exits:
+      -  
+        roomid: 5
+        name: front door
+        direction: *north
+        description: A heavy front door leading into the house.
+        gostring: >
+          You open the door and walk inside to the hallway.
+      -  
+        roomid: 14
+        name: chini
+        direction: *west
+        description: Your large dog is in between you and the front yard.
+        locked: true
+        lockedstring: >-
+          You attempt to walk into the front yard, but your dog Chini is barking like crazy.
+          Maybe Martin forgot to feed him today? You try to calm her, but she does not appear to recognise you.
+          You cannot pass this way.
+        unlockedwith: frozen meat
+        unlockstring: >-
+          You throw the meat down the driveway, your dog Chini immediately begins to gnaw on it.
+          It should be safe to sneak past.
+        gostring: >
+          You carefully walk past Chini while he is eating.          
   -
     id: 10
     name: Kitchen
+    items:
+      -
+        name: fridge
+        description: The large family fridge.
+        openable: true
+        openstring: The door swings open revealing mountains of food!
+        items:
+          -
+            name: frozen meat
+            description: Frozen meat for dinner this week.
+            takeablewith: towel
+            takeablestring: You use the towel to protect your hands from the cold, and pickup the meat.
+            nottakeablestring: This meat is frozen! It is too cold to touch with your bare hands.
+    exits:
+      -
+        roomid: 11
+        name: Passage
+        direction: *east
+        description: A thin passage leading to the back of the house
+        gostring: >
+          You squeeze past the saloon door and enter a cramped passage.       
+      -
+        roomid: 8
+        name: saloon door
+        direction: *south
+        description: A saloon style door leading to the kitchen.
+        gostring: >
+          You push the saloon door with both hands and enter the open living space.     
   -
     id: 11
     name: Laundry Room
+    exits:
+      -
+        roomid: 12
+        name: bathroom door
+        direction: *north
+        description: This door has seen better days, the handle is loose and the lock sticks.
+        gostring: >
+          You grab the handle carefully, you don't want it to fall off completely, and enter the downstairs bathroom.      
+      -
+        roomid: 13
+        name: old door
+        direction: *east
+        description: An old door leading to the back bedroom.
+        locked: true
+        gostring: >
+          You swing open the old door and listen to the creak of its hinges and enter Cassandra's bedroom.            
+      -
+        roomid: 10
+        name: Passage
+        direction: *west
+        description: A thin passage leading to the back of the house
+        gostring: >
+          You squeeze through a cramped passage and the saloon door back into the kitchen.  
+    items:
+      -
+        name: Pile of Junk
+        description: A large pile of junk, containing many things of value and.. dubious value.
+        openable: true
+        locked: true
+        lockedstring: >-
+          You try to dig into the pile, but is packed tightly and tied up strongly.
+        unlockedwith: scissors
+        unlockstring: >-
+          You cut the cord tieing the pile together.
+        openstring: You begin to search through the pile for any objects of interest.
+        items:      
+          -
+            name: step-ladder
+            description: A step-ladder, this could be useful for getting to high places.
+            takeable: true                 
   -
     id: 12
     name: Downstairs Bathroom
+    exits:
+      -
+        roomid: 11
+        name: bathroom door
+        direction: *south
+        description: This door has seen better days, the handle is loose and the lock sticks.
+        gostring: >
+          You grab the handle carefully, you don't want it to fall off completely, and enter the Laundry Room.  
   -
     id: 13
     name: Cassandra's Bedroom
+    exits:
+      -
+        roomid: 11
+        name: old door
+        direction: *west
+        description: An old door leading to the Laundry Room
+        gostring: >
+          You swing open the old door and listen to the creak of its hinges and enter the Laundry Room.        
   -
     id: 14
-    name: Patio
+    name: Front Yard
+    exits:
+      -  
+        roomid: 9
+        name: Driveway
+        direction: *east
+        description: The driveway where you park your care.
+        gostring: >
+          You carefully walk past Chini while he is eating. 
+      -
+        roomid: 16
+        name: Roof
+        direction: *ne
+        description: You look up to the roof, it has a flat top and can safely be walked on.
+        locked: true
+        lockedstring: >-
+          You stare up at the roof, there is no way you can get up there by yourself.
+        unlockedwith: ladder
+        unlockstring: >-
+          You lean the ladder againt the side of the house cautiously.         
+        gostring: >
+          You climb the ladder and carefully step onto the roof. You hesistate for a moment, bit it seems
+          to hold your weight.       
+    items:
+      -
+        name: ladder
+        description: A big old ladder.                          
   -
     id: 15
     name: Attic
@@ -228,5 +480,25 @@ rooms:
         roomid: 4
         name: Removed tile in the floor
         direction: *down
-        description: The tile you removed leading back to the bathroom
-        locked: false     
+        description: The tile you removed leading back to the bathroom. 
+        gostring: >
+          You climb down the gap in the floor, onto the step-ladder and back into the Upstairs Bathroom. 
+  -
+    id: 16
+    name: Roof
+    description: This place is very creepy!
+    exits:
+      -
+        roomid: 14
+        name: Ladder
+        direction: *sw
+        description: A ladder leading back to the front yard
+        gostring: >
+          You carefully climb back down the ladder. You feel very anxious, but make it to the bottom safely.    
+      -
+        roomid: 4
+        name: window
+        direction: *south
+        description: A small bathroom window, just big enough for a person to climb through.
+        gostring: >
+          You push the window open as much as possible, and slide your body awkwardly through into the bathroom.              

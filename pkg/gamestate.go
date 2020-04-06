@@ -159,7 +159,7 @@ func (g *Game) updateGameState(input string) (*Game, error) {
 		g.DisplayRoomInfo = true
 		return g, nil
 	case strings.ToLower(g.Dictionary["commands"]["inventory"]):
-		fmt.Println(g.Player.getItemOptions())
+		fmt.Println(g.Dictionary["strings"]["inventory"] + g.Player.getItemOptions())
 		return g, nil
 	case strings.ToLower(g.Dictionary["commands"]["help"]):
 		fmt.Println(g.help())
@@ -207,8 +207,9 @@ func (g *Game) Play() {
 			fmt.Println(g.CurrentRoom.Name)
 			fmt.Println()
 			fmt.Println(g.CurrentRoom.Description)
-			fmt.Println(g.CurrentRoom.getDirections())
-			fmt.Println(g.CurrentRoom.getObjectOptions())
+			fmt.Println(g.Dictionary["strings"]["directions"] + g.CurrentRoom.getDirections())
+			fmt.Println(g.Dictionary["strings"]["exits"] + g.CurrentRoom.getExitOptions())
+			fmt.Println(g.Dictionary["strings"]["items"] + g.CurrentRoom.getItemOptions())
 			fmt.Println()
 		}
 

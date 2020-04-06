@@ -20,7 +20,7 @@ func (g *Game) goDirection(where string) error {
 	}
 	nextRoom := g.getRoomByID(exit.RoomID)
 	g.setCurrentRoom(nextRoom)
-	fmt.Println(exit.GoString)
+	fmt.Printf(exit.GoString)
 	return nil
 }
 
@@ -50,7 +50,7 @@ func (g *Game) examine(name string) error {
 func (g *Game) open(name string) error {
 	item := g.getItemByName(name)
 	if item == nil {
-		return fmt.Errorf(g.Dictionary["errors"]["noObject"], name, g.CurrentRoom.Name)
+		return fmt.Errorf(g.Dictionary["errors"]["noItem"], name, g.CurrentRoom.Name)
 	}
 	//return if item is already open or cannot be opened.
 	if item.Open {
@@ -80,6 +80,9 @@ func (g *Game) take(name string) error {
 		fmt.Println()
 		return nil
 	}
+	if item.NotTakeableString != "" {
+		return fmt.Errorf(item.NotTakeableString)
+	}
 	return fmt.Errorf(g.Dictionary["errors"]["itemNotTakeable"])
 }
 
@@ -97,26 +100,60 @@ func (g *Game) use(name string, on string) error {
 		}
 		return fmt.Errorf(g.Dictionary["errors"]["itemNotUseable"])
 	}
-	var unlockable unlockable
-	unlockable = g.getItemByName(on)
-	if isNil(unlockable) {
-		unlockable = g.CurrentRoom.getExitByName(on)
-		if isNil(unlockable) {
+
+	itemOn := g.getItemByName(on)
+	if itemOn == nil {
+		exit := g.CurrentRoom.getExitByName(on)
+		if exit == nil {
 			return fmt.Errorf(g.Dictionary["errors"]["noItem"], on, g.CurrentRoom.Name)
 		}
+		return g.useOnExit(item, exit)
 	}
-	return g.useOn(item, unlockable)
+	return g.useOnItem(item, itemOn)
 }
 
-// useOn actions the use function of an item in a players inventory or room or another item
-// or exit in the players inventory or room.
-func (g *Game) useOn(item *item, unlockable unlockable) error {
-	if unlockable.locked() && unlockable.unlockedWith() == item.Name {
-		unlockable.setLocked(false)
-		fmt.Println(unlockable.unlockString())
+// useOnItem actions the use function of an item on another item.
+func (g *Game) useOnItem(item *item, itemOn *item) error {
+	if itemOn.Locked && itemOn.UnlockedWith == item.Name {
+		itemOn.Locked = false
+		fmt.Println(itemOn.UnlockString)
+		fmt.Println()
+		g.open(itemOn.Name)
 		return nil
 	}
-	return fmt.Errorf(g.Dictionary["errors"]["cannotUseItem"], item.Name, unlockable.name())
+	if !itemOn.Takeable && itemOn.TakeableWith == item.Name {
+		itemOn.Takeable = true
+		fmt.Println(itemOn.TakeableString)
+		fmt.Println()
+		g.take(itemOn.Name)
+		return nil
+	}
+	return fmt.Errorf(g.Dictionary["errors"]["cannotUseItem"], item.Name, itemOn.Name)
+}
+
+// useOnExit actions the use function of an item on an exit.
+func (g *Game) useOnExit(item *item, exit *exit) error {
+	if exit.Locked && exit.UnlockedWith == item.Name {
+		g.unlockExit(exit)
+		return nil
+	}
+	return fmt.Errorf(g.Dictionary["errors"]["cannotUseItem"], item.Name, exit.Name)
+}
+
+// unlockExitsByName unlocks a matching exit.
+// Exits are not bi-directional. There is a separate exit object in the other room.
+// When an exit is unlocked from one room, it should unlock the exit in the other room too.
+func (g *Game) unlockExit(exit *exit) {
+	exit.Locked = false
+	room := g.getRoomByID(exit.RoomID)
+	for index, e := range room.Exits {
+		if e.Name == exit.Name {
+			room.Exits[index].Locked = false
+		}
+	}
+	fmt.Println(exit.UnlockString)
+	fmt.Println()
+	g.goDirection(exit.Direction)
 }
 
 // isNil is a helper function to determine if an interface is nil
