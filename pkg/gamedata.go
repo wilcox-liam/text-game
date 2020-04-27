@@ -32,6 +32,8 @@ type room struct {
 	Description string
 	Exits       []exit
 	Items       []item
+	Entered		bool
+	StoryString	string
 }
 
 //Should I use inheritance or interfaces for items and exits?
@@ -104,64 +106,6 @@ func (p *player) setItems(items []item) {
 	p.Inventory = items
 }
 
-type unlockable interface {
-	name() string
-	locked() bool
-	setLocked(locked bool)
-	unlockedWith() string
-	unlockString() string
-}
-
-// name returns the name of an item.
-func (i *item) name() string {
-	return i.Name
-}
-
-// returns whether an item is locked.
-func (i *item) locked() bool {
-	return i.Locked
-}
-
-// setLocked sets the locked property of an item.
-func (i *item) setLocked(locked bool) {
-	i.Locked = locked
-}
-
-// unlockedWith returns the name of the item that can unlock this item.
-func (i *item) unlockedWith() string {
-	return i.UnlockedWith
-}
-
-// unlockString returns the string to print when an item is unlocked.
-func (i *item) unlockString() string {
-	return i.UnlockString
-}
-
-// name returns the name of an exit.
-func (e *exit) name() string {
-	return e.Name
-}
-
-// returns whether an exit is locked.
-func (e *exit) locked() bool {
-	return e.Locked
-}
-
-// setLocked sets the locked property of an exit.
-func (e *exit) setLocked(locked bool) {
-	e.Locked = locked
-}
-
-// unlockedWith returns the name of the item that can unlock this exit.
-func (e *exit) unlockedWith() string {
-	return e.UnlockedWith
-}
-
-// unlockString returns the string to print when an exit is unlocked.
-func (e *exit) unlockString() string {
-	return e.UnlockString
-}
-
 // getRoomByID returns a room matching a provided id.
 func (g *Game) getRoomByID(id int) *room {
 	for index, room := range g.Rooms {
@@ -177,6 +121,7 @@ func (g *Game) setCurrentRoom(room *room) {
 	g.DisplayRoomInfo = true
 	g.CurrentRoom = room
 	g.CurrentRoomID = room.ID
+	g.CurrentRoom.Entered = true
 }
 
 // getExitByName returns an exit matching a provided name in a room.

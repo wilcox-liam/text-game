@@ -13,14 +13,21 @@ import (
 func (g *Game) goDirection(where string) error {
 	exit := g.CurrentRoom.getExitByDirection(where)
 	if exit == nil {
-		return fmt.Errorf(g.Dictionary["errors"]["noExit"], g.CurrentRoom.Name, where)
+		exit = g.CurrentRoom.getExitByName(where)		
+		if exit == nil {		
+			return fmt.Errorf(g.Dictionary["errors"]["noExit"], g.CurrentRoom.Name, where)
+		}
 	}
 	if exit.Locked {
 		return errors.New(exit.LockedString)
 	}
 	nextRoom := g.getRoomByID(exit.RoomID)
+	if nextRoom.Entered == false && nextRoom.StoryString != "" {
+		fmt.Println(nextRoom.StoryString)
+	}
 	g.setCurrentRoom(nextRoom)
 	fmt.Printf(exit.GoString)
+	fmt.Println()
 	return nil
 }
 
@@ -170,7 +177,7 @@ func (g *Game) help() string {
 	for _, key := range sortedKeys {
 		value := g.Dictionary["shortcuts"][key]
 		helpstring := g.Dictionary["helptext"][value]
-		helptext += "\n (" + key + ") " + value + ": " + helpstring
+		helptext += "\n" + key + ": " + value + ": " + helpstring
 	}
 	return helptext
 }
