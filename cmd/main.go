@@ -50,7 +50,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
-	"github.com/wilcox-liam/text-game/pkg"
+	"github.com/wilcox-liam/textgame"
 	"os"
 	"strings"
 )
