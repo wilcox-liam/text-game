@@ -1,4 +1,4 @@
-module github.com/wilcox-liam/textgame
+module github.com/wilcox-liam/text-game
 
 go 1.14
 

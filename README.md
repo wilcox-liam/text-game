@@ -2,12 +2,18 @@
 
 # textgame
 
-A simple text adventure game as a learning exercise
+A simple text adventure game, built as a learning exercise, turned text adventure game engine.
 
-Goals
-1. Multi-Language Support
-2. Multi-Player Support (2)
-3. Development Best practices
+Data driven text adventure game engine supporting the following functions:
+1. Go (Direction | Exit)
+2. Open (Item)
+3. Inventory
+4. Take (Item)
+5. Use (Item)
+6. Examine (Item)
+7. Save to file
+8. Load from file
 
+Game data controlled and loaded by a yaml file.
 
 Requires gopkg.in/yaml.v2
