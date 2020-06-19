@@ -1,48 +1,4 @@
 //Author: Liam Wilcox
-//I built this basic text-adventure game as a learning exercise for golang
-//Goals
-//	-Multi-Language Support
-//	-Multi-Player Support
-//	-Coding Best Practices
-//  -Save/Load Game State
-//
-//Known Weaknesses
-//	-Technical Error messages are always in English
-
-//TODO
-//Learn logging for golang
-
-//Merge Pop Function with Take function
-
-//EXITS
-//unlocked description
-//locked description
-
-//PUZZLE IDEAS
-//keys on locks
-//Step Ladder to the attic
-//torch illuminating a room
-//jacket for the cold
-
-//Need warm water for .. something?
-//turn things on and off?
-
-//take towel
-//use torch on stairway
-//open fridge
-//use towel on frozen meat
-//use frozen meat on chini
-//use ladder on roof.
-//use handle on door
-//take scissors from bathroom
-//use scissors on step-ladder
-
-//take scissors from bathroom
-//use scissors on box downstairs.
-
-//use car key on car
-//something in the car to be used elsewhere
-//soap to loosen something and make it takeable.
 
 package main
 

@@ -147,7 +147,7 @@ func (g *Game) useOnExit(item *item, exit *exit) error {
 	return fmt.Errorf(g.Dictionary["errors"]["cannotUseItem"], item.Name, exit.Name)
 }
 
-// unlockExitsByName unlocks a matching exit.
+// unlockExit unlocks a matching exit.
 // Exits are not bi-directional. There is a separate exit object in the other room.
 // When an exit is unlocked from one room, it should unlock the exit in the other room too.
 func (g *Game) unlockExit(exit *exit) {
