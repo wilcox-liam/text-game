@@ -23,11 +23,11 @@ func (g *Game) goDirection(where string) error {
 	}
 	nextRoom := g.getRoomByID(exit.RoomID)
 	if nextRoom.Entered == false && nextRoom.StoryString != "" {
-		fmt.Println(nextRoom.StoryString)
+		fmt.Print(nextRoom.StoryString)
 	}
 	g.setCurrentRoom(nextRoom)
 	fmt.Printf(exit.GoString)
-	fmt.Println()
+	//fmt.Println()
 	return nil
 }
 
