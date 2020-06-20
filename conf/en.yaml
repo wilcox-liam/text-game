@@ -10,11 +10,11 @@ description: >
   You awake with a start, it is still very dark, you glance at your phone, it shows 12:11am, you can hear rain pattering on the roof,
   and the air feels unusually cold for a summer evening.
 
-  Suddenly you realise that you have an urgent need to use the bathroom, so you swing your legs out of bed and grab your Phone to light the way,
-  but before standing up you reach for your boyfriend next to you, gently tapping around the far side of the bed with your hand. 
-  As each tap of the hand touches cold empty bed, a growing anxiety takes hold.Your boyfriend is not here.
+  It is still the middle of the night, you think to yourself as you close your eyes again. "I hope I can fall back to sleep".
+  You roll to the other side of the bed to hug your boyfriend, however as yours arms only touch cold empty space, a growing anxiety begins to take hold.
+  Your boyfriend is not here.
 
-  Calm down, you think to yourself, surely has only gone to the bathroom, you decide to get out of bed to go and check.  
+  Calm down, you think to yourself, surely has only gone to the bathroom, you decide to get out of bed to go and check, taking your phone with you to illuminate the way.
 currentroomid: 1
 savedgame: false
 displayroominfo: true
@@ -141,7 +141,7 @@ rooms:
             description: This is Liam's favourite pen, he brought it all the way from Australia for a reason I am yet to understand.
       -
         name: wardrobe
-        description: A large wardrobe built into the wall. It is large enough to hold clothes for 2 people.
+        description: A large wardrobe built into the wall. It is large enough to hold clothes for two people.
         open: true
         items:
           -
@@ -150,7 +150,7 @@ rooms:
             takeable: true
           -
             name: shoes
-            description: There are too many shoes to count! Why are there so many!?             
+            description: There are too many shoes to count! Why do I have so many!?             
       -
         name: guitar
         description: Your dad bought you this guitar, it has great sentimental value to you.
@@ -163,7 +163,7 @@ rooms:
       You glance briefly around the room, it is full of all sorts of things. The bookshelf is overflowing
       with thick old books, arts and crafts supplies and strange bits and pieces collected over many years.
 
-      Further along the room, a sits a giant wardrobe and your old lounge, it is not used much anymore.
+      Further along the room, sits a giant wardrobe and your old lounge, it is not used much anymore.
     exits:
       -
         roomid: 4
@@ -205,10 +205,10 @@ rooms:
         description: A steep and dark stairway.
         locked: true
         unlockedwith: phone
-        lockedstring: >
+        lockedstring: >-
           You try the lightswitch by the stairs.. it isn't working. You glance down.. it is unusually dark tonight,
           not a spot of moonlight coming through the window. It would not be safe to walk the stairs without a light source.
-        unlockstring: The torch on your phone illuminates the stairwell.       
+        unlockstring: The torch on your phone illuminates the stairwell.
         gostring: >
           You walk down the stairs by the light of your phone, and reach the first floor of the house safely.    
     items:
