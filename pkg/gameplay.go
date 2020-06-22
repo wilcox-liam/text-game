@@ -159,7 +159,6 @@ func (g *Game) unlockExit(exit *exit) {
 		}
 	}
 	fmt.Println(exit.UnlockString)
-	fmt.Println()
 	g.goDirection(exit.Direction)
 }
 

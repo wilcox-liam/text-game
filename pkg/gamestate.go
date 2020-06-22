@@ -219,7 +219,7 @@ func (g *Game) Play() {
 		fmt.Println()
 		g, err = g.updateGameState(input)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Print(err)
 		}
 		fmt.Println()
 	}
