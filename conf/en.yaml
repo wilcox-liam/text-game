@@ -2,34 +2,60 @@
 # Keys cannot be edited, with the exception of game dictionary shortcuts and directions.
 
 
-#Ideas, 
-#smash parents window from patio to get in?
-#find something besides scissors in the bathroom. Dads carkeys, have to go to the Hyundai?
-#open the blinds in parents room. Finds baloons or something?
-#balloons to calm crying baby
-#box in the attic? needs a key?
+#code features
+#autocomplete text and/or fuzzy match
+#remove items after use
+
+#UNLOCK STRING doesnt exist now when unlocking an exit.
+
+
+#hyundi not in the driveway
+
+
+
+
+#romantic ideas
+#magnet of san franscisco
+#magnet of Los Angeles
+#menu for restaurant
+
+#favourite Items
+#colour?
+
 
 name: Haunted's House
 description: >
-  You awake with a start, it is still very dark, you glance at your phone, it shows 12:11am, you can hear rain pattering on the roof,
-  and the air feels unusually cold for a summer evening.
+  You awake with a start, it is still very dark, you glance at your Phone, it shows 01:03am, you can hear rain pattering on the roof,
+  and the air feels unusually cold for a spring evening.
 
   It is still the middle of the night, you think to yourself as you close your eyes again. "I hope I can fall back to sleep".
 
   You roll to the other side of the bed to hug your boyfriend, however as yours arms only touch cold empty space, a growing anxiety begins to take hold.
   Your boyfriend is not here.
 
-  Calm down, you think to yourself, surely has only gone to the bathroom, you decide to get out of bed to go and check, taking your phone with you to illuminate the way.
-currentroomid: 1
+  Calm down, you think to yourself, surely he has only gone to the bathroom, you decide to get out of bed to go and check. You take your Phone with you to illuminate the way, however the battery has run out.
+currentroomid: 9
 savedgame: false
 displayroominfo: true
+displayiteminfo: true
 
 player:
   name: Jazminne
   inventory:
     -
-      name: phone
-      description: What a great phone! It has so many features, even a torch!
+      name: Uncharged Phone
+      description: What a great phone! It has so many features, even a torch... if only it had battery.
+      takeable: true
+      locked: true
+      openable: true
+      unlockedwith: portable battery
+      unlockname: Charged Phone
+      unlockDescription: What a great phone! It has so many features, even a torch!
+      unlockstring: You plug in the Portable Battery and press the power button on your phone, it comes to life.
+    -
+      name: Bronze Key
+      description: >
+        A large Bronze Key, you dont know what this key belongs too, but no doubt a door with a Bronze Handle.
 
 dictionary:
 
@@ -67,7 +93,7 @@ dictionary:
     *examine: Examine a direction, item or exit in the room or your invetory. Usage "examine Direction | Exit | Item "
     *open: Opens an item in the room or your inventory. Usage "open Item"
     *take: Take an item from the room and add it to your inventory. Usage "take Item"
-    *use: Use an item in the room or your inventory. Usage "use Item [on Exit | Item ]"
+    *use: Use an item in the room or your inventory. Usage "use Item" | "use Item [on Exit | Item ]"
     *inventory: Opens the Player's inventory 
     *help: Displays Help Text
     *refresh: Refreshes the screen and displays the room information again.
@@ -77,12 +103,12 @@ dictionary:
 
   directions:
     #Common game direction shortcuts
-    n: &north north
-    e: &east east
-    s: &south south
-    w: &west west
-    u: &up up
-    d: &down down
+    n: &north North
+    e: &east East
+    s: &south South
+    w: &west West
+    u: &up Up
+    d: &down Down
     ne: &ne north east
     se: &se south east
     sw: &sw south west
@@ -98,7 +124,7 @@ dictionary:
     command: "Command: "
     refreshing: "Refreshing..."
     itemAdded: "Item %s added to you inventory."
-    helpAdvice: "type 'help' at any time to list the available commands. Use these to escape the house!"
+    helpAdvice: "type 'help' at any time to list the available commands. Use these to solve the mysteries!"
     saveSuccessful: "Game state saved succesfully"
     loadSuccessful: "Game state loaded succesfully"
 
@@ -129,87 +155,126 @@ rooms:
     name: Jazminne's Bedroom
     description: >
       You glance out the window behind you, the curtain is open dully illuminating the Patio to the East a floor below you.
-      Inside the room you recognise the outlines of the familar objects.
-      Your desk is in the corner, your laptop sits closed on top of it.
-      You can see the wardrobe in front of you, it is ajar... Liam always forgets to shut it.
-      In front of you to the West is the bedroom door leading to the upstairs hallway.
+      Inside the room you recognise the outlines of familar objects, your guitar is sitting in the corner and the TV is turned off infront of you.
+      Your bedside table is next to you, with various bits and pieces on top of it. Liam's bedside table is on the other side, the Google Home sitting on top.
+      You can see the Wardrobe in front of you, it is ajar... Liam always forgets to shut it.
+      In front of you to the West is the Bedroom Door, it is ajar leading to a Dark Hallway.
     exits:
       -
         roomid: 2
-        name: bedroom door
+        name: Dark Hallway
+        description: A landing on the second floor of the house. It is very dark without a light source.
         direction: *west
-        description: An old white door leading to the Upstairs Hallway.
+        locked: true
+        unlockedwith: charged phone
+        unlockname: Upstairs Hallway
+        unlockdescription: A landing on the second floor of the house.
+        lockedstring: >
+          You try the lightswitch by the stairs.. it isn't working. You glance out into the hallway.. it is unusually dark tonight,
+          not a spot of moonlight coming through the window. It would not be safe to walk around the house without a light source.
+        unlockstring: The torch on your phone illuminates the room.
         gostring: >
-          You open the bedroom door and walk out onto the landing at the top of stairs. 
-          It makes a creaking sound as you move.
+          You slowly exit your Bedroom holding your phone high.  
 
     items:
       -
-        name: desk
-        description: A basic office desk, with one drawer.
+        name: Guitar
+        description: Your dad bought you this guitar, it has great sentimental value to you.
+        useable: true
+        usestring: You bust out a quick Wonderwall!... But it isn't the time for that.
+      -
+        name: TV
+        description: Your TV. You watch this often with Liam.
+        useable: true
+        usestring: You turn on the TV, your favourite movie is playing, The Girl with the Dragon Tatoo... but it isn't the time for that, you turn it off again.
+      -
+        name: Jazminne's Bedside Table
+        description: A simple bedside table, with one drawer.
         openable: true
-        openstring: You open the desk drawer revealing a Pen.
+        openstring: You open the bedside table revealing a Portable Battery.
         items:
           -
-            name: pen
-            description: This is Liam's favourite pen, he brought it all the way from Australia for a reason I am yet to understand.
+            name: Portable Battery
+            description: A fully charged portable battery. You use this often for charging your phone.
+            takeable: true 
       -
-        name: wardrobe
+        name: Propoleo
+        description: A fantastic spray to protect your throat. Try using it.
+        useable: true
+        usestring: ah ack augh cough.. ah refreshing.
+      -
+        name: Liam's Bedside Table
+        description: A simple bedside table, with one drawer.
+        openable: true
+        openstring: You open the bedside table revealing Ferrero Rocher Chocolates!.
+        items:
+          -
+            name: Ferrero Rocher Chocolate
+            description: This is your favourite chocolate! When did Liam buy this!?
+            takeable: true  
+      -
+        name: Google Home
+        description: A great device to Use to play Music.
+        useable: true
+        usestring: Hey Google. Play - you speak to the room. Playing Music on Spotify...... Theres a fire burning in my heart... Yeaaaaaah, but it probably isnt the moment for that. Hey Google. Stop.
+      -
+        name: Wardrobe
         description: A large wardrobe built into the wall. It is large enough to hold clothes for two people.
         open: true
         items:
           -
-            name: winter jacket
-            description: A very warm winter jacket.
-            takeable: true
+            name: Shoes
+            description: There are too many shoes to count! Why do I have so many!? 
           -
-            name: shoes
-            description: There are too many shoes to count! Why do I have so many!?             
+            name: Catan
+            description: A great board game to share with friends and family. Should I use it now?
+            useable: true
+            usestring: You setup the board and play game by yourself. 1 hour passes, you should probably keep searching for your missing boyfriend!
+
       -
-        name: guitar
-        description: Your dad bought you this guitar, it has great sentimental value to you.
-        useable: true
-        usestring: You bust out a quick Wonderwall!... But it isn't the time for that.
+        name: Coin collection
+        description: A folder containing your prized collection of money from around the world. Liam promised to buy you more space in Australia!
   -
     id: 2
     name: Upstairs Hallway
     description: >
-      You glance briefly around the room, it is full of all sorts of things. The bookshelf is overflowing
+      You glance briefly around the room, it is very dark, but you can make out the shapes of all sorts of things. The bookshelf is overflowing
       with thick old books, arts and crafts supplies and strange bits and pieces collected over many years.
-
-      Further along the room, sits a giant wardrobe and your old lounge, it is not used much anymore.
+      To the north is the Upstairs Bathroom, the Heavy Door is shut tight. Further along the hallway to the east is your brother Martin's Bedroom.
+      His door is also shut, not surprising given the time of night. At the far end of the hallway, sits a giant wardrobe and your old lounge, 
+      it is not used much anymore. Above the lounge hangs a bath Towel. The stairs leading down are very dark, you cannot see the bottom at all.
     exits:
       -
         roomid: 4
-        name: heavy door
+        name: Bathroom door
         direction: *north
         description: A large heavy door with a brass handle.
         locked: true
         unlockedwith: brass key
         lockedstring: >
           The door is locked! You knock on the door and ask "Liam".. There is no response..
-          Your anxierty begins to spike again. You knock again, but louder.. still no response. You pull the handle,
+          Your anxiety begins to spike again. You knock again, but louder.. still no response. You pull the handle,
           but the door is very strong and heavy, it does not move at all.
 
           You are in a panic now, imagining what might have happened to your boyfriend.
           You decide to go downstairs to your parents bedroom and find help.    
       -
         roomid: 1
-        name: bedroom door
+        name: Bedroom Door
         direction: *east
         description: An old white door leading to Jazminne's Bedroom.
         gostring: >
           You walk back into your bedroom. Everything is exactly as you left it.
       -
         roomid: 3
-        name: brown door
+        name: Martin's Door
         direction: *west
-        description: An old brown door leading to Martin's Bedroom.
+        description: An old brown door with a bronze handle leading to Martin's Bedroom.
         locked: true
         unlockedwith: bronze key
         lockedstring: >
           Martin's door is locked, not unusual for a teenager..
-        unlockstring: The key slips into the lock and the door swiongs open.          
+        unlockstring: The key slips into the lock and the door swings open.          
         gostring: >
           You walk into Martin's Bedroom, the smell of teenage boy enters your nostrils.. lets not stay here long.          
       -
@@ -217,30 +282,56 @@ rooms:
         name: stairway
         direction: *down
         description: A steep and dark stairway leading to the Living Room on the first floor.
-        locked: true
-        unlockedwith: phone
-        lockedstring: >
-          You try the lightswitch by the stairs.. it isn't working. You glance down.. it is unusually dark tonight,
-          not a spot of moonlight coming through the window. It would not be safe to walk the stairs without a light source.
-        unlockstring: The torch on your phone illuminates the stairwell.
         gostring: >
           You walk down the stairs by the light of your phone, and reach the first floor of the house safely.    
     items:
       -
-        name: towel
-        description: This is your towel, it is still damp from your shower yesterday.
+        name: Towel
+        description: >-
+          A Towel, is about the most massively useful thing an interstellar hitchhiker can have.
+          Partly it has great practical value. You can wrap it around you for WARMTH as you bound across the galaxy.
+
+
+          You pause briefly and smile as you remember buying these towels for the holiday you took with Liam to Queensland.
         takeable: true   
   -
     id: 3
     name: Martin's Bedroom
+    description: >
+      You glance around Martin's Bedroom seeing all the items you expect to see. His bed sits in the corner, the covers unmade.
+      His desk with 1 drawer sits in the middle of the room.
+      However you also see one thing you do not expect. Sitting on the table in the corner is your Green Travel Backpack.. why is that here?
     exits:
       -
-        roomid: 3
-        name: brown door
-        direction: *west
-        description: An old brown door.
-        gostring: >
-          You walk into Martin's Bedroom, the smell of teenage boy enters your nostrils.. lets not stay here long. 
+        roomid: 2
+        name: Martin's Door
+        direction: *east
+        description: An old brown door with a Bronze Handle leading to Martin's Bedroom.
+    items:
+      -
+        name: Travel Backpack
+        description: >-
+          This is your Travel Backpack, you bought this in Australia to go travelling with Liam. You have no idea why it is in Martin's Bedroom.
+        openable: true
+        openstring: You unzip the zipper and search through the bag, it seemed to be packed for some sort of trip.
+        items:
+          -
+            name: Winter Jacket
+            description: A very warm winter jacket that can protect you from COLD AIR.
+            takeable: true
+          -
+            name: Snow Pants 
+            description: Warm and waterproof snow pants. Perfect for making snow angels.
+      -
+        name: Martin's Desk
+        description: A simple desk with one drawer.
+        openable: true
+        openstring: You open the desk drawer revealing an Adult Magazine... I shouldn't have looked through his personal things.
+        items:
+          -
+            name: Adult Magazine
+            description: Why am I reading this?
+            takeable: true  
   -
     id: 4
     name: Upstairs Bathroom
@@ -315,7 +406,14 @@ rooms:
         direction: *south
         description: A heavy front door leading to the Front Porch.
         gostring: >
-          You open the door and walk outside and onto the Front Porch.          
+          You open the door and walk outside and onto the Front Porch. 
+    items:
+      -
+        name: Google Home
+        description: A great device to Use to play Music.
+        useable: true
+        usestring: Hey Google. Play - you speak to the room. Playing Music on Spotify...... SOMOS LAS VOCALES ,A, E, I ... oh Dios Mio, Anything but that. Hey Google. Shut up.
+             
   -
     id: 6
     name: Master Bedroom
@@ -353,11 +451,11 @@ rooms:
         name: blinds
         description: Thick grey blinds that block out all the light
         openable: true          
-        openstring: You flick open the blinds to the sides using both of your hands, revealing ... balloons.... inflated balloons. You shiver as you remember the movie 'It'.
+        openstring: You flick open the blinds to the sides using both of your hands, revealing ... balloons.... inflated balloons.
         items:
           -
             name: balloons
-            description: What are inflated balloons doing in here?
+            description: What are inflated balloons doing in here? Is there a celebration that I am not aware of?
   -
     id: 7
     name: Master Bedroom Ensuite
@@ -389,7 +487,7 @@ rooms:
         locked: true
         unlockedwith: winter jacket
         lockedstring: >
-          The night air outside is freezing, you cannot go out there without warmer clothes.
+          The night air outside is freezing, you cannot go out there without a warm Jacket.
         unlockstring: >
           You put on the winter jacket and feel warmth radiate through your body.
         gostring: >
@@ -405,31 +503,43 @@ rooms:
     id: 9
     name: Driveway
     description: >
-      You are looking at a familiar short concrete driveway leading to the street. Your dads Hyundi is parked close by, and you family dog 'Chini' is resting nearby.
+      You are looking at a familiar short concrete driveway leading to the street. You glance around in the light of the streelights
+      and see the old family Exercise Bike nearby. Behind you to the North is the Front Porch leading back into the house. 
+      To the West is your dog Chini, sleeping in the middle of the Driveway. Behind her is the Front Yard and the street.
+
+      Your dads car is absent because it has been at the Mechanic's for over a week. If it was not taking so long we could have taken a trip
+      to the snow last week.
+
     exits:
       -  
         roomid: 8
-        name: front porch
+        name: Front porch
         direction: *north
         description: A small porch at the front of the house.
         gostring: >
           You climb the several steps up onto the front porch.
       -  
         roomid: 14
-        name: chini
+        name: Chini
         direction: *west
         description: Your large dog is in between you and the front yard.
         locked: true
         lockedstring: >
           You attempt to walk into the Front Yard, but your dog Chini is barking like crazy.
           Maybe Martin forgot to feed her today? You try to calm her, but she does not appear to recognise you.
-          You cannot pass this way.
-        unlockedwith: frozen meat
+          You cannot pass this way without some raw food for her.
+        unlockedwith: raw meat
         unlockstring: >
           You throw the meat down the driveway, your dog Chini immediately begins to gnaw on it.
           It should be safe to sneak past.
         gostring: >
-          You carefully walk past into the Front Yard while Chini is eating.          
+          You carefully walk past into the Front Yard while Chini is eating.      
+    items:
+      -
+        name: Exercise Bike
+        description: An old exercise bike that is occasionally used my you and other members of the family.
+        useable: true          
+        usestring: You jump on and start pedalling! 20 Minutes later and out of breath you decide to continue your adventure.
   -
     id: 10
     name: Kitchen
@@ -437,17 +547,33 @@ rooms:
       You are standing in a familiar kitchen. A quick glance shows nothing unexpected. The room is populated with all the usual items. 
     items:
       -
-        name: fridge
+        name: Fridge
         description: The large family fridge.
         openable: true
         openstring: The door swings open revealing mountains of food!
         items:
           -
-            name: frozen meat
+            name: Frozen Meat
             description: Frozen meat for dinner this week.
             takeablewith: towel
             takeablestring: You use the towel to protect your hands from the cold, and pickup the meat.
             nottakeablestring: This meat is frozen! It is too cold to touch with your bare hands.
+            locked: true
+            openable: true
+            unlockedwith: microwave
+            unlockname: Raw Meat
+            unlockDescription: Raw Meat, I would not want to eat this myself, but an animal might enjoy it.
+            unlockstring: You put the Frozen Meat in the Microwave and set it to defrost, and wait several minutes. Ding! The Frozen Meat has defrosted into Raw Meat.
+          -
+            name: Butter Chicken
+            description: Leftover Butter Chicken from lunch today. mmmmm my favourite food.
+            useable: true
+            usestring: You begin to eat the Butter Chicken straight out of the fridge. I hope no one is seeing this.
+      -
+        name: Microwave
+        description: A standard Microwave for heating or defrosting items.
+
+
     exits:
       -
         roomid: 11
@@ -467,7 +593,11 @@ rooms:
     id: 11
     name: Laundry Room
     description: >
-      The Laundry room, is a dark, cold room at the back of the house. It recieves little light from its one small window, and holds no heat. You shiver as you enter. 
+      The Laundry Room, is a dark, cold room at the back of the house. It recieves little light from its one small window, and holds no heat. You shiver as you enter. 
+      
+
+      Glancing around the room it is difficult to identify anything of interest among the Piles of Junk. However you catch your eye on your old Fridge
+      sitting in the corner. What is it that has drawn your attention, you go to Examine it further.
     exits:
       -
         roomid: 12
@@ -495,8 +625,8 @@ rooms:
           You squeeze through a cramped passage and the saloon door back into the Kitchen.  
     items:
       -
-        name: pile of Junk
-        description: A large pile of junk, containing many things of value and.. dubious value.
+        name: Pile of Junk
+        description: A large Pile of Junk, containing many things of value and.. dubious value.
         openable: true
         locked: true
         lockedstring: >
@@ -507,9 +637,23 @@ rooms:
         openstring: You begin to search through the pile for any objects of interest.
         items:      
           -
-            name: step-ladder
-            description: A step-ladder, this could be useful for getting to high places.
-            takeable: true                 
+            name: Step-ladder
+            description: A Step-ladder, this could be useful for getting to high places.
+            takeable: true        
+      -
+        name: Fridge
+        description: >
+          A large family fridge that used to belong to you. You glance briefly at your magnets attached to the front of the Fridge,
+          reminding you of many happy experiences in your life. There is your magnet that you brought back from Tasmania when you went
+          to visit Liam's family. There is the magnet you bought in Ushuaia, when you travelled to Argentia with Liam, and there is also one more
+          that you didnt expect... your magnet from San Diego has been repaired and put back on the fridge. When did that happen!? 
+        openable: true
+        openstring: You open the door with difficulty, due to the large piles of junk surrounding it.
+        items:
+          -
+            name: Australian Sparkling Red Wine
+            description: An unusual and delicious type of wine from Australia. You and Liam have been saving this for a special occasion.
+            takeable: true       
   -
     id: 12
     name: Downstairs Bathroom
@@ -544,7 +688,7 @@ rooms:
     exits:
       -  
         roomid: 9
-        name: driveway
+        name: Driveway
         direction: *east
         description: The Driveway where you park your car.
         gostring: >
@@ -565,7 +709,7 @@ rooms:
           to hold your weight.       
     items:
       -
-        name: ladder
+        name: Ladder
         description: A big old ladder.                          
   -
     id: 15
@@ -575,26 +719,26 @@ rooms:
     exits:
       -
         roomid: 4
-        name: bathroom
+        name: Bathroom
         direction: *down
         description: The tile you removed leading back to the Upstairs Bathroom. 
         gostring: >
           You climb down the gap in the floor, onto the step-ladder and back into the Upstairs Bathroom. 
   -
     id: 16
-    name: roof
+    name: Roof
     description: This place is very creepy!
     exits:
       -
         roomid: 14
-        name: ladder
+        name: Ladder
         direction: *sw
         description: A ladder leading back to the Front Yard
         gostring: >
           You carefully climb back down the ladder. You feel very anxious, but make it to the bottom safely.    
       -
         roomid: 4
-        name: window
+        name: Window
         direction: *south
         description: A small bathroom window, just big enough for a person to climb through.
         gostring: >

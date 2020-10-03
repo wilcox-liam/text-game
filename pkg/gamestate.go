@@ -8,6 +8,8 @@ import (
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
+	"os/exec"
+	"runtime"
 	"strings"
 )
 
@@ -149,6 +151,7 @@ func (g *Game) updateGameState(input string) (*Game, error) {
 	}
 
 	g.DisplayRoomInfo = false
+	g.DisplayItemInfo = false
 	switch command {
 	case strings.ToLower(g.Dictionary["commands"]["go"]):
 		return g, g.goDirection(object)
@@ -156,7 +159,7 @@ func (g *Game) updateGameState(input string) (*Game, error) {
 		return g, g.examine(object)
 	case strings.ToLower(g.Dictionary["commands"]["refresh"]):
 		fmt.Println(g.Dictionary["strings"]["refreshing"])
-		g.DisplayRoomInfo = true
+		g.displayRoomInfo(true)
 		return g, nil
 	case strings.ToLower(g.Dictionary["commands"]["inventory"]):
 		fmt.Println(g.Dictionary["strings"]["inventory"] + g.Player.getItemOptions())
@@ -207,11 +210,14 @@ func (g *Game) Play() {
 			fmt.Println(g.CurrentRoom.Name)
 			fmt.Println()
 			fmt.Println(g.CurrentRoom.Description)
+		}
+		if g.DisplayItemInfo {
 			fmt.Println(g.Dictionary["strings"]["directions"] + g.CurrentRoom.getDirections())
 			fmt.Println(g.Dictionary["strings"]["exits"] + g.CurrentRoom.getExitOptions())
-			fmt.Println(g.Dictionary["strings"]["items"] + g.CurrentRoom.getItemOptions())
-			fmt.Println()
-		}
+			fmt.Println(g.Dictionary["strings"]["items"] + g.CurrentRoom.getItemOptions())	
+		    fmt.Println(g.Dictionary["strings"]["inventory"] + g.Player.getItemOptions())
+			fmt.Println()			
+		}	
 
 		fmt.Print(g.Dictionary["strings"]["command"])
 		input, _ := reader.ReadString('\n')
@@ -221,6 +227,27 @@ func (g *Game) Play() {
 		if err != nil {
 			fmt.Print(err)
 		}
+
 		fmt.Println()
+	}
+}
+
+func CallClear() {
+	clear := make(map[string]func()) //Initialize it
+	clear["linux"] = func() {
+		cmd := exec.Command("clear") //Linux example, its tested
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+	}
+	clear["windows"] = func() {
+		cmd := exec.Command("cmd", "/c", "cls") //Windows example, its tested
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+	}
+	value, ok := clear[runtime.GOOS] //runtime.GOOS -> linux, windows, darwin etc.
+	if ok {                          //if we defined a clear func for that platform:
+		value() //we execute it
+	} else { //unsupported platform
+		panic("Your platform is unsupported! I can't clear terminal screen :(" + runtime.GOOS)
 	}
 }

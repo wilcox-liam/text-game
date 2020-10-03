@@ -7,14 +7,15 @@ import (
 	"fmt"
 	"reflect"
 	"sort"
+	"strings"
 )
 
 // goDirection handles user input command.go and will set CurrentRoom to the new room.
 func (g *Game) goDirection(where string) error {
 	exit := g.CurrentRoom.getExitByDirection(where)
 	if exit == nil {
-		exit = g.CurrentRoom.getExitByName(where)		
-		if exit == nil {		
+		exit = g.CurrentRoom.getExitByName(where)
+		if exit == nil {
 			return fmt.Errorf(g.Dictionary["errors"]["noExit"], g.CurrentRoom.Name, where)
 		}
 	}
@@ -70,6 +71,7 @@ func (g *Game) open(name string) error {
 		return errors.New(item.LockedString)
 	}
 	item.Open = true
+	g.DisplayItemInfo = true
 	fmt.Println(item.OpenString)
 	return nil
 }
@@ -82,6 +84,7 @@ func (g *Game) take(name string) error {
 		return fmt.Errorf(g.Dictionary["errors"]["noItem"], name, g.CurrentRoom.Name)
 	}
 	if item.Takeable {
+		g.DisplayItemInfo = true
 		g.Player.Inventory = append(g.Player.Inventory, *item)
 		fmt.Printf(g.Dictionary["strings"]["itemAdded"], item.Name)
 		fmt.Println()
@@ -121,26 +124,35 @@ func (g *Game) use(name string, on string) error {
 
 // useOnItem actions the use function of an item on another item.
 func (g *Game) useOnItem(item *item, itemOn *item) error {
-	if itemOn.Locked && itemOn.UnlockedWith == item.Name {
+	if !itemOn.Takeable && strings.ToLower(itemOn.TakeableWith) == strings.ToLower(item.Name) {
+		itemOn.Takeable = true
+		fmt.Print(itemOn.TakeableString)
+		fmt.Println()
+		g.take(itemOn.Name)
+		return nil
+	}	
+	if itemOn.Takeable == false {
+		return fmt.Errorf(itemOn.NotTakeableString)
+	}
+	if itemOn.Locked && strings.ToLower(itemOn.UnlockedWith) == strings.ToLower(item.Name) {
 		itemOn.Locked = false
-		fmt.Println(itemOn.UnlockString)
+		if itemOn.UnlockName != "" {
+			itemOn.Name = itemOn.UnlockName
+			itemOn.Description = itemOn.UnlockDescription
+		}
+		fmt.Print(itemOn.UnlockString)
 		fmt.Println()
 		g.open(itemOn.Name)
 		return nil
 	}
-	if !itemOn.Takeable && itemOn.TakeableWith == item.Name {
-		itemOn.Takeable = true
-		fmt.Println(itemOn.TakeableString)
-		fmt.Println()
-		g.take(itemOn.Name)
-		return nil
-	}
+
+
 	return fmt.Errorf(g.Dictionary["errors"]["cannotUseItem"], item.Name, itemOn.Name)
 }
 
 // useOnExit actions the use function of an item on an exit.
 func (g *Game) useOnExit(item *item, exit *exit) error {
-	if exit.Locked && exit.UnlockedWith == item.Name {
+	if exit.Locked && strings.ToLower(exit.UnlockedWith) == strings.ToLower(item.Name) {
 		g.unlockExit(exit)
 		return nil
 	}
@@ -152,6 +164,10 @@ func (g *Game) useOnExit(item *item, exit *exit) error {
 // When an exit is unlocked from one room, it should unlock the exit in the other room too.
 func (g *Game) unlockExit(exit *exit) {
 	exit.Locked = false
+	if exit.UnlockName != "" {
+		exit.Name = exit.UnlockName
+		exit.Description = exit.UnlockDescription
+	}
 	room := g.getRoomByID(exit.RoomID)
 	for index, e := range room.Exits {
 		if e.Name == exit.Name {
@@ -159,6 +175,7 @@ func (g *Game) unlockExit(exit *exit) {
 		}
 	}
 	fmt.Println(exit.UnlockString)
+	fmt.Println()
 	g.goDirection(exit.Direction)
 }
 

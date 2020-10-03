@@ -19,6 +19,7 @@ type Game struct {
 	CurrentRoom     *room
 	SavedGame       bool
 	DisplayRoomInfo bool
+	DisplayItemInfo bool
 }
 
 type player struct {
@@ -32,8 +33,8 @@ type room struct {
 	Description string
 	Exits       []exit
 	Items       []item
-	Entered		bool
-	StoryString	string
+	Entered     bool
+	StoryString string
 }
 
 //Should I use inheritance or interfaces for items and exits?
@@ -41,6 +42,8 @@ type exit struct {
 	Name         string
 	Description  string
 	Locked       bool
+	UnlockName   string
+	UnlockDescription string
 	LockedString string
 	UnlockedWith string
 	UnlockString string
@@ -54,6 +57,8 @@ type item struct {
 	Name              string
 	Description       string
 	Locked            bool
+	UnlockName        string
+	UnlockDescription string
 	LockedString      string
 	UnlockedWith      string
 	UnlockString      string
@@ -118,10 +123,18 @@ func (g *Game) getRoomByID(id int) *room {
 
 // setCurrentRoom sets the room the player is currently in.
 func (g *Game) setCurrentRoom(room *room) {
-	g.DisplayRoomInfo = true
+	g.displayRoomInfo(true)
 	g.CurrentRoom = room
 	g.CurrentRoomID = room.ID
 	g.CurrentRoom.Entered = true
+}
+
+func (g *Game) displayRoomInfo(clear bool) {
+	if clear {
+		CallClear()	
+	}
+	g.DisplayRoomInfo = true
+	g.DisplayItemInfo  = true
 }
 
 // getExitByName returns an exit matching a provided name in a room.
