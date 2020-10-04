@@ -8,20 +8,8 @@
 
 #UNLOCK STRING doesnt exist now when unlocking an exit.
 
-
-#hyundi not in the driveway
-
-
-
-
-#romantic ideas
-#magnet of san franscisco
-#magnet of Los Angeles
-#menu for restaurant
-
 #favourite Items
 #colour?
-
 
 name: Haunted's House
 description: >
@@ -34,7 +22,7 @@ description: >
   Your boyfriend is not here.
 
   Calm down, you think to yourself, surely he has only gone to the bathroom, you decide to get out of bed to go and check. You take your Phone with you to illuminate the way, however the battery has run out.
-currentroomid: 9
+currentroomid: 1
 savedgame: false
 displayroominfo: true
 displayiteminfo: true
@@ -52,10 +40,6 @@ player:
       unlockname: Charged Phone
       unlockDescription: What a great phone! It has so many features, even a torch!
       unlockstring: You plug in the Portable Battery and press the power button on your phone, it comes to life.
-    -
-      name: Bronze Key
-      description: >
-        A large Bronze Key, you dont know what this key belongs too, but no doubt a door with a Bronze Handle.
 
 dictionary:
 
@@ -109,10 +93,10 @@ dictionary:
     w: &west West
     u: &up Up
     d: &down Down
-    ne: &ne north east
-    se: &se south east
-    sw: &sw south west
-    nw: &nw north west  
+    ne: &ne North East
+    se: &se South East
+    sw: &sw South West
+    nw: &nw North West  
 
   strings:
     # Game strings
@@ -124,7 +108,7 @@ dictionary:
     command: "Command: "
     refreshing: "Refreshing..."
     itemAdded: "Item %s added to you inventory."
-    helpAdvice: "type 'help' at any time to list the available commands. Use these to solve the mysteries!"
+    helpAdvice: "type 'help' at any time to list the available commands. Use these to solve the mysteries! Be sure to examine every item in every room as there are many interesting things to find!"
     saveSuccessful: "Game state saved succesfully"
     loadSuccessful: "Game state loaded succesfully"
 
@@ -179,12 +163,12 @@ rooms:
     items:
       -
         name: Guitar
-        description: Your dad bought you this guitar, it has great sentimental value to you.
+        description: Your dad bought you this guitar, it has great sentimental value to you. Should I use it to perform a quick song?
         useable: true
         usestring: You bust out a quick Wonderwall!... But it isn't the time for that.
       -
         name: TV
-        description: Your TV. You watch this often with Liam.
+        description: Your TV. You watch this often with Liam. I wonder what is on now if I Use it?
         useable: true
         usestring: You turn on the TV, your favourite movie is playing, The Girl with the Dragon Tatoo... but it isn't the time for that, you turn it off again.
       -
@@ -210,7 +194,7 @@ rooms:
         items:
           -
             name: Ferrero Rocher Chocolate
-            description: This is your favourite chocolate! When did Liam buy this!?
+            description: This is your favourite chocolate! When did Liam buy this!? Should I take this?
             takeable: true  
       -
         name: Google Home
@@ -246,7 +230,7 @@ rooms:
     exits:
       -
         roomid: 4
-        name: Bathroom door
+        name: Bathroom Door
         direction: *north
         description: A large heavy door with a brass handle.
         locked: true
@@ -279,7 +263,7 @@ rooms:
           You walk into Martin's Bedroom, the smell of teenage boy enters your nostrils.. lets not stay here long.          
       -
         roomid: 5
-        name: stairway
+        name: Stairway
         direction: *down
         description: A steep and dark stairway leading to the Living Room on the first floor.
         gostring: >
@@ -313,7 +297,7 @@ rooms:
         description: >-
           This is your Travel Backpack, you bought this in Australia to go travelling with Liam. You have no idea why it is in Martin's Bedroom.
         openable: true
-        openstring: You unzip the zipper and search through the bag, it seemed to be packed for some sort of trip.
+        openstring: You unzip the zipper and search through the bag, it seemed to be packed for some sort of trip. Judging by the items in the bag, possibly to the snow..
         items:
           -
             name: Winter Jacket
@@ -335,11 +319,12 @@ rooms:
   -
     id: 4
     name: Upstairs Bathroom
-    description: You share this bathroom with your brother Martin, it is a bit of a mess...
+    description: >
+      You share this bathroom with your brother Martin, it is a bit of a mess...
     exits:
       -
         roomid: 2
-        name: heavy door
+        name: Bathroom Door
         direction: *south
         description: A large heavy door with a brass handle leading to the Upstairs Hallway. 
         locked: true
@@ -347,10 +332,11 @@ rooms:
         lockedstring: >
           This door is locked.. from the inside, using the handle should unlock it.
         unlockstring: You grab the handle of the door and twist it. The door clicks unlocked. 
-        gostring: You walk through the heavy door back into the Upstairs Hallway.    
+        gostring: >
+          You walk through the heavy door back into the Upstairs Hallway.    
       -
         roomid: 15
-        name: attic
+        name: Attic
         direction: *up
         description: There is a removable tile in the roof leading to the Attic. It is pretty high, you cannot reach that.
         locked: true
@@ -362,17 +348,17 @@ rooms:
           You climb the step ladder, move the tile and proceed into the Attic.  
       -
         roomid: 16
-        name: window
+        name: Window
         direction: *north
         description: You look out the window to the roof, it has a flat top and can safely be walked on.     
         gostring: >
           You climb awkwardly back out the window and onto the Roof.             
     items:
       -
-        name: handle
+        name: Handle
         description: A brass handle for opening the door  
       -
-        name: scissors
+        name: Scissors
         description: A pair of bathroom scissors, they are small but they look sharp.
         takeable: true      
   -
@@ -383,37 +369,46 @@ rooms:
     exits:
       -
         roomid: 2
-        name: stairway
+        name: Stairway
         direction: *up
         description: A steep stairway leading back to the Upstairs Hallway.  
         gostring: >
           You walk back up the stairs by the light of your phone to the Upstairs Hallway.
       -
         roomid: 10
-        name: saloon door
+        name: Kitchen door
         direction: *north
         description: A saloon style door leading to the Kitchen.
         gostring: >
           You push the saloon door with both hands and enter the Kitchen.           
       -
         roomid: 6
-        name: brown door
+        name: Master Bedroom Door
         direction: *east
         description: An old brown door leading to the Master Bedroom.
       -  
         roomid: 8
-        name: front door
+        name: Front Door
         direction: *south
         description: A heavy front door leading to the Front Porch.
-        gostring: >
-          You open the door and walk outside and onto the Front Porch. 
     items:
+      -
+        name: Bottle of Wine 
+        description: You pick up the bottle to read the label, it says Las Mulas - Carmenere.. your favourite... oo what is this doing here, maybe I could take it?
+        takeable: true
+      -
+        name: Restaurant Brochure 
+        description: On closer inspection you notice this is for Die Pinte! What a fantastic little restaurant. I hope Liam will take me one day..
+      -
+        name: Window
+        description: >-
+          You pull back the curtain and look out the window. It is difficult to see through all the building equipment the roofers left on the front lawn,
+          but behind the Tall Ladder you see 2 cars. Yours and Cassandra's.
       -
         name: Google Home
         description: A great device to Use to play Music.
         useable: true
-        usestring: Hey Google. Play - you speak to the room. Playing Music on Spotify...... SOMOS LAS VOCALES ,A, E, I ... oh Dios Mio, Anything but that. Hey Google. Shut up.
-             
+        usestring: Hey Google. Play - you speak to the room. Playing Music on Spotify...... SOMOS LAS VOCALES, A, E, I ... oh Dios Mio, Anything but that. Hey Google. Shut up.        
   -
     id: 6
     name: Master Bedroom
@@ -425,37 +420,38 @@ rooms:
       But as you slap your hand around on top of the bed, you come to the terrifying conclusion, that they are not where the should be either.
       Something is very wrong here, where is everyone? you think to yourself.
 
-      You decide to turn on the lightswitch for a better look.      
+      With your last effort to reassure yourself, you decide to go to check on your sister Cassandra, surely there is a reasonable exaplanation to all of this.     
     description: >
       You glance around the illuminated room and see the familiar belonging of your parents. Their large queen sized bed sits against the wall, it looks recently slept in.
-      There is a large window to the east that would show the Patio, if the blinds were not closed.
+      There is a large window to the East that would show the Patio, if the blinds were not closed.
 
-      There is a small alcove to the south leading to an ensuite.
+      There is a small alcove to the North leading to an ensuite.
     exits:
       -
         roomid: 7
-        name: sliding door
+        name: Ensuite Door
         direction: *north
         description: A sliding door leading to the Master Bedroom Ensuite.
         gostring: >
           You walk into a small but modern Master Bedroom Ensuite.        
       -
         roomid: 5
-        name: brown door
+        name: Bedroom Door
         direction: *west
         description: An old brown door.
         gostring: >
           You walk back into the Living Room     
     items:
       -
-        name: blinds
-        description: Thick grey blinds that block out all the light
+        name: Blinds
+        description: Thick grey blinds that block out all the light. It looks like there is something behind them.
         openable: true          
-        openstring: You flick open the blinds to the sides using both of your hands, revealing ... balloons.... inflated balloons.
+        openstring: You flick open the blinds to the sides using both of your hands, revealing ... Balloons.... inflated balloons.
         items:
           -
-            name: balloons
+            name: Balloons
             description: What are inflated balloons doing in here? Is there a celebration that I am not aware of?
+            takeable: true
   -
     id: 7
     name: Master Bedroom Ensuite
@@ -464,41 +460,55 @@ rooms:
 
       You see a modern shower with a glass wall on the far side of the room. On your left is an elegant wash basin and mirror, and to your right a standard toilet with a girly seat cover.
 
-      You are jealous of this bathroom, it is much nice than yours.
+      You feel jealous of this bathroom, it is much nice than yours.
     exits:
       -
         roomid: 6
-        name: sliding door
+        name: Ensuite Door
         direction: *south
         description: A sliding door leading back to the Master Bedroom.
         gostring: >
-          You walk back into the Master Bedroom.       
+          You walk back into the Master Bedroom.
+    items:
+      -
+        name: Jasmine Flowers 
+        description: ah such pretty flowers, did my dad buy these for my mum I wonder? That does not seem likely..
+        takeable: true     
   -
     id: 8
     name: Front Porch
     description: >
-      The Front Porch of your house looking over the driveway. The air is freezing tonight!
+      The Front Porch of your house looking to the South over the driveway and North to the Front Door of the House. 
+      Next to you are the anti-covid supplies, a necesity in 2020.
+    storystring: >
+      The Air is Freezing Tonight!.
     exits:
       -
         roomid: 9
-        name: cold night air
+        name: Cold Night Air
         direction: *south
         description: Steps leading down to the Driveway.
         locked: true
         unlockedwith: winter jacket
         lockedstring: >
           The night air outside is freezing, you cannot go out there without a warm Jacket.
-        unlockstring: >
+        unlockstring: >-
           You put on the winter jacket and feel warmth radiate through your body.
         gostring: >
           You begin to descend the stairs down to the Driveway and into the night air.
       -
         roomid: 5
-        name: front door
+        name: Front Door
         direction: *north
         description: A heavy front door leading to the Living Room
         gostring: >
-          You swing open the heavy door and close it behind you with a loud thunk.       
+          You swing open the heavy door and close it behind you with a loud thunk.   
+    items:
+      -
+        name: Alcohol Gel
+        description: Your dad's Anti-Covid Alcohol Gel. Should I use some?
+        useable: true   
+        usestring: It's never a bad time to use Alcohol Gel, you think to yourself as you squirt some on your hands and rub them together.   
   -
     id: 9
     name: Driveway
@@ -529,7 +539,7 @@ rooms:
           Maybe Martin forgot to feed her today? You try to calm her, but she does not appear to recognise you.
           You cannot pass this way without some raw food for her.
         unlockedwith: raw meat
-        unlockstring: >
+        unlockstring: >-
           You throw the meat down the driveway, your dog Chini immediately begins to gnaw on it.
           It should be safe to sneak past.
         gostring: >
@@ -548,13 +558,13 @@ rooms:
     items:
       -
         name: Fridge
-        description: The large family fridge.
+        description: The large family fridge. Should I open it and look inside?
         openable: true
         openstring: The door swings open revealing mountains of food!
         items:
           -
             name: Frozen Meat
-            description: Frozen meat for dinner this week.
+            description: Frozen meat for dinner this week. It needs desfrosting before it can be eaten.
             takeablewith: towel
             takeablestring: You use the towel to protect your hands from the cold, and pickup the meat.
             nottakeablestring: This meat is frozen! It is too cold to touch with your bare hands.
@@ -577,14 +587,14 @@ rooms:
     exits:
       -
         roomid: 11
-        name: passage
+        name: Passage
         direction: *east
         description: A thin passage leading to the Laundry Room and the back of the house.
         gostring: >
           You squeeze past the saloon door and enter a cramped passage and arrive in the Laundry Room.    
       -
         roomid: 5
-        name: saloon door
+        name: Kitchen Door
         direction: *south
         description: A saloon style door leading to the Living Room
         gostring: >
@@ -601,24 +611,19 @@ rooms:
     exits:
       -
         roomid: 12
-        name: bathroom door
+        name: Bathroom Door
         direction: *north
         description: This door has seen better days, the handle is loose and the lock sticks.
         gostring: >
           You grab the handle carefully, you don't want it to fall off completely, and enter the Downstairs Bathroom.      
       -
         roomid: 13
-        name: old door
+        name: Cassandra's Door
         direction: *east
-        description: An old door leading to Cassandra's Bedroom.
-        locked: true
-        lockedstring: >
-          I probably shouldn't go in my Sister's Bedroom, I don't want to wake up my baby nephew!
-        gostring: >
-          You swing open the old door and listen to the creak of its hinges and enter Cassandra's Bedroom.            
+        description: An old door leading to Cassandra's Bedroom.         
       -
         roomid: 10
-        name: passage
+        name: Passage
         direction: *west
         description: A thin passage leading back to the Kitchen.
         gostring: >
@@ -632,7 +637,7 @@ rooms:
         lockedstring: >
           You try to dig into the pile, but is packed tightly and tied up strongly.
         unlockedwith: scissors
-        unlockstring: >
+        unlockstring: >-
           You cut the cord tieing the pile together.
         openstring: You begin to search through the pile for any objects of interest.
         items:      
@@ -662,29 +667,66 @@ rooms:
     exits:
       -
         roomid: 11
-        name: bathroom door
+        name: Bathroom Door
         direction: *south
         description: This door has seen better days, the handle is loose and the lock sticks.
         gostring: >
           You grab the handle carefully, you don't want it to fall off completely, and enter the Laundry Room.  
+    items:
+      -
+        name: Bin 
+        description: A small bathroom Bin. Should I search inside?
+        openable: true
+        items:
+          -
+            name: Small Jewellery Bag
+            description: This is a small bag from a jewellery store. It seems to be empty. I wonder what was in here.
   -
     id: 13
     name: Cassandra's Bedroom
-    description: >
-      Your sister's bedroom.    
+    description: blah 
+    storystring: >
+      You flip on the lightswitch and enter your sister Cassandra's Bedroom. Your eyes dart quickly around the room, but with less surprise this time,
+      you discover Cassandra is not in her room. Your mind is racing full of confusion and anxiety as you take a seat on the end of her bed and try to think the situation though.
+
+
+      It is the middle of the night, nobody is in bed, there are lots of unexpected items in the house and the bathroom door is locked. What does it all mean?
+
+
+      After a few minutes, doing the best you can to stay calm, you decide that there is only two things to be done. One, you should check on your Brother Martin, and two, you have to find a way into that bathroom, it can only be locked from the inside, so someone HAS to be in there!
+
+      As you get up to leave the bedroom, you pause for a moment as your eyes focus on a Box of Cigarettes your sister has on the window sill.
     exits:
       -
         roomid: 11
-        name: old door
+        name: Cassandra's Door
         direction: *west
         description: An old door leading to the Laundry Room
         gostring: >
           You swing open the old door and listen to the creak of its hinges as you enter the Laundry Room.
+    items:
+      -
+        name: Box of Cigarettes
+        description: >-
+          Cassandra smokes the same brand you do, you have a lot of happy memories smoking together on the Front Porch or climbing out the Bathroom Window 
+          to smoke together on the Roof when you were younger and hiding from your parents. The Roof...?
+        takeable: true
+      -
+        name: Business Card
+        description: On closer inspection you notice this is a Business Card for a manicure. I've been waiting a year for Liam to take me!
+      -
+        name: Bronze Key
+        description: Is this the key to Martin's Bedroom? What is that doing here?
+        takeable: true
   -
     id: 14
     name: Front Yard
     description: >
-      You look into the small patch of grass and tiny garding you generously refer to as a Front Yard.  
+      You look north along the small Gardin and patch of grass that makes up the Front Yard of the house. Unfortunately that space is temporarily
+      occupied by a lot of equipment left by the builders who have been working on the Roof. You glance up at the Roof to the North East,
+      this part has already been completed and looks strong enough to walk on.
+
+      To the East is the Driveway leading towards the front door.
     exits:
       -  
         roomid: 9
@@ -702,32 +744,55 @@ rooms:
         lockedstring: >
           You stare up at the Roof, there is no way you can get up there by yourself.
         unlockedwith: ladder
-        unlockstring: >
+        unlockstring: >-
           You lean the ladder againt the side of the house cautiously.         
         gostring: >
           You climb the ladder and carefully step onto the Roof. You hesistate for a moment, bit it seems
           to hold your weight.       
     items:
       -
+        name: Gardin
+        description: The Gardin has some beautiful plants, however Chini has not been kind to it.
+      -
         name: Ladder
-        description: A big old ladder.                          
+        description: A big old ladder.   
+      -
+        name: Building equipment
+        description: A large bile of Building Equipment. You probably should not touch it.                       
   -
     id: 15
     name: Attic
     description: >
-      This place is very creepy!
+      You climb up the Step-ladder and slowly enter the Attic. There room is mostly dark, with shadows surrounding the edges of the room.
+      However sitting in the centre of the room is a single beam of light illuminating a beautiful box.
     exits:
       -
         roomid: 4
-        name: Bathroom
+        name: Down
         direction: *down
         description: The tile you removed leading back to the Upstairs Bathroom. 
         gostring: >
           You climb down the gap in the floor, onto the step-ladder and back into the Upstairs Bathroom. 
+    items:
+      -
+        name: Box
+        description: Such a beautiful box must hold something very precious.
+        openable: true
+        openstring: You gently open the box with your hands and gasp as you see...!
+        items:
+          -
+            name: Anillo con Promiso
+            description: oh Dios Mio!  
+            takeable: true
   -
     id: 16
     name: Roof
-    description: This place is very creepy!
+    description: >
+      You step carefully onto the Roof, pausing for a moment to test your weight. It seems to be strong enough, you think to yourself
+      as you edge further along.
+
+      You take the opportunity to glance at your surroundings. You can see the Ladder to the South West you used to climb up here hanging over the edge,
+      and to the South is the Window to the Upstairs Bathroom.
     exits:
       -
         roomid: 14
@@ -742,4 +807,12 @@ rooms:
         direction: *south
         description: A small bathroom window, just big enough for a person to climb through.
         gostring: >
-          You push the window open as much as possible, and slide your body awkwardly through into the Upstairs Bathroom.                       
+          You push the window open as much as possible, and slide your body awkwardly through into the Upstairs Bathroom. 
+    items:
+      -
+        name: Box of Cigarettes
+        description: This is the same brand you smoke, but this box looks 15 years old!   
+        takeable: true         
+      -
+        name: Toy       
+        description: Is this one of Bejamin's Toys? How in the world did this get here. 

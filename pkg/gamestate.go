@@ -14,10 +14,10 @@ import (
 )
 
 // ConfDir is the directory where new game configurations are stored.
-const ConfDir = "../conf/"
+const ConfDir = "conf/"
 
 // SaveDir is the directory where save games are stored.
-const SaveDir = "../saves/"
+const SaveDir = "saves/"
 
 // ReadLanguages lists all languages provided by the Game configuration.
 func ReadLanguages() []string {
@@ -159,7 +159,7 @@ func (g *Game) updateGameState(input string) (*Game, error) {
 		return g, g.examine(object)
 	case strings.ToLower(g.Dictionary["commands"]["refresh"]):
 		fmt.Println(g.Dictionary["strings"]["refreshing"])
-		g.displayRoomInfo(true)
+		g.displayRoomInfo()
 		return g, nil
 	case strings.ToLower(g.Dictionary["commands"]["inventory"]):
 		fmt.Println(g.Dictionary["strings"]["inventory"] + g.Player.getItemOptions())
@@ -205,7 +205,9 @@ func (g *Game) Play() {
 
 	var err error
 	reader := bufio.NewReader(os.Stdin)
-	for {
+	//Break Loop when ring is found
+	loop := true
+	for loop {
 		if g.DisplayRoomInfo {
 			fmt.Println(g.CurrentRoom.Name)
 			fmt.Println()
@@ -227,9 +229,14 @@ func (g *Game) Play() {
 		if err != nil {
 			fmt.Print(err)
 		}
-
 		fmt.Println()
+		item := g.Player.getItemByName("Anillo con Promiso")
+		if item != nil {
+			loop = false
+		}
 	}
+	fmt.Println("What do you think Luz? Still working on it for Jazz. ¯\\_(ツ)_/¯")
+	fmt.Println()
 }
 
 func CallClear() {

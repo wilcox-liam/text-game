@@ -6,6 +6,7 @@ package textgame
 
 import (
 	"strings"
+	"fmt"
 )
 
 // Game provides the data structures to play a text-game
@@ -123,16 +124,15 @@ func (g *Game) getRoomByID(id int) *room {
 
 // setCurrentRoom sets the room the player is currently in.
 func (g *Game) setCurrentRoom(room *room) {
-	g.displayRoomInfo(true)
+	g.displayRoomInfo()
 	g.CurrentRoom = room
 	g.CurrentRoomID = room.ID
 	g.CurrentRoom.Entered = true
 }
 
-func (g *Game) displayRoomInfo(clear bool) {
-	if clear {
-		CallClear()	
-	}
+func (g *Game) displayRoomInfo() {
+	CallClear()	
+	fmt.Println()
 	g.DisplayRoomInfo = true
 	g.DisplayItemInfo  = true
 }

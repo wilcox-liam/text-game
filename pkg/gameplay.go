@@ -23,10 +23,11 @@ func (g *Game) goDirection(where string) error {
 		return errors.New(exit.LockedString)
 	}
 	nextRoom := g.getRoomByID(exit.RoomID)
-	if nextRoom.Entered == false && nextRoom.StoryString != "" {
+	entered := nextRoom.Entered
+	g.setCurrentRoom(nextRoom)
+	if entered == false && nextRoom.StoryString != "" {
 		fmt.Print(nextRoom.StoryString)
 	}
-	g.setCurrentRoom(nextRoom)
 	fmt.Printf(exit.GoString)
 	//fmt.Println()
 	return nil
@@ -131,9 +132,6 @@ func (g *Game) useOnItem(item *item, itemOn *item) error {
 		g.take(itemOn.Name)
 		return nil
 	}	
-	if itemOn.Takeable == false {
-		return fmt.Errorf(itemOn.NotTakeableString)
-	}
 	if itemOn.Locked && strings.ToLower(itemOn.UnlockedWith) == strings.ToLower(item.Name) {
 		itemOn.Locked = false
 		if itemOn.UnlockName != "" {
@@ -145,7 +143,9 @@ func (g *Game) useOnItem(item *item, itemOn *item) error {
 		g.open(itemOn.Name)
 		return nil
 	}
-
+	if itemOn.Takeable == false {
+		return fmt.Errorf(itemOn.NotTakeableString)
+	}
 
 	return fmt.Errorf(g.Dictionary["errors"]["cannotUseItem"], item.Name, itemOn.Name)
 }
@@ -164,15 +164,16 @@ func (g *Game) useOnExit(item *item, exit *exit) error {
 // When an exit is unlocked from one room, it should unlock the exit in the other room too.
 func (g *Game) unlockExit(exit *exit) {
 	exit.Locked = false
-	if exit.UnlockName != "" {
-		exit.Name = exit.UnlockName
-		exit.Description = exit.UnlockDescription
-	}
 	room := g.getRoomByID(exit.RoomID)
 	for index, e := range room.Exits {
+		fmt.Println(e.Name, exit.Name)
 		if e.Name == exit.Name {
 			room.Exits[index].Locked = false
 		}
+	}
+	if exit.UnlockName != "" {
+		exit.Name = exit.UnlockName
+		exit.Description = exit.UnlockDescription
 	}
 	fmt.Println(exit.UnlockString)
 	fmt.Println()
