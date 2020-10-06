@@ -235,11 +235,8 @@ func (g *Game) Play() {
 			loop = false
 		}
 	}
-	fmt.Println("What is your answer? ¯\\_(ツ)_/¯")
-	fmt.Println()
-	fmt.Println("P.S I love you")
-	fmt.Println()
 }
+
 
 func CallClear() {
 	clear := make(map[string]func()) //Initialize it

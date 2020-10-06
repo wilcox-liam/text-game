@@ -30,7 +30,7 @@ description: >
   Your boyfriend is not here.
 
   Calm down, you think to yourself, surely he has only gone to the bathroom, you decide to get out of bed to go and check. You take your Phone with you to illuminate the way, however the battery has run out.
-currentroomid: 1
+currentroomid: 15
 savedgame: false
 displayroominfo: true
 displayiteminfo: true
@@ -826,7 +826,14 @@ rooms:
         name: Box
         description: Such a beautiful box must hold something very precious.
         openable: true
-        openstring: You gently open the box with your hands and gasp as you see...!
+        openstring: >
+          You gently open the box with your hands and gasp as you see an Anillo Con Promiso!
+
+
+          Jazminne Aurora Vallejo Badilla, Will You Marry me? ¯\\_(ツ)_/¯
+
+
+          P.S I love you
         items:
           -
             name: Anillo con Promiso
