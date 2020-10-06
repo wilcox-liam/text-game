@@ -8,6 +8,14 @@
 
 #UNLOCK STRING doesnt exist now when unlocking an exit.
 
+
+#favourite cheese in the back fridge?
+#something without purpose to heat in the microwave,maybe that cheese jazz likes?
+
+#move restaurant brochure.
+
+#easter eggs in piles of junnks
+
 #favourite Items
 #colour?
 
@@ -265,10 +273,23 @@ rooms:
         roomid: 5
         name: Stairway
         direction: *down
-        description: A steep and dark stairway leading to the Living Room on the first floor.
+        description: A steep stairway leading to the Living Room on the first floor.
         gostring: >
           You walk down the stairs by the light of your phone, and reach the first floor of the house safely.    
     items:
+      -
+        name: Pile of Junk
+        description: A large Pile of Junk containing many things of value and.. dubious value.
+        openable: true
+        openstring: You begin to search through the pile for any objects of interest.
+        items:      
+          -
+            name: Step-ladder
+            description: A Step-ladder, this could be useful for getting to high places.
+            takeable: true 
+          -
+            name: Sarcophagus
+            description: Wow, you can really find anything in this house!     
       -
         name: Towel
         description: >-
@@ -295,7 +316,7 @@ rooms:
       -
         name: Travel Backpack
         description: >-
-          This is your Travel Backpack, you bought this in Australia to go travelling with Liam. You have no idea why it is in Martin's Bedroom.
+          This is your Travel Backpack, you bought this in Australia to go travelling with Liam. You have no idea why it is in Martin's Bedroom. I wonder what is inside.
         openable: true
         openstring: You unzip the zipper and search through the bag, it seemed to be packed for some sort of trip. Judging by the items in the bag, possibly to the snow..
         items:
@@ -321,6 +342,14 @@ rooms:
     name: Upstairs Bathroom
     description: >
       You share this bathroom with your brother Martin, it is a bit of a mess...
+    storystring: >
+      You awkwardly pull yourself through the Window and pick yourself up from the ground breathing heavily from the effort of entering the room
+      and the anxiety and anticipation you feel. However this is temporarily replaced with confusion as you scan the small bathroom with your eyes
+      and discover that it is empty... Just what is going on here, someone had to be in here, did they leave through the Window, surely that seems unlikely?
+
+
+      As you stand silently and alone in this bathroom a thought occurs to you. You glance upwards towards the tile in the roof that leads into the Attic.
+      It is slightly ajar..
     exits:
       -
         roomid: 2
@@ -338,7 +367,9 @@ rooms:
         roomid: 15
         name: Attic
         direction: *up
-        description: There is a removable tile in the roof leading to the Attic. It is pretty high, you cannot reach that.
+        description: >-
+          The removable tile in the roof of the Upstairs Bathroom is slightly ajar, as if it has been used recently.
+          You cannot reach up that high by yourself, but surely there is a Step-ladder in one of the many Piles of Junk in this house.
         locked: true
         unlockedwith: step-ladder
         lockedstring: >
@@ -359,7 +390,7 @@ rooms:
         description: A brass handle for opening the door  
       -
         name: Scissors
-        description: A pair of bathroom scissors, they are small but they look sharp.
+        description: A pair of bathroom scissors, they are small but they look sharp enough to cut rope.
         takeable: true      
   -
     id: 5
@@ -371,7 +402,7 @@ rooms:
         roomid: 2
         name: Stairway
         direction: *up
-        description: A steep stairway leading back to the Upstairs Hallway.  
+        description: A steep stairway leading to the Upstairs Hallway.  
         gostring: >
           You walk back up the stairs by the light of your phone to the Upstairs Hallway.
       -
@@ -393,12 +424,26 @@ rooms:
         description: A heavy front door leading to the Front Porch.
     items:
       -
-        name: Bottle of Wine 
-        description: You pick up the bottle to read the label, it says Las Mulas - Carmenere.. your favourite... oo what is this doing here, maybe I could take it?
+        name: Wine Glasses
+        description: 1.2....6, 6 Wine Glasses are layed out on the dining Room Table.. 1 for everyone.
         takeable: true
       -
+        name: Bottles of Wine 
+        description: You pick up the first Bottle of Wine and read Champagn, oo nice, glancing at the other you see that it is the Sparkling Red Wine you brought from Australia. Why are they on the table?
+        takeable: true
+      -
+        name: Cupboard 
+        description: A large Cupboard owned by everyone from the Generation X. Inside is your fathers Wine collection.
+        openable: true
+        openstring: You pull open the doors in the centre of the Cupboard revealing your fathers Wine collection.
+        items:
+          -
+            name: Bottle of Wine
+            description: On closer inspection this is your favourite brand, Las Mulas - Carmenere. Should I take this!?
+            takeable: true
+      -
         name: Restaurant Brochure 
-        description: On closer inspection you notice this is for Die Pinte! What a fantastic little restaurant. I hope Liam will take me one day..
+        description: On closer inspection you notice this is for Sushi Fusion! Yummy Yummy!
       -
         name: Window
         description: >-
@@ -537,7 +582,7 @@ rooms:
         lockedstring: >
           You attempt to walk into the Front Yard, but your dog Chini is barking like crazy.
           Maybe Martin forgot to feed her today? You try to calm her, but she does not appear to recognise you.
-          You cannot pass this way without some raw food for her.
+          You cannot pass this way without some Raw Meat for her.
         unlockedwith: raw meat
         unlockstring: >-
           You throw the meat down the driveway, your dog Chini immediately begins to gnaw on it.
@@ -573,7 +618,7 @@ rooms:
             unlockedwith: microwave
             unlockname: Raw Meat
             unlockDescription: Raw Meat, I would not want to eat this myself, but an animal might enjoy it.
-            unlockstring: You put the Frozen Meat in the Microwave and set it to defrost, and wait several minutes. Ding! The Frozen Meat has defrosted into Raw Meat.
+            unlockstring: You put the Frozen Meat in the Microwave and set it to defrost. After almost 3 years, I mean 3 minutes, it is ready for the next step.. Ding! The Frozen Meat has defrosted into Raw Meat.
           -
             name: Butter Chicken
             description: Leftover Butter Chicken from lunch today. mmmmm my favourite food.
@@ -596,7 +641,7 @@ rooms:
         roomid: 5
         name: Kitchen Door
         direction: *south
-        description: A saloon style door leading to the Living Room
+        description: A saloon style door leading to the Living Room.
         gostring: >
           You push the saloon door with both hands and enter the open Living Room.   
   -
@@ -631,7 +676,7 @@ rooms:
     items:
       -
         name: Pile of Junk
-        description: A large Pile of Junk, containing many things of value and.. dubious value.
+        description: A large Pile of Junk containing many things of value and.. dubious value. The packing rope needs to be opened before the pile can be searched.
         openable: true
         locked: true
         lockedstring: >
@@ -644,7 +689,10 @@ rooms:
           -
             name: Step-ladder
             description: A Step-ladder, this could be useful for getting to high places.
-            takeable: true        
+            takeable: true 
+          -
+            name: Sarcophagus
+            description: Wow, you can really find anything in this house!       
       -
         name: Fridge
         description: >
@@ -677,6 +725,7 @@ rooms:
         name: Bin 
         description: A small bathroom Bin. Should I search inside?
         openable: true
+        openstring: You cautiously open the lid and look inside.
         items:
           -
             name: Small Jewellery Bag
@@ -701,16 +750,15 @@ rooms:
         roomid: 11
         name: Cassandra's Door
         direction: *west
-        description: An old door leading to the Laundry Room
+        description: An old door leading to the Laundry Room.
         gostring: >
           You swing open the old door and listen to the creak of its hinges as you enter the Laundry Room.
     items:
       -
         name: Box of Cigarettes
         description: >-
-          Cassandra smokes the same brand you do, you have a lot of happy memories smoking together on the Front Porch or climbing out the Bathroom Window 
+          Cassandra smokes the same brand you do, you have a lot of happy memories smoking together on the Front Porch or climbing out the Window in the Upstairs Bathroom
           to smoke together on the Roof when you were younger and hiding from your parents. The Roof...?
-        takeable: true
       -
         name: Business Card
         description: On closer inspection you notice this is a Business Card for a manicure. I've been waiting a year for Liam to take me!
@@ -743,27 +791,27 @@ rooms:
         locked: true
         lockedstring: >
           You stare up at the Roof, there is no way you can get up there by yourself.
-        unlockedwith: ladder
+        unlockedwith: Tall ladder
         unlockstring: >-
-          You lean the ladder againt the side of the house cautiously.         
+          You lean the Tall ladder againt the side of the house cautiously.         
         gostring: >
-          You climb the ladder and carefully step onto the Roof. You hesistate for a moment, bit it seems
+          You climb the Tall Ladder and carefully step onto the Roof. You hesistate for a moment, bit it seems
           to hold your weight.       
     items:
       -
         name: Gardin
         description: The Gardin has some beautiful plants, however Chini has not been kind to it.
       -
-        name: Ladder
-        description: A big old ladder.   
+        name: Tall Ladder
+        description: A very Tall Ladder the builders use to access the Roof. 
       -
         name: Building equipment
-        description: A large bile of Building Equipment. You probably should not touch it.                       
+        description: A large pile of Building Equipment. You probably should not touch it.                       
   -
     id: 15
     name: Attic
     description: >
-      You climb up the Step-ladder and slowly enter the Attic. There room is mostly dark, with shadows surrounding the edges of the room.
+      You climb up the Step-ladder and slowly enter the Attic. The room is mostly dark, with shadows surrounding the edges of the room.
       However sitting in the centre of the room is a single beam of light illuminating a beautiful box.
     exits:
       -
@@ -806,8 +854,6 @@ rooms:
         name: Window
         direction: *south
         description: A small bathroom window, just big enough for a person to climb through.
-        gostring: >
-          You push the window open as much as possible, and slide your body awkwardly through into the Upstairs Bathroom. 
     items:
       -
         name: Box of Cigarettes

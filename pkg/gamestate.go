@@ -235,7 +235,9 @@ func (g *Game) Play() {
 			loop = false
 		}
 	}
-	fmt.Println("What do you think Luz? Still working on it for Jazz. ¯\\_(ツ)_/¯")
+	fmt.Println("What is your answer? ¯\\_(ツ)_/¯")
+	fmt.Println()
+	fmt.Println("P.S I love you")
 	fmt.Println()
 }
 
