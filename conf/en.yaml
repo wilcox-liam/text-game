@@ -8,14 +8,6 @@
 
 #UNLOCK STRING doesnt exist now when unlocking an exit.
 
-
-#favourite cheese in the back fridge?
-#something without purpose to heat in the microwave,maybe that cheese jazz likes?
-
-#move restaurant brochure.
-
-#easter eggs in piles of junnks
-
 #favourite Items
 #colour?
 
@@ -30,7 +22,7 @@ description: >
   Your boyfriend is not here.
 
   Calm down, you think to yourself, surely he has only gone to the bathroom, you decide to get out of bed to go and check. You take your Phone with you to illuminate the way, however the battery has run out.
-currentroomid: 15
+currentroomid: 3
 savedgame: false
 displayroominfo: true
 displayiteminfo: true
@@ -116,7 +108,7 @@ dictionary:
     command: "Command: "
     refreshing: "Refreshing..."
     itemAdded: "Item %s added to you inventory."
-    helpAdvice: "type 'help' at any time to list the available commands. Use these to solve the mysteries! Be sure to examine every item in every room as there are many interesting things to find!"
+    helpAdvice: "type 'help' at any time to list the available commands. Use these to solve the mysteries! Be sure to examine every item in every room as there are many interesting gifts to find!"
     saveSuccessful: "Game state saved succesfully"
     loadSuccessful: "Game state loaded succesfully"
 
@@ -230,11 +222,19 @@ rooms:
     id: 2
     name: Upstairs Hallway
     description: >
-      You glance briefly around the room, it is very dark, but you can make out the shapes of all sorts of things. The bookshelf is overflowing
-      with thick old books, arts and crafts supplies and strange bits and pieces collected over many years.
-      To the north is the Upstairs Bathroom, the Heavy Door is shut tight. Further along the hallway to the east is your brother Martin's Bedroom.
-      His door is also shut, not surprising given the time of night. At the far end of the hallway, sits a giant wardrobe and your old lounge, 
-      it is not used much anymore. Above the lounge hangs a bath Towel. The stairs leading down are very dark, you cannot see the bottom at all.
+      You glance briefly down the short hallway, the light from your Phone is enough to illuminate the room, but it is casting flickering shadows around the room.
+      With trepidation, you edge out onto the landing.
+
+
+      You see the familiar family bookcase on the North wall, it is overflowing with differnt objects belonging to every member of the family.
+      From thick old books to arts and crafts supplies and strange bits and pieces collected over many years. A bit further a long is your old lounge
+      from your apartment. Next to that is a Pile of Junk, containing all the items people don't know what else to do with.
+      Above that hangs the bath Towels of you, Liam and Martin.
+
+
+      To the North is the Upstairs Bathroom, the Heavy Door is shut tight. Further along the hallway to the East is your brother Martin's Bedroom.
+      His door is also shut, not surprising given the time of night. To the West leads back into your Bedroom.
+      To the South is the Stairway leading to the Living Room downstairs.
     exits:
       -
         roomid: 4
@@ -278,18 +278,29 @@ rooms:
           You walk down the stairs by the light of your phone, and reach the first floor of the house safely.    
     items:
       -
+        name: Thick Books
+        description: >-
+          You search through the many old Thick Books stored in this shelf. There are some encyclopedia that are very old and beautiful,
+          and some academic text books owned by your Father and even by his Mother too. You also see some childrens language books for learning to read and write.
+      -
+        name: Arts and Crafts Supplies
+        description: You begin to remove the box of supplies, but you resist the urge. Now is not the time. 
+      -
+        name: Lounge
+        description: A very beautiful lounge, that has not aged well in this house.
+        useable: true
+        usestring: You sit down in the lounge, it is not as comfortable as it is beautiful. You stand up again.
+      -
         name: Pile of Junk
         description: A large Pile of Junk containing many things of value and.. dubious value.
         openable: true
         openstring: You begin to search through the pile for any objects of interest.
         items:      
           -
-            name: Step-ladder
-            description: A Step-ladder, this could be useful for getting to high places.
-            takeable: true 
-          -
-            name: Sarcophagus
-            description: Wow, you can really find anything in this house!     
+            name: Boxing Bag
+            description: A large bag for learning to box.
+            useable: true
+            usestring: You punch the bag hard with your right fist. It hurt.. a lot.    
       -
         name: Towel
         description: >-
@@ -303,9 +314,13 @@ rooms:
     id: 3
     name: Martin's Bedroom
     description: >
-      You glance around Martin's Bedroom seeing all the items you expect to see. His bed sits in the corner, the covers unmade.
-      His desk with 1 drawer sits in the middle of the room.
-      However you also see one thing you do not expect. Sitting on the table in the corner is your Green Travel Backpack.. why is that here?
+      You glance around Martin's Bedroom , it looks, and smells exactly the same as always. except for one thing.. 
+
+
+      His single bed sits on the edge of the room, the covers unmade. Next to his bed is his simple desk with a single drawer.
+      However there is one item sitting in the middle of the room which does no belong here.. It is your Green Travel Backpack.. why is that here?
+
+      To the east in the doorway your just used leading back to the Upstairs Hallway.
     exits:
       -
         roomid: 2
@@ -313,6 +328,19 @@ rooms:
         direction: *east
         description: An old brown door with a Bronze Handle leading to Martin's Bedroom.
     items:
+      -
+        name: Bed
+        description: A single bed that appears to have been hastily made to look presentable.
+      -
+        name: Martin's Desk
+        description: A simple desk with one drawer.
+        openable: true
+        openstring: You open the desk drawer revealing an Adult Magazine... I shouldn't have looked through his personal things.
+        items:
+          -
+            name: Adult Magazine
+            description: Why am I reading this?
+            takeable: true  
       -
         name: Travel Backpack
         description: >-
@@ -327,21 +355,14 @@ rooms:
           -
             name: Snow Pants 
             description: Warm and waterproof snow pants. Perfect for making snow angels.
-      -
-        name: Martin's Desk
-        description: A simple desk with one drawer.
-        openable: true
-        openstring: You open the desk drawer revealing an Adult Magazine... I shouldn't have looked through his personal things.
-        items:
-          -
-            name: Adult Magazine
-            description: Why am I reading this?
-            takeable: true  
   -
     id: 4
     name: Upstairs Bathroom
     description: >
-      You share this bathroom with your brother Martin, it is a bit of a mess...
+      You enter the small Upstairs Bathroom and take in the surroundings. There is little of interest here, except for a few household items sitting on top of the basin.
+
+
+      To the South in the Bathroom Door leading into the Upstairs Hallway. To the North is the a small Bathroom Window leading onto the Roof.
     storystring: >
       You awkwardly pull yourself through the Window and pick yourself up from the ground breathing heavily from the effort of entering the room
       and the anxiety and anticipation you feel. However this is temporarily replaced with confusion as you scan the small bathroom with your eyes
@@ -391,12 +412,21 @@ rooms:
       -
         name: Scissors
         description: A pair of bathroom scissors, they are small but they look sharp enough to cut rope.
-        takeable: true      
+        takeable: true     
+      -
+        name: NuSkin Device
+        description: Discover the Best You.
   -
     id: 5
     name: Living Room
     description: >
-      A large open living space, half lounge room, half dining room.
+      You enter into a large open plan living space, part Dining Room, part Living Room. On one side of the room sits a black leather lounge set,
+      and several small coffee tables. In the center of the room there is an empty space, filled with hundreds of Childrens Toys. On the other side of
+      the room is a large Dining Table that seats eight people comfortably. On top of the Dining table there are some unusual items.. 
+
+
+      The the South is the Front Door leading outside onto the Front Porch. Next to that is the Stairway leading Up to the Upstairs Hallway.
+      On the other side of the room to the North is a Saloon style door leading to the Kitchen. to the West is a Large Window overlooking the Front Yard and the street outside.
     exits:
       -
         roomid: 2
@@ -424,6 +454,9 @@ rooms:
         description: A heavy front door leading to the Front Porch.
     items:
       -
+        name: Childrens Toy
+        description: There are so many. Everywhere...
+      -
         name: Wine Glasses
         description: 1.2....6, 6 Wine Glasses are layed out on the dining Room Table.. 1 for everyone.
         takeable: true
@@ -442,10 +475,7 @@ rooms:
             description: On closer inspection this is your favourite brand, Las Mulas - Carmenere. Should I take this!?
             takeable: true
       -
-        name: Restaurant Brochure 
-        description: On closer inspection you notice this is for Sushi Fusion! Yummy Yummy!
-      -
-        name: Window
+        name: Large Window
         description: >-
           You pull back the curtain and look out the window. It is difficult to see through all the building equipment the roofers left on the front lawn,
           but behind the Tall Ladder you see 2 cars. Yours and Cassandra's.
@@ -458,19 +488,21 @@ rooms:
     id: 6
     name: Master Bedroom
     storystring: >
-      You creep slowly into your parents room, moving step by step. You whisper your parents name to the room,
+      You creep slowly into your parents room without turning on the light, moving step by step. You whisper your parents name to the room,
       hoping to wake them up peacefully. No response, you try again, but louder. You cannot hear a single sound in the world.
       Now using your normal voice, you say "Mum!", and reach onto the bed looking for a leg to touch and shake awake.
 
       But as you slap your hand around on top of the bed, you come to the terrifying conclusion, that they are not where the should be either.
       Something is very wrong here, where is everyone? you think to yourself.
 
-      With your last effort to reassure yourself, you decide to go to check on your sister Cassandra, surely there is a reasonable exaplanation to all of this.     
+      With your last effort to reassure yourself, you turn on the lightswitch decide to go to check on your sister Cassandra, surely there is a reasonable exaplanation to all of this.     
     description: >
       You glance around the illuminated room and see the familiar belonging of your parents. Their large queen sized bed sits against the wall, it looks recently slept in.
-      There is a large window to the East that would show the Patio, if the blinds were not closed.
+      There TV is switched off on the opposite wall.
+     
 
-      There is a small alcove to the North leading to an ensuite.
+      There is a large window to the East that would show the Patio, if the blinds were not closed. There is a small alcove to the North leading to an ensuite, and
+      the Master Bedroom Door you entered through is to the West.
     exits:
       -
         roomid: 7
@@ -502,10 +534,8 @@ rooms:
     name: Master Bedroom Ensuite
     description: >
       You enter a small ensuite that only your parents use. Your father renovated it a few years ago as a gift for your mother.
-
-      You see a modern shower with a glass wall on the far side of the room. On your left is an elegant wash basin and mirror, and to your right a standard toilet with a girly seat cover.
-
-      You feel jealous of this bathroom, it is much nice than yours.
+      You see a modern shower with a glass wall on the far side of the room. On your right is a standard toilet with a girly seat cover
+      and to your left is an elegant wash basin and mirror with something unexpected sitting on top of it..
     exits:
       -
         roomid: 6
@@ -516,7 +546,7 @@ rooms:
           You walk back into the Master Bedroom.
     items:
       -
-        name: Jasmine Flowers 
+        name: Flowers Bouquet
         description: ah such pretty flowers, did my dad buy these for my mum I wonder? That does not seem likely..
         takeable: true     
   -
@@ -559,7 +589,7 @@ rooms:
     name: Driveway
     description: >
       You are looking at a familiar short concrete driveway leading to the street. You glance around in the light of the streelights
-      and see the old family Exercise Bike nearby. Behind you to the North is the Front Porch leading back into the house. 
+      and see the old family Exercise Bike nearby. To the North is the Front Porch leading back into the house. 
       To the West is your dog Chini, sleeping in the middle of the Driveway. Behind her is the Front Yard and the street.
 
       Your dads car is absent because it has been at the Mechanic's for over a week. If it was not taking so long we could have taken a trip
@@ -599,10 +629,14 @@ rooms:
     id: 10
     name: Kitchen
     description: >
-      You are standing in a familiar kitchen. A quick glance shows nothing unexpected. The room is populated with all the usual items. 
+      You are standing in a familiar kitchen. A quick glance of the room shows nothing unexpected. This room conains all the things you expect to find in a Kitchen.
+      A large Modern Fridge is directly infront of you, behind it, partially hidden from view. is a Microwave. At the other end of the room is the Kitchen Sink, and many Cupboards and Drawers. 
+
+
+      To the South is a Saloon style door leading back to the Living Room, and to the east is a Passage leading to the Laundry.
     items:
       -
-        name: Fridge
+        name: Modern Fridge
         description: The large family fridge. Should I open it and look inside?
         openable: true
         openstring: The door swings open revealing mountains of food!
@@ -627,6 +661,28 @@ rooms:
       -
         name: Microwave
         description: A standard Microwave for heating or defrosting items.
+      -
+        name: Kitchen Sink
+        description: Yep, thats a sink.
+      -
+        name: Drawer
+        description: A basic kitchen Drawer contains bit and pieces of random things.
+        openable: true
+        openstring: You pull the drawer and slide it open and look inside.
+        items:
+          -
+            name: Restaurant Brochure 
+            description: On closer inspection you notice this is for Sushi Fusion! Yummy Yummy!
+      -
+        name: Cupboard
+        description: A basic kitchen Cupboard for storing food.
+        openable: true
+        openstring: You pull open the door and search inside.
+        items:
+          -
+            name: Muffins 
+            description: So thats where those Muffins went!
+            takeable: true
 
 
     exits:
@@ -704,9 +760,20 @@ rooms:
         openstring: You open the door with difficulty, due to the large piles of junk surrounding it.
         items:
           -
-            name: Australian Sparkling Red Wine
-            description: An unusual and delicious type of wine from Australia. You and Liam have been saving this for a special occasion.
+            name: Queso Gruyere
+            description: ooo This cheese is my favourite!
             takeable: true       
+          -
+            name: Queso Provoletta
+            description: A delicious cheese that needs to be heated before being eaten.
+            takeable: true
+            locked: true
+            openable: true
+            unlockedwith: microwave
+            unlockname: Warm Queso Provoletta
+            unlockDescription: Delicious and ready to eat.
+            unlockstring: You put the Queso Provoletta in the Microwave and set it to heat. After a moments wait it is now ready to eat!
+          
   -
     id: 12
     name: Downstairs Bathroom
