@@ -22,7 +22,7 @@ description: >
   Your boyfriend is not here.
 
   Calm down, you think to yourself, surely he has only gone to the bathroom, you decide to get out of bed to go and check. You take your Phone with you to illuminate the way, however the battery has run out.
-currentroomid: 3
+currentroomid: 1
 savedgame: false
 displayroominfo: true
 displayiteminfo: true
@@ -139,7 +139,7 @@ rooms:
     name: Jazminne's Bedroom
     description: >
       You glance out the window behind you, the curtain is open dully illuminating the Patio to the East a floor below you.
-      Inside the room you recognise the outlines of familar objects, your guitar is sitting in the corner and the TV is turned off infront of you.
+      Inside the room you recognise the outlines of familar objects, your Guitar is sitting in the corner and the TV is turned off infront of you.
       Your bedside table is next to you, with various bits and pieces on top of it. Liam's bedside table is on the other side, the Google Home sitting on top.
       You can see the Wardrobe in front of you, it is ajar... Liam always forgets to shut it.
       In front of you to the West is the Bedroom Door, it is ajar leading to a Dark Hallway.
@@ -292,7 +292,7 @@ rooms:
         usestring: You sit down in the lounge, it is not as comfortable as it is beautiful. You stand up again.
       -
         name: Pile of Junk
-        description: A large Pile of Junk containing many things of value and.. dubious value.
+        description: A large Pile of Junk containing many things of value and.. dubious value. It can be opened to search better.
         openable: true
         openstring: You begin to search through the pile for any objects of interest.
         items:      
@@ -454,7 +454,7 @@ rooms:
         description: A heavy front door leading to the Front Porch.
     items:
       -
-        name: Childrens Toy
+        name: Childrens Toys
         description: There are so many. Everywhere...
       -
         name: Wine Glasses
@@ -707,8 +707,12 @@ rooms:
       The Laundry Room, is a dark, cold room at the back of the house. It recieves little light from its one small window, and holds no heat. You shiver as you enter. 
       
 
+      To the West is a Passage leading back to the Kitchen, to the East is a Old Door leading to your sister Cassandra's Bedroom, and to the North is a Small Bathroom.
+
       Glancing around the room it is difficult to identify anything of interest among the Piles of Junk. However you catch your eye on your old Fridge
       sitting in the corner. What is it that has drawn your attention, you go to Examine it further.
+
+
     exits:
       -
         roomid: 12
@@ -771,14 +775,14 @@ rooms:
             openable: true
             unlockedwith: microwave
             unlockname: Warm Queso Provoletta
-            unlockDescription: Delicious and ready to eat.
+            unlockdescription: Delicious and ready to eat.
             unlockstring: You put the Queso Provoletta in the Microwave and set it to heat. After a moments wait it is now ready to eat!
           
   -
     id: 12
     name: Downstairs Bathroom
     description: >
-      A very small Downstairs Bathroom containing only a toilet and a sink. It is rare that you use this room.
+      A very small Downstairs Bathroom containing only a Toilet and a Sink, and a Small Bin. It is rare that you use this room.
     exits:
       -
         roomid: 11
@@ -789,7 +793,7 @@ rooms:
           You grab the handle carefully, you don't want it to fall off completely, and enter the Laundry Room.  
     items:
       -
-        name: Bin 
+        name: Small Bin 
         description: A small bathroom Bin. Should I search inside?
         openable: true
         openstring: You cautiously open the lid and look inside.
@@ -800,7 +804,8 @@ rooms:
   -
     id: 13
     name: Cassandra's Bedroom
-    description: blah 
+    description: >
+      Your scan the mountains of objects scattered over this Bedroom, but your eyes linger on only a few of interest. 
     storystring: >
       You flip on the lightswitch and enter your sister Cassandra's Bedroom. Your eyes dart quickly around the room, but with less surprise this time,
       you discover Cassandra is not in her room. Your mind is racing full of confusion and anxiety as you take a seat on the end of her bed and try to think the situation though.
@@ -837,7 +842,7 @@ rooms:
     id: 14
     name: Front Yard
     description: >
-      You look north along the small Gardin and patch of grass that makes up the Front Yard of the house. Unfortunately that space is temporarily
+      You look north along the small Garden and patch of grass that makes up the Front Yard of the house. Unfortunately that space is temporarily
       occupied by a lot of equipment left by the builders who have been working on the Roof. You glance up at the Roof to the North East,
       this part has already been completed and looks strong enough to walk on.
 
