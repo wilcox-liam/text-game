@@ -359,10 +359,10 @@ rooms:
     id: 4
     name: Upstairs Bathroom
     description: >
-      You enter the small Upstairs Bathroom and take in the surroundings. There is little of interest here, except for a few household items sitting on top of the basin.
+      You enter the small Upstairs Bathroom and take in your surroundings. There is little of interest here, except for a few household items sitting on top of the basin.
 
 
-      To the South in the Bathroom Door leading into the Upstairs Hallway. To the North is the a small Bathroom Window leading onto the Roof.
+      To the South is the Bathroom Door leading into the Upstairs Hallway. To the North is a small Bathroom Window leading onto the Roof.
     storystring: >
       You awkwardly pull yourself through the Window and pick yourself up from the ground breathing heavily from the effort of entering the room
       and the anxiety and anticipation you feel. However this is temporarily replaced with confusion as you scan the small bathroom with your eyes
@@ -498,10 +498,10 @@ rooms:
       With your last effort to reassure yourself, you turn on the lightswitch decide to go to check on your sister Cassandra, surely there is a reasonable exaplanation to all of this.     
     description: >
       You glance around the illuminated room and see the familiar belonging of your parents. Their large queen sized bed sits against the wall, it looks recently slept in.
-      There TV is switched off on the opposite wall.
+      Their TV is switched off on the opposite wall.
      
 
-      There is a large window to the East that would show the Patio, if the blinds were not closed. There is a small alcove to the North leading to an ensuite, and
+      There is a large window to the East that would show the Patio, if the blinds were not closed. There is a small alcove to the North leading to an ensuite and
       the Master Bedroom Door you entered through is to the West.
     exits:
       -
@@ -547,7 +547,7 @@ rooms:
     items:
       -
         name: Flowers Bouquet
-        description: ah such pretty flowers, did my dad buy these for my mum I wonder? That does not seem likely..
+        description: ah such pretty flowers, did my dad buy these for my mum I wonder?
         takeable: true     
   -
     id: 8
@@ -594,7 +594,6 @@ rooms:
 
       Your dads car is absent because it has been at the Mechanic's for over a week. If it was not taking so long we could have taken a trip
       to the snow last week.
-
     exits:
       -  
         roomid: 8
@@ -622,7 +621,7 @@ rooms:
     items:
       -
         name: Exercise Bike
-        description: An old exercise bike that is occasionally used my you and other members of the family.
+        description: An old exercise bike that is occasionally used by you and other members of the family.
         useable: true          
         usestring: You jump on and start pedalling! 20 Minutes later and out of breath you decide to continue your adventure.
   -
@@ -630,7 +629,7 @@ rooms:
     name: Kitchen
     description: >
       You are standing in a familiar kitchen. A quick glance of the room shows nothing unexpected. This room conains all the things you expect to find in a Kitchen.
-      A large Modern Fridge is directly infront of you, behind it, partially hidden from view. is a Microwave. At the other end of the room is the Kitchen Sink, and many Cupboards and Drawers. 
+      A large Modern Fridge is directly infront of you, behind it, partially hidden from view, is a Microwave. At the other end of the room is the Kitchen Sink and many Cupboards and Drawers. 
 
 
       To the South is a Saloon style door leading back to the Living Room, and to the east is a Passage leading to the Laundry.
@@ -683,8 +682,6 @@ rooms:
             name: Muffins 
             description: So thats where those Muffins went!
             takeable: true
-
-
     exits:
       -
         roomid: 11
@@ -711,8 +708,6 @@ rooms:
 
       Glancing around the room it is difficult to identify anything of interest among the Piles of Junk. However you catch your eye on your old Fridge
       sitting in the corner. What is it that has drawn your attention, you go to Examine it further.
-
-
     exits:
       -
         roomid: 12
@@ -782,7 +777,7 @@ rooms:
     id: 12
     name: Downstairs Bathroom
     description: >
-      A very small Downstairs Bathroom containing only a Toilet and a Sink, and a Small Bin. It is rare that you use this room.
+      A very small Downstairs Bathroom containing only a Toilet, a Sink and a Small Bin. It is rare that you use this room.
     exits:
       -
         roomid: 11
@@ -794,7 +789,7 @@ rooms:
     items:
       -
         name: Small Bin 
-        description: A small bathroom Bin. Should I search inside?
+        description: A Small bathroom Bin. Should I search inside?
         openable: true
         openstring: You cautiously open the lid and look inside.
         items:
@@ -808,13 +803,13 @@ rooms:
       Your scan the mountains of objects scattered over this Bedroom, but your eyes linger on only a few of interest. 
     storystring: >
       You flip on the lightswitch and enter your sister Cassandra's Bedroom. Your eyes dart quickly around the room, but with less surprise this time,
-      you discover Cassandra is not in her room. Your mind is racing full of confusion and anxiety as you take a seat on the end of her bed and try to think the situation though.
+      you discover Cassandra is not in her room. Your mind is racing full of confusion and anxiety as you take a seat on the end of her bed and try to think the situation through.
 
 
       It is the middle of the night, nobody is in bed, there are lots of unexpected items in the house and the bathroom door is locked. What does it all mean?
 
 
-      After a few minutes, doing the best you can to stay calm, you decide that there is only two things to be done. One, you should check on your Brother Martin, and two, you have to find a way into that bathroom, it can only be locked from the inside, so someone HAS to be in there!
+      After a few minutes, doing the best you can to stay calm, you decide that there are only two things to be done. One, you should check on your Brother Martin, and two, you have to find a way into that bathroom, it can only be locked from the inside, so someone HAS to be in there!
 
       As you get up to leave the bedroom, you pause for a moment as your eyes focus on a Box of Cigarettes your sister has on the window sill.
     exits:
@@ -829,7 +824,7 @@ rooms:
       -
         name: Box of Cigarettes
         description: >-
-          Cassandra smokes the same brand you do, you have a lot of happy memories smoking together on the Front Porch or climbing out the Window in the Upstairs Bathroom
+          Cassandra smokes the same brand you do, you have a lot of happy memories smoking together on the Front Porch or climbing out the Window of the Upstairs Bathroom
           to smoke together on the Roof when you were younger and hiding from your parents. The Roof...?
       -
         name: Business Card
@@ -867,12 +862,12 @@ rooms:
         unlockstring: >-
           You lean the Tall ladder againt the side of the house cautiously.         
         gostring: >
-          You climb the Tall Ladder and carefully step onto the Roof. You hesistate for a moment, bit it seems
+          You climb the Tall Ladder and carefully step onto the Roof. You hesistate for a moment, but it seems
           to hold your weight.       
     items:
       -
-        name: Gardin
-        description: The Gardin has some beautiful plants, however Chini has not been kind to it.
+        name: Garden
+        description: The Garden has some beautiful plants, however Chini has not been kind to it.
       -
         name: Tall Ladder
         description: A very Tall Ladder the builders use to access the Roof. 
@@ -902,7 +897,7 @@ rooms:
           You gently open the box with your hands and gasp as you see an Anillo Con Promiso!
 
 
-          Jazminne Aurora Vallejo Badilla, Will You Marry me? ¯\\_(ツ)_/¯
+          Jazminne Aurora Vallejo Badilla, Will You Marry me? ¯\_(ツ)_/¯
 
 
           P.S I love you
