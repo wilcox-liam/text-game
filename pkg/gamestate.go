@@ -237,6 +237,7 @@ func (g *Game) Play() {
 	}
 }
 
+// CallClear is a helper function to clear the command prompt in differnt Operating Systems.
 func CallClear() {
 	clear := make(map[string]func()) //Initialize it
 	clear["linux"] = func() {
