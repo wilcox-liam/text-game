@@ -131,7 +131,7 @@ func (g *Game) useOnItem(item *item, itemOn *item) error {
 		fmt.Println()
 		g.take(itemOn.Name)
 		return nil
-	}	
+	}
 	if itemOn.Locked && strings.ToLower(itemOn.UnlockedWith) == strings.ToLower(item.Name) {
 		itemOn.Locked = false
 		if itemOn.UnlockName != "" {

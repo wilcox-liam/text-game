@@ -5,8 +5,8 @@ package textgame
 // It is idiomatic to use a pointer receiver for a method that modifies a slice
 
 import (
-	"strings"
 	"fmt"
+	"strings"
 )
 
 // Game provides the data structures to play a text-game
@@ -40,14 +40,14 @@ type room struct {
 
 //Should I use inheritance or interfaces for items and exits?
 type exit struct {
-	Name         string
-	Description  string
-	Locked       bool
-	UnlockName   string
+	Name              string
+	Description       string
+	Locked            bool
+	UnlockName        string
 	UnlockDescription string
-	LockedString string
-	UnlockedWith string
-	UnlockString string
+	LockedString      string
+	UnlockedWith      string
+	UnlockString      string
 
 	RoomID    int
 	Direction string
@@ -131,10 +131,10 @@ func (g *Game) setCurrentRoom(room *room) {
 }
 
 func (g *Game) displayRoomInfo() {
-	CallClear()	
+	CallClear()
 	fmt.Println()
 	g.DisplayRoomInfo = true
-	g.DisplayItemInfo  = true
+	g.DisplayItemInfo = true
 }
 
 // getExitByName returns an exit matching a provided name in a room.

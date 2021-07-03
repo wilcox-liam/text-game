@@ -216,10 +216,10 @@ func (g *Game) Play() {
 		if g.DisplayItemInfo {
 			fmt.Println(g.Dictionary["strings"]["directions"] + g.CurrentRoom.getDirections())
 			fmt.Println(g.Dictionary["strings"]["exits"] + g.CurrentRoom.getExitOptions())
-			fmt.Println(g.Dictionary["strings"]["items"] + g.CurrentRoom.getItemOptions())	
-		    fmt.Println(g.Dictionary["strings"]["inventory"] + g.Player.getItemOptions())
-			fmt.Println()			
-		}	
+			fmt.Println(g.Dictionary["strings"]["items"] + g.CurrentRoom.getItemOptions())
+			fmt.Println(g.Dictionary["strings"]["inventory"] + g.Player.getItemOptions())
+			fmt.Println()
+		}
 
 		fmt.Print(g.Dictionary["strings"]["command"])
 		input, _ := reader.ReadString('\n')
@@ -236,7 +236,6 @@ func (g *Game) Play() {
 		}
 	}
 }
-
 
 func CallClear() {
 	clear := make(map[string]func()) //Initialize it
